@@ -1,0 +1,23 @@
+{
+  "name": "automation-remote",
+  "version": "1.0.0",
+  "description": "Smart remote to automate and control tasks in my room",
+  "main": "./electron/main.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdmiralAki99/HomeAutomationRemote.git"
+  },
+  "author": "Akhilesh Warty",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AdmiralAki99/HomeAutomationRemote/issues"
+  },
+  "homepage": "https://github.com/AdmiralAki99/HomeAutomationRemote#readme"
+}
