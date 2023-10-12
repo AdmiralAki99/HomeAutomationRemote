@@ -1,0 +1,17 @@
+<LightScreen>:
+    BoxLayout:
+        Button:
+            text: 'Goto Lights'
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'light'
+        Button:
+            text: 'Quit'
+
+<SettingsScreen>:
+    BoxLayout:
+        Button:
+            text: 'My settings button'
+        Button:
+            text: 'Back to menu'
+            on_press: root.manager.current = 'menu'
