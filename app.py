@@ -21,17 +21,72 @@ from PySide6.QtWidgets import (
     QTimeEdit,
     QVBoxLayout,
     QHBoxLayout,
+    QStackedWidget,
     QScrollArea,
     QWidget,
 )
 from PySide6.QtCore import QSize,Qt
+from PySide6.QtGui import QPixmap,QIcon
+
+class MenuImageCarousel(QWidget):
+    image_carousel = None
+    currentImageSelection = None
+
+    def __init__(self, images, *args, **kwargs):
+        super(MenuImageCarousel, self).__init__(*args, **kwargs)
+        self.image_carousel = images
+        self.currentImageSelection = 0
+
+    def create_carousel(self):
+        layout = QVBoxLayout()
+        self.image_label = QLabel()
+        self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.stacked_view = QStackedWidget()
+
+        for path in self.image_carousel:
+            image = QPixmap(path)
+            label = QLabel()
+            label.setPixmap(image)
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.stacked_view.addWidget(label)
+
+        self.prev_button = QPushButton("<")
+        self.next_button = QPushButton(">")
+
+        self.prev_button.clicked.connect(self.previous_image_view)
+        self.next_button.clicked.connect(self.next_image_view)
+
+        layout.addWidget(self.image_label)
+        layout.addWidget(self.prev_button)
+        layout.addWidget(self.next_button)
+
+        self.setLayout(layout)
+
+        self.update()
+
+    def previous_image_view(self):
+        if self.currentImageSelection > 0:
+            self.currentImageSelection -= 1
+            self.update()
+
+    def next_image_view(self):
+        if self.currentImageSelection < len(self.image_carousel) - 1:
+            self.currentImageSelection += 1
+            self.update()
+
+    def update(self):
+        self.stacked_view.setCurrentIndex(self.currentImageSelection)
+
+        
+
 
 class MenuCardTitle(QLabel):
     def __init__(self, title,subtitle, *args, **kwargs):
         super(MenuCardTitle, self).__init__(*args, **kwargs)
         layout = QVBoxLayout()
         title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 20px; font-weight: bold;")
+        title_label.setStyleSheet("font-size: 44px; font-weight: bold;")
 
         # Create a small subtitle label
         subtitle_label = QLabel(subtitle)
@@ -84,6 +139,16 @@ class MainApp(QMainWindow):
         scroll = QScrollArea()
         scroll_widget = QWidget()
         layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        image_label = QLabel()
+        image = QPixmap('./widget_research/360_F_535677467_iDO9waFgRKX5IKvOjfhxBCQjFdHyJegi.jpg')
+        image_label.setPixmap(image)
+
+        carousel = MenuImageCarousel(images=['./widget_research/360_F_535677467_iDO9waFgRKX5IKvOjfhxBCQjFdHyJegi.jpg','./widget_research/blank-wall-psd-japandi-living-room-interior_53876-109284.jpg','./widget_research/istockphoto-969431326-612x612.jpg'])
+
+        layout.addWidget(image_label)
+
         layout.setSpacing(0)
         scroll.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.init_menu_cards()
