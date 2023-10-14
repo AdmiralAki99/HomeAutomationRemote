@@ -208,8 +208,7 @@ class MusicPlayback(QLabel):
         title_label = PlaybackModule()
 
         # Create a small subtitle label
-        subtitle_label = QLabel(subtitle)
-        subtitle_label.setStyleSheet("font-size: 14px; color: white;")
+        subtitle_label = QSlider(Qt.Orientation.Horizontal)
 
         layout.addWidget(title_label)
         layout.addSpacing(0)
