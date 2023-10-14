@@ -86,7 +86,7 @@ class MenuCardTitle(QLabel):
         super(MenuCardTitle, self).__init__(*args, **kwargs)
         layout = QVBoxLayout()
         title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 44px; font-weight: bold;")
+        title_label.setStyleSheet("font-size: 44px; font-weight: bold;color:white;")
 
         # Create a small subtitle label
         subtitle_label = QLabel(subtitle)
@@ -99,6 +99,61 @@ class MenuCardTitle(QLabel):
         self.setLayout(layout)
         self.setFixedSize(QSize(200,100))
         # self.setStyleSheet("background-color: #f5f5f5; border-radius: 10px;")
+
+class MusicCardTitle(QLabel):
+     def __init__(self, title,subtitle, *args, **kwargs):
+        super(MusicCardTitle, self).__init__(*args, **kwargs)
+        layout = QVBoxLayout()
+        title_label = QLabel(title)
+        title_label.setStyleSheet("font-size: 24px; font-weight: bold;color:white;")
+
+        # Create a small subtitle label
+        subtitle_label = QLabel(subtitle)
+        subtitle_label.setStyleSheet("font-size: 14px; color: white;")
+
+        layout.addWidget(title_label)
+        layout.addSpacing(0)
+        layout.addWidget(subtitle_label)
+
+        self.setLayout(layout)
+        self.setFixedSize(QSize(200,100))
+        # self.setStyleSheet("background-color: #f5f5f5; border-radius: 10px;")
+
+class MusicMenuCard(QWidget):
+
+    def __init__(self, widgets, *args, **kwargs):
+        super(MusicMenuCard, self).__init__(*args, **kwargs)
+
+        layout = QVBoxLayout()
+        titleLayout = QHBoxLayout()
+        label1 = MusicCardTitle(title="Title",subtitle="Subtitle")
+        label2 = QLabel("Hello")
+        backgroundLabel = QLabel()
+
+        overlay_label = QLabel(parent=backgroundLabel)  # Overlay label
+        overlay_label.setStyleSheet("background-color: rgba(128, 128, 128, 128);")
+        overlay_label.setGeometry(20,0,85,85)  # Semi-transparent black
+
+        titleLayout.addWidget(backgroundLabel)
+        titleLayout.addWidget(label1)
+        layout.addLayout(titleLayout)
+        layout.addWidget(label2)
+
+        layout.setSpacing(0)
+
+        backgroundLabel.setFixedSize(QSize(110,100))
+        label1.setFixedSize(QSize(190,100))
+        label2.setStyleSheet("background-color: #D93A5E;")
+        label2.setFixedSize(QSize(300,100))
+
+        # self._dial = QDial()
+        # layout.addWidget(self._dial)
+
+        self.setLayout(layout)
+        self.setStyleSheet("background-color: #000000; border-radius: 0px;")
+        self.setFixedSize(QSize(300,200))
+        overlay_label.raise_()
+        overlay_label.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
 
 class MenuCard(QWidget):
 
@@ -114,7 +169,7 @@ class MenuCard(QWidget):
 
         layout.setSpacing(0)
 
-        widgets[0].setStyleSheet("background-color: #000000;border-right: 0.5px solid gray;")
+        widgets[0].setStyleSheet("background-color: #000000;border-right: 0.5px solid gray;color:white;")
         widgets[0].setFixedSize(QSize(50,100))
         widgets[2].setStyleSheet("background-color: #D93A5E;")
         widgets[2].setFixedSize(QSize(50,100))
@@ -145,8 +200,6 @@ class MainApp(QMainWindow):
         image = QPixmap('./widget_research/360_F_535677467_iDO9waFgRKX5IKvOjfhxBCQjFdHyJegi.jpg')
         image_label.setPixmap(image)
 
-        carousel = MenuImageCarousel(images=['./widget_research/360_F_535677467_iDO9waFgRKX5IKvOjfhxBCQjFdHyJegi.jpg','./widget_research/blank-wall-psd-japandi-living-room-interior_53876-109284.jpg','./widget_research/istockphoto-969431326-612x612.jpg'])
-
         layout.addWidget(image_label)
 
         layout.setSpacing(0)
@@ -163,7 +216,7 @@ class MainApp(QMainWindow):
         # centralWidget.setLayout(layout)
         self.setCentralWidget(scroll)
         self.setStyleSheet("background-color: #171718;")
-        with open("./homeScreenStyle.qss") as file:
+        with open("./stylesheets/homeScreenStyle.qss") as file:
             style = file.read()
             print(style)
             scroll.setStyleSheet(style)
@@ -176,7 +229,8 @@ class MainApp(QMainWindow):
             MenuCard([QLabel("Hello"),MenuCardTitle(title="Title",subtitle="Subtitle"),QPushButton(">")]),
             MenuCard([QLabel("Hello"),MenuCardTitle(title="Title",subtitle="Subtitle"),QPushButton(">")]),
             MenuCard([QLabel("Hello"),MenuCardTitle(title="Title",subtitle="Subtitle"),QPushButton(">")]),
-            MenuCard([QLabel("Hello"),MenuCardTitle(title="Title",subtitle="Subtitle"),QPushButton(">")])
+            MusicMenuCard([QLabel("Hello"),MenuCardTitle(title="Title",subtitle="Subtitle"),QPushButton(">")]),
+            
         ]
         
     def showMessage(self):
@@ -186,6 +240,23 @@ def main():
     app = QApplication(sys.argv)
     window = MainApp()
     window.show()
+
+    # # Create the main window
+    # window = QWidget()
+    # window.setWindowTitle("Widget Positioning Example")
+    # window.setGeometry(100, 100, 400, 300)
+
+    # # Create a background label widget
+    # background_label = QLabel("Background Label", parent=window)
+    # background_label.setGeometry(50, 50, 200, 100)  # (x, y, width, height)
+    # background_label.setStyleSheet("background-color: lightblue;")
+
+    # # Create an overlay button widget
+    # overlay_button = QPushButton("Overlay Button", parent=window)
+    # overlay_button.setGeometry(100, 100, 200, 50)  # (x, y, width, height)
+    # overlay_button.setStyleSheet("background-color: rgba(255, 0, 0, 100);")
+    # overlay_button.raise_()  # Raise the button above the background label
+    # window.show()
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
