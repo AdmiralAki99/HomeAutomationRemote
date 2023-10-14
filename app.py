@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QStackedWidget,
     QScrollArea,
+    QStyle,
     QWidget,
 )
 from PySide6.QtCore import QSize,Qt
@@ -105,7 +106,7 @@ class MusicCardTitle(QLabel):
         super(MusicCardTitle, self).__init__(*args, **kwargs)
         layout = QVBoxLayout()
         title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 24px; font-weight: bold;color:white;")
+        title_label.setStyleSheet("font-size: 20px; font-weight: bold;color:white;")
 
         # Create a small subtitle label
         subtitle_label = QLabel(subtitle)
@@ -119,6 +120,104 @@ class MusicCardTitle(QLabel):
         self.setFixedSize(QSize(200,100))
         # self.setStyleSheet("background-color: #f5f5f5; border-radius: 10px;")
 
+class MusicMetadata(QLabel):
+    def __init__(self,*args,**kwargs):
+        super(MusicMetadata, self).__init__(*args, **kwargs)
+        layout = QHBoxLayout()
+        sublayout = QVBoxLayout()
+        layout.setSpacing(5)
+
+        musicArtwork = QLabel()
+        musicArtwork.setStyleSheet("background-color: rgba(128, 0, 0, 128);")
+        musicArtwork.setFixedSize(QSize(60,60))
+        layout.addWidget(musicArtwork)
+
+        title_label = QLabel("Title")
+        artist_label = QLabel("Artist")
+        sublayout.addWidget(title_label)
+        sublayout.addWidget(artist_label)
+        layout.addLayout(sublayout)
+
+        self.setLayout(layout)
+        self.setFixedSize(QSize(100,100))
+
+class PlaybackModule(QWidget):
+    is_playing = False
+
+    def __init__(self, *args,**kwargs):
+        super(PlaybackModule, self).__init__(*args, **kwargs)
+        layout = QHBoxLayout()
+        layout.setSpacing(0)
+
+        musicMetadata = MusicMetadata()
+        layout.addWidget(musicMetadata)
+
+        musicMetadata.setFixedSize(QSize(150,50))
+        
+
+        rewind_button = QPushButton()
+        pixmapapi = getattr(QStyle,"SP_MediaSkipBackward")
+        icon = self.style().standardIcon(pixmapapi)
+        rewind_button.setIcon(icon)
+        rewind_button.clicked.connect(self.on_rewind_clicked)
+
+        play_button = QPushButton()
+        pixmapapi = getattr(QStyle,"SP_MediaPlay")
+        icon = self.style().standardIcon(pixmapapi)
+        play_button.setIcon(icon)
+        play_button.clicked.connect(self.on_play_clicked)
+
+        forward_button = QPushButton()
+        pixmapapi = getattr(QStyle,"SP_MediaSkipForward")
+        icon = self.style().standardIcon(pixmapapi)
+        forward_button.setIcon(icon)
+        forward_button.clicked.connect(self.on_forward_clicked)
+
+        
+        layout.addWidget(rewind_button)
+        layout.addWidget(play_button)
+        layout.addWidget(forward_button)
+
+        self.setLayout(layout)
+
+    def on_play_clicked(self):
+        if self.is_playing:
+            self.is_playing = False
+            pixmapapi = getattr(QStyle,"SP_MediaPlay")
+            icon = self.style().standardIcon(pixmapapi)
+            self.sender().setIcon(icon)
+        else:
+            self.is_playing = True
+            pixmapapi = getattr(QStyle,"SP_MediaPause")
+            icon = self.style().standardIcon(pixmapapi)
+            self.sender().setIcon(icon)
+
+    def on_pause_clicked(self):
+        pass
+
+    def on_rewind_clicked(self):
+        pass
+
+    def on_forward_clicked(self):
+        pass
+
+class MusicPlayback(QLabel):
+     def __init__(self, title,subtitle, *args, **kwargs):
+        super(MusicPlayback, self).__init__(*args, **kwargs)
+        layout = QVBoxLayout()
+        title_label = PlaybackModule()
+
+        # Create a small subtitle label
+        subtitle_label = QLabel(subtitle)
+        subtitle_label.setStyleSheet("font-size: 14px; color: white;")
+
+        layout.addWidget(title_label)
+        layout.addSpacing(0)
+        layout.addWidget(subtitle_label)
+
+        self.setLayout(layout)
+        self.setFixedSize(QSize(200,100))
+
 class MusicMenuCard(QWidget):
 
     def __init__(self, widgets, *args, **kwargs):
@@ -126,8 +225,8 @@ class MusicMenuCard(QWidget):
 
         layout = QVBoxLayout()
         titleLayout = QHBoxLayout()
-        label1 = MusicCardTitle(title="Title",subtitle="Subtitle")
-        label2 = QLabel("Hello")
+        label1 = MusicCardTitle(title="Apple Homepod",subtitle="Smart Audio Line-Up")
+        label2 = MusicPlayback(title="Apple Homepod",subtitle="Smart Audio Line-Up")
         backgroundLabel = QLabel()
 
         overlay_label = QLabel(parent=backgroundLabel)  # Overlay label
@@ -143,7 +242,7 @@ class MusicMenuCard(QWidget):
 
         backgroundLabel.setFixedSize(QSize(110,100))
         label1.setFixedSize(QSize(190,100))
-        label2.setStyleSheet("background-color: #D93A5E;")
+        label2.setStyleSheet("background-color: #000000; border-radius: 0px;")
         label2.setFixedSize(QSize(300,100))
 
         # self._dial = QDial()
@@ -153,7 +252,6 @@ class MusicMenuCard(QWidget):
         self.setStyleSheet("background-color: #000000; border-radius: 0px;")
         self.setFixedSize(QSize(300,200))
         overlay_label.raise_()
-        overlay_label.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
 
 class MenuCard(QWidget):
 
