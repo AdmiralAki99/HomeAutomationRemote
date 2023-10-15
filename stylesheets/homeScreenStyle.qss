@@ -1,9 +1,0 @@
-QScrollBar:vertical {
-    width: 0px;
-    background: transparent;
-}
-
-QScrollBar:horizontal {
-    height: 0px;
-    background: transparent;
-}

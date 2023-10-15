@@ -1,4 +1,0 @@
-QSlider::handle:horizontal {
-    width: 0.5pxpx;
-    height: 0.5px;
-}
