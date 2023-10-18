@@ -16,6 +16,11 @@ module.exports = withMT({
         "2xl": "1400px",
       },
     },
+    colors:{
+      home: '#181818',
+      bubblegum: '#DA3B5E',
+      noir: '#1C1C1D'
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
