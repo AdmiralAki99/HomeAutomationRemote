@@ -8,6 +8,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {View} from 'react-native';
 
+function HomeScreen(){
+  return (
+    <View style={{flex: 1,alignItems: 'center',justifyContent: 'center'}}>
+      <h1>Home Screen</h1>
+    </View>
+  );
+}
+
 const Stack = createNativeStackNavigator();
 
 function App() {
