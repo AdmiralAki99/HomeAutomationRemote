@@ -204,7 +204,29 @@ function LightScreen(){
         <div className="pb-16">
           <div className="flex items-center justify-center">
             <div className="grid grid-cols-2 items-center justify-center gap-6 p-6">
-              <div className="grid grid-cols-1 items-center justify-center gap-4 p-4">
+              <div className="grid grid-cols-1 items-center justify-center gap-4 p-6">
+                <div className="flex items-center mb-4 gap-6">
+                  <input
+                    id="light-section-1"
+                    type="radio"
+                    value={""}
+                    name="light-selection"
+                    className="w-4 h-4 text-white bg-black border-white focus: ring-white"
+                  ></input>
+                  <a className="block max-w-lg w-80 h-40 p-6 bg-yellow-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
+                    <div className="grid grid-rows-3 grid-cols-2 gap-4">
+                      <div className="row row-start-1 row-end-3">01</div>
+                      <div className="row row-start-1 row-end-3 items-center bg-black mb-auto">
+                        <h5 className="text-3xl font-bold tracking-tight text-white">
+                          Card Title
+                        </h5>
+                        <p className="text-white"> Card Content</p>
+                        <p> Card Content</p>
+                      </div>
+                    </div>
+                  </a>
+                  
+                </div>
                 <div className="flex items-center mb-4 gap-6">
                   <input
                     id="light-section-1"
@@ -226,8 +248,54 @@ function LightScreen(){
                     </div>
                   </a>
                 </div>
+                <div className="flex items-center mb-4 gap-6">
+                  <input
+                    id="light-section-1"
+                    type="radio"
+                    value={""}
+                    name="light-selection"
+                    className="w-4 h-4 text-white bg-black border-white focus: ring-white"
+                  ></input>
+                  <a className="block max-w-lg w-80 h-40 p-6 bg-yellow-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
+                    <div className="grid grid-rows-3 grid-cols-2 gap-4">
+                      <div className="row row-start-1 row-end-3">01</div>
+                      <div className="row row-start-1 row-end-3 items-center bg-black mb-auto">
+                        <h5 className="text-3xl font-bold tracking-tight text-white">
+                          Card Title
+                        </h5>
+                        <p className="text-white"> Card Content</p>
+                        <p> Card Content</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div className="flex items-center mb-4 gap-6">
+                  <input
+                    id="light-section-1"
+                    type="radio"
+                    value={""}
+                    name="light-selection"
+                    className="w-4 h-4 text-white bg-black border-white focus: ring-white"
+                  ></input>
+                  <a className="block max-w-lg w-80 h-40 p-6 bg-yellow-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
+                    <div className="grid grid-rows-3 grid-cols-2 gap-4">
+                      <div className="row row-start-1 row-end-3">01</div>
+                      <div className="row row-start-1 row-end-3 items-center bg-black mb-auto">
+                        <h5 className="text-3xl font-bold tracking-tight text-white">
+                          Card Title
+                        </h5>
+                        <p className="text-white"> Card Content</p>
+                        <p> Card Content</p>
+                      </div>
+                    </div>
+                  </a>
+                  
+                </div>
               </div>
-              <Slider defaultValue={[50]} max={100} step={1} className='bg-white -rotate-90' ></Slider>
+              <input
+                type="range"
+                className="accent-white h-10 w-full bg-gray-200 rounded-lg border-transparent -rotate-90"
+              ></input>
             </div>
           </div>
         </div>
