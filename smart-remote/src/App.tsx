@@ -8,6 +8,7 @@ import { Carousel } from '@material-tailwind/react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {View} from 'react-native';
+import RangeSlider from './components/RangeSlider';
 
 function HomeScreen(){
   return (
@@ -225,7 +226,6 @@ function LightScreen(){
                       </div>
                     </div>
                   </a>
-                  
                 </div>
                 <div className="flex items-center mb-4 gap-6">
                   <input
@@ -289,13 +289,19 @@ function LightScreen(){
                       </div>
                     </div>
                   </a>
-                  
                 </div>
               </div>
-              <input
+              {/* <input
                 type="range"
                 className="accent-white h-10 w-full bg-gray-200 rounded-lg border-transparent -rotate-90"
-              ></input>
+              ></input> */}
+              <RangeSlider
+                min={0}
+                onChange={({ min }: { min: number }) =>
+                  console.log(`val = ${min}`)
+                }
+
+              ></RangeSlider>
             </div>
           </div>
         </div>
@@ -327,12 +333,19 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {/* <Stack.Screen name="Home" component={HomeScreen}/> */}
-        <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <Stack.Navigator>
+    //     {/* <Stack.Screen name="Home" component={HomeScreen}/> */}
+    //     <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    <RangeSlider
+    min={0}
+    onChange={({ min }: { min: number }) =>
+      console.log(`val = ${min}`)
+    }
+
+  ></RangeSlider>
   );
 }
 
