@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    rotate: -90deg;
   }
   
   .slider {
@@ -25,9 +26,11 @@
   }
   
   .slider__track {
-    background-color: #ced4da;
+    background-color: #DA3B5E;
     width: 100%;
+    height: 70px;
     z-index: 1;
+    border-radius: 35px;
   }
   
   .slider__range {
@@ -81,12 +84,12 @@
   .thumb::-webkit-slider-thumb {
     background-color: #f1f5f7;
     border: none;
-    border-radius: 50%;
-    box-shadow: 0 0 1px 1px #ced4da;
+    border-radius: 10px;
+    box-shadow: 0 0 1px 1px black;
     cursor: pointer;
-    height: 18px;
-    width: 18px;
-    margin-top: 4px;
+    height: 20px;
+    width: 5px;
+    margin-top: 70px;
     pointer-events: all;
     position: relative;
   }
@@ -96,7 +99,7 @@
     background-color: #f1f5f7;
     border: none;
     border-radius: 50%;
-    box-shadow: 0 0 1px 1px #ced4da;
+    box-shadow: 0 0 1px 1px black;
     cursor: pointer;
     height: 18px;
     width: 18px;

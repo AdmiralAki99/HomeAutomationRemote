@@ -204,7 +204,7 @@ function LightScreen(){
       <div className="bg-home w-full">
         <div className="pb-16">
           <div className="flex items-center justify-center">
-            <div className="grid grid-cols-2 items-center justify-center gap-6 p-6">
+            <div className="grid grid-cols-2 items-center bg-red-300 justify-center gap-6 p-6">
               <div className="grid grid-cols-1 items-center justify-center gap-4 p-6">
                 <div className="flex items-center mb-4 gap-6">
                   <input
@@ -291,17 +291,12 @@ function LightScreen(){
                   </a>
                 </div>
               </div>
-              {/* <input
-                type="range"
-                className="accent-white h-10 w-full bg-gray-200 rounded-lg border-transparent -rotate-90"
-              ></input> */}
-              <RangeSlider
-                min={0}
-                onChange={({ min }: { min: number }) =>
-                  console.log(`val = ${min}`)
-                }
-
-              ></RangeSlider>
+              <div className='bg-cyan-200 flex items-center h-full'>
+                <input
+                  type="range"
+                  className="accent-white w-full bg-gray-200 rounded-lg border-transparent -rotate-90 flex"
+                ></input>
+              </div>
             </div>
           </div>
         </div>
@@ -332,20 +327,14 @@ function LightScreen(){
 const Stack = createNativeStackNavigator();
 
 function App() {
+  const [value, setValue] = useState({ min: 0, max: 100 });
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     {/* <Stack.Screen name="Home" component={HomeScreen}/> */}
-    //     <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    <RangeSlider
-    min={0}
-    onChange={({ min }: { min: number }) =>
-      console.log(`val = ${min}`)
-    }
-
-  ></RangeSlider>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {/* <Stack.Screen name="Home" component={HomeScreen}/> */}
+        <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
