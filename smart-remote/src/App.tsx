@@ -204,7 +204,7 @@ function LightScreen(){
       <div className="bg-home w-full">
         <div className="pb-16">
           <div className="flex items-center justify-center">
-            <div className="grid grid-cols-2 items-center bg-red-300 justify-center gap-6 p-6">
+            <div className="grid grid-cols-2 items-center bg-red-300 justify-center gap-6 p-8">
               <div className="grid grid-cols-1 items-center justify-center gap-4 p-6">
                 <div className="flex items-center mb-4 gap-6">
                   <input
@@ -214,16 +214,10 @@ function LightScreen(){
                     name="light-selection"
                     className="w-4 h-4 text-white bg-black border-white focus: ring-white"
                   ></input>
-                  <a className="block max-w-lg w-80 h-40 p-6 bg-yellow-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
+                  <a className="block max-w-lg w-80 h-40 p-6 bg-black border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
                     <div className="grid grid-rows-3 grid-cols-2 gap-4">
-                      <div className="row row-start-1 row-end-3">01</div>
-                      <div className="row row-start-1 row-end-3 items-center bg-black mb-auto">
-                        <h5 className="text-3xl font-bold tracking-tight text-white">
-                          Card Title
-                        </h5>
-                        <p className="text-white"> Card Content</p>
-                        <p> Card Content</p>
-                      </div>
+                      <div className="row row-start-1 row-end-3">Lamp</div>
+                      <div className="flex row-start-2 row-end-4 items-center justify-center h-full w-full object-fill pt-4 bg-white"></div>
                     </div>
                   </a>
                 </div>
@@ -291,16 +285,22 @@ function LightScreen(){
                   </a>
                 </div>
               </div>
-              <div className='bg-cyan-200 flex items-center h-full'>
-                <input
+              <div className="flex items-center h-full object-fill">
+                {/* <input
                   type="range"
-                  className="accent-white w-full bg-gray-200 rounded-lg border-transparent -rotate-90 flex"
-                ></input>
+                  className="accent-white w-full bg-gray-200 rounded-lg border-transparent -rotate-90 flex row-start-1 row-end-4"
+                ></input> */}
+                <RangeSlider
+                  min={0}
+                  onChange={({ min }: { min: number }) =>
+                    console.log(`val = ${min}`)
+                  }
+                ></RangeSlider>
               </div>
             </div>
           </div>
         </div>
-        <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
+        <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 z-10">
           <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
             <button>
               <LightMode sx={{ color: "white" }} />

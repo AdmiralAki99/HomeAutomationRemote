@@ -1,56 +1,35 @@
-.container {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    rotate: -90deg;
-  }
-  
-  .slider {
+.container{
+  padding: 0%;
+  margin: 0%;
+}
+.slider {
     position: relative;
-    width: 200px;
-    background-color: black;
+    width: 600px;
+    height: 300px;
+    rotate: -90deg;
+    padding: 0%;
   }
   
   .slider__track,
-  .slider__range,
-  .slider__left-value,
-  .slider__right-value {
+  .slider__range {
+    height: 5px;
     position: absolute;
   }
   
-  .slider__track,
-  .slider__range {
-    border-radius: 3px;
-    height: 5px;
-  }
-  
   .slider__track {
-    background-color: #DA3B5E;
+    background-color: #ced4da;
     width: 100%;
-    height: 70px;
+    height: 100px;
     z-index: 1;
-    border-radius: 35px;
+    top: -30px;
+    border-radius: 50px;
   }
   
   .slider__range {
-    background-color: red;
+    background-color: #9fe5e1;
+    height: 100px;
     z-index: 2;
-  }
-  
-  .slider__left-value,
-  .slider__right-value {
-    color: #dee2e6;
-    font-size: 12px;
-    margin-top: 20px;
-  }
-  
-  .slider__left-value {
-    left: 6px;
-  }
-  
-  .slider__right-value {
-    right: -4px;
+    top: -30px;
   }
   
   /* Removing the default appearance */
@@ -63,9 +42,13 @@
   .thumb {
     pointer-events: none;
     position: absolute;
+    left: 232px;
+    top: 432px;
     height: 0;
-    width: 200px;
+    width: 600px;
+    rotate: -90deg;
     outline: none;
+    background-color: transparent;
   }
   
   .thumb--zindex-3 {
@@ -76,20 +59,16 @@
     z-index: 4;
   }
   
-  .thumb--zindex-5 {
-    z-index: 5;
-  }
-  
   /* For Chrome browsers */
   .thumb::-webkit-slider-thumb {
     background-color: #f1f5f7;
     border: none;
-    border-radius: 10px;
-    box-shadow: 0 0 1px 1px black;
+    border-radius: 2.5px;
+    box-shadow: 0 0 1px 1px #ced4da;
     cursor: pointer;
-    height: 20px;
+    height: 25px;
     width: 5px;
-    margin-top: 70px;
+    margin-top: 4px;
     pointer-events: all;
     position: relative;
   }
@@ -99,7 +78,7 @@
     background-color: #f1f5f7;
     border: none;
     border-radius: 50%;
-    box-shadow: 0 0 1px 1px black;
+    box-shadow: 0 0 1px 1px #ced4da;
     cursor: pointer;
     height: 18px;
     width: 18px;
@@ -107,4 +86,23 @@
     pointer-events: all;
     position: relative;
   }
-  
+
+  .thumb--zindex-5 {
+    z-index: 5;
+  }
+
+.slider__left-value,
+.slider__right-value {
+  color: #dee2e6;
+  font-size: 12px;
+  margin-top: 20px;
+  position: absolute;
+}
+
+.slider__left-value {
+  left: 6px;
+}
+
+.slider__right-value {
+  right: -4px;
+}
