@@ -201,7 +201,7 @@ function HomeScreen(){
 function LightScreen(){
   return (
     <View style={{ alignItems: "center" }}>
-      <div className="bg-home w-full">
+      <div className="bg-home w-full max-h-screen">
         <div className="pb-16">
           <div className="flex items-center justify-center">
             <div className="grid grid-cols-2 items-center bg-red-300 justify-center gap-6 p-8">
