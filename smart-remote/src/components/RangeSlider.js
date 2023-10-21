@@ -1,7 +1,7 @@
 import { PropTypes } from "prop-types";
 import { useState, useCallback, useEffect, useRef } from "react";
 import classnames from "classnames";
-import './rangeSlider.css'
+import './RangeSlider.css'
 
 
 const RangeSlider = ({ min, onChange }) => {
