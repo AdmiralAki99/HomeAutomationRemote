@@ -1,0 +1,105 @@
+.container{
+  padding: 0%;
+  margin: 0%;
+}
+.light-slider {
+    position: relative;
+    width: 100px;
+    height: 10px;
+    rotate: -90deg;
+    padding: 0%;
+  }
+  
+  .light-slider__track,
+  .light-slider__range {
+    height: 5px;
+    position: absolute;
+  }
+  
+  .light-slider__track {
+    background-color: #2B1A1F;
+    border-radius: 50px;
+    width: 100%;
+    z-index: 1;
+  }
+  
+  .light-slider__range {
+    background-color: #DA3B5E;
+    border-radius: 50px;
+    width: 100%;
+    z-index: 2;
+  }
+  
+  /* Removing the default appearance */
+  .light-thumb,
+  .light-thumb::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .light-thumb {
+    pointer-events: none;
+    position: absolute;
+    height: 5;
+    width:95px;
+    rotate: -90deg;
+    outline: none;
+    background-color: transparent;
+  }
+  
+  .light-thumb--zindex-3 {
+    z-index: 3;
+  }
+  
+  .light-thumb--zindex-4 {
+    z-index: 4;
+  }
+  
+  /* For Chrome browsers */
+  .light-thumb::-webkit-slider-thumb {
+    background-color: transparent;
+    left: -5px;
+    border: none;
+    border-radius: 2.5px;
+    box-shadow: 0 0 1px 1px transparent;
+    cursor: pointer;
+    height: 4px;
+    width: 2px;
+    margin-top: 0px;
+    pointer-events: all;
+    position: relative;
+  }
+  
+  /* For Firefox browsers */
+  .light-thumb::-moz-range-thumb {
+    background-color: #f1f5f7;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 0 1px 1px #ced4da;
+    cursor: pointer;
+    height: 18px;
+    width: 18px;
+    margin-top: 4px;
+    pointer-events: all;
+    position: relative;
+  }
+
+  .light-thumb--zindex-5 {
+    z-index: 5;
+  }
+
+.light-slider__left-value,
+.light-slider__right-value {
+  color: #dee2e6;
+  font-size: 12px;
+  margin-top: 20px;
+  position: absolute;
+}
+
+.light-slider__left-value {
+  left: 6px;
+}
+
+.light-slider__right-value {
+  right: -4px;
+}
