@@ -22,7 +22,6 @@
     height: 100px;
     z-index: 1;
     top: -30px;
-    border-radius: 50px;
   }
   
   .slider__range {
@@ -30,6 +29,8 @@
     height: 100px;
     z-index: 2;
     top: -30px;
+    border-radius: 0px;
+    border-right: #FFFFFF 0.5px solid;
   }
   
   /* Removing the default appearance */

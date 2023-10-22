@@ -22,7 +22,7 @@ const RangeSlider = ({ min, onChange }) => {
       const valuePercent = getPercent(minVal);
       if (rangeRef.current) {
         rangeRef.current.style.width = `${valuePercent}%`;
-
+        rangeRef.current.style.borderRadius = `0px`;
       }
     }
   }, [minVal, getPercent]);
