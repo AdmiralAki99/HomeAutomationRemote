@@ -3,6 +3,7 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import LightScreen from './screens/LightScreen';
+import TestScreen from './screens/TestScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,8 +13,8 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator >
         {/* <Stack.Screen name="Home" component={HomeScreen}/> */}
-        {/* <Stack.Screen name="Test" component={TestScreen}></Stack.Screen> */}
-        <Stack.Screen name="Light" component={HomeScreen}></Stack.Screen>
+        <Stack.Screen name="Test" component={TestScreen}></Stack.Screen>
+        <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
