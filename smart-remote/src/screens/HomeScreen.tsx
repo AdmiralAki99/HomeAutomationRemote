@@ -1,9 +1,13 @@
 import { Button,IconButton,Box,Card,CardContent,Grid,CardMedia,Paper,Slide,MobileStepper,Typography} from '@mui/material';
 import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMute,VolumeUp,Speaker,Apple,Lightbulb,LightMode,Camera,House,Person, Home,Menu} from '@mui/icons-material';
 import {View} from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { ScreenParamList } from '../App';
+
+type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
 
 
-function HomeScreen() {
+function HomeScreen({route, navigation} : HomeScreenProps) {
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <div className="bg-home">
@@ -137,7 +141,9 @@ function HomeScreen() {
                     <p className="text-gray-50">Lights: 12</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button>
+                    <button onClick={
+                      () => navigation.navigate('Test')
+                    }>
                       <ChevronRight sx={{ color: "white" }} />
                     </button>
                   </div>

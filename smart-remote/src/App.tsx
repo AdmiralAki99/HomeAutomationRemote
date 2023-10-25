@@ -1,26 +1,33 @@
 import React ,{useState, useEffect} from 'react';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+
 import HomeScreen from './screens/HomeScreen';
 import LightScreen from './screens/LightScreen';
 import TestScreen from './screens/TestScreen';
 
-const Stack = createNativeStackNavigator();
+export type ScreenParamList = {
+  Light: undefined;
+  Test: undefined;
+  Home: undefined;
+  Camera : undefined;
+}
+
+const Stack = createNativeStackNavigator<ScreenParamList>();
 
 function App() {
   const [value, setValue] = useState({ min: 0, max: 100 });
   return (
     <NavigationContainer>
-      <Stack.Navigator >
-        {/* <Stack.Screen name="Home" component={HomeScreen}/> */}
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="Test" component={TestScreen}></Stack.Screen>
         <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-
 
 export default App;
 
