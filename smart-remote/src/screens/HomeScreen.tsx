@@ -3,14 +3,24 @@ import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMut
 import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
+import { useState } from 'react';
+import { HomeScreenNavbar } from '../components/Navbar';
 
 type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
 
 
 function HomeScreen({route, navigation} : HomeScreenProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+  
+
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <div className="bg-home">
+        {/* <HomeScreenNavbar/> */}
         <div className="pb-16">
           <div className="w-full h-1/4 relative">
             <img
@@ -101,9 +111,11 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                         <button>
                           <SkipPrevious sx={{ color: "white" }} />
                         </button>
-                        <button>
+                        {isPlaying ? <Button onClick={()=>handlePlayPause()} size='small' disableRipple={true} style={{backgroundColor: 'transparent'}}>
+                          <Pause sx={{ color: "white" }} />
+                        </Button> :<Button onClick={()=>handlePlayPause()} size='small' disableRipple={true} style={{backgroundColor: 'transparent'}}>
                           <PlayArrow sx={{ color: "white" }} />
-                        </button>
+                        </Button>}
                         <button>
                           <SkipNext sx={{ color: "white" }} />
                         </button>

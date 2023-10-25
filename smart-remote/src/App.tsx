@@ -14,13 +14,18 @@ export type ScreenParamList = {
   Camera : undefined;
 }
 
+export type NavbarMode = {
+  backButton : boolean;
+  drawerButton : boolean;
+}
+
 const Stack = createNativeStackNavigator<ScreenParamList>();
 
 function App() {
   const [value, setValue] = useState({ min: 0, max: 100 });
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="Test" component={TestScreen}></Stack.Screen>
         <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
