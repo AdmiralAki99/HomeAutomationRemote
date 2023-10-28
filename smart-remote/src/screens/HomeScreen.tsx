@@ -154,7 +154,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
                     <button onClick={
-                      () => navigation.navigate('Test')
+                      () => navigation.navigate('Light')
                     }>
                       <ChevronRight sx={{ color: "white" }} />
                     </button>

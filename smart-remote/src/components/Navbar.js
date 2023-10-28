@@ -7,7 +7,7 @@ import { Button } from "@mui/material";
 
 const HomeScreenNavbar = () => {
     return(
-        <div className="flex bg-noir w-screen h-9 justify-end items-center ">
+        <div className="flex bg-home w-screen h-9 justify-end items-center ">
             <Menu sx={{color:'white'}} fontSize="medium"/>
         </div>
     )
@@ -16,7 +16,7 @@ const HomeScreenNavbar = () => {
 
 const ScreenNavbar = ({navigation,destination}) =>{
     return (
-      <div className="flex bg-noir w-screen h-9 justify-start items-center ">
+      <div className="flex bg-home w-screen h-9 justify-start items-center ">
         <Button onClick={
             () => {
               navigation.navigate(destination);

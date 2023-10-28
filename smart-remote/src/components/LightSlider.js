@@ -3,8 +3,8 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import classnames from "classnames";
 import './LightSlider.css'
 
-const LightSlider = ({ min, onChange }) => {
-  const [minVal, setVal] = useState(min);
+const LightSlider = ({ min, value, onChange }) => {
+  const [minVal, setVal] = useState(value);
 
   /* Creating References */
   const valRef = useRef(null);
@@ -21,7 +21,7 @@ const LightSlider = ({ min, onChange }) => {
       const valuePercent = getPercent(minVal);
       if (rangeRef.current) {
         rangeRef.current.style.width = `${valuePercent}%`;
-        rangeRef.current.style.borderRadius = `0px`;
+        // rangeRef.current.style.borderRadius = `0px`;
       }
     }
   }, [minVal, getPercent]);
@@ -30,6 +30,7 @@ const LightSlider = ({ min, onChange }) => {
     // Call the onChange function whenever minVal changes
     onChange({ min: minVal });
   }, [minVal, onChange]);
+
   return (
     <div className="container">
       <div>
@@ -57,6 +58,7 @@ const LightSlider = ({ min, onChange }) => {
 
 LightSlider.propTypes = {
   min: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
