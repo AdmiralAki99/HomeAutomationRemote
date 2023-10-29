@@ -7,6 +7,8 @@ import HomeScreen from './screens/HomeScreen';
 import LightScreen from './screens/LightScreen';
 import TestScreen from './screens/TestScreen';
 
+const TPLSmartDevice = require('tplink-lightbulb');
+
 export type ScreenParamList = {
   Light: undefined;
   Test: undefined;
@@ -23,6 +25,7 @@ const Stack = createNativeStackNavigator<ScreenParamList>();
 
 function App() {
   const [value, setValue] = useState({ min: 0, max: 100 });
+  console.log("Hello World")
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home'>
