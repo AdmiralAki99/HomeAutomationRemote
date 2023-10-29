@@ -17,6 +17,10 @@ const LightSlider = ({ id ,min, value, onChange }) => {
   );
 
   useEffect(() => {
+    setVal(value);
+  });
+
+  useEffect(() => {
     if (valRef.current) {
       const valuePercent = getPercent(minVal);
       if (rangeRef.current) {
@@ -25,11 +29,6 @@ const LightSlider = ({ id ,min, value, onChange }) => {
       }
     }
   }, [minVal, getPercent]);
-
-  useEffect(() => {
-    // Call the onChange function whenever minVal changes
-    onChange({ min: minVal });
-  }, [minVal, onChange]);
 
   return (
     <div className="container">
