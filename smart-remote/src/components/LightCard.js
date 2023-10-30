@@ -1,11 +1,15 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LightSlider from './LightSlider';
 
-const LightCard = ({min,label,onChange}) => {
+const LightCard = ({min,value,label,onChange}) => {
 
-    const [minVal, setVal] = useState(min);
+    const [minVal, setVal] = useState(value);
     const [labelName,setLabel] = useState(label);
+
+    // useEffect(() => {
+    //   setVal(value);
+    // });
 
 
     return (
@@ -15,6 +19,7 @@ const LightCard = ({min,label,onChange}) => {
           <div className="flex row-start-2 row-end-4 items-center justify-center h-full w-full object-fill pt-6 pl-6">
             <LightSlider
               min={0}
+              value={value}
               onChange={({ min }) =>
                 console.log(`val = ${min}`)
               }
@@ -28,6 +33,7 @@ const LightCard = ({min,label,onChange}) => {
 
 LightCard.propTypes = {
     min: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired
 }
