@@ -1,7 +1,7 @@
 import { PropTypes } from "prop-types";
 import { useState, useCallback, useEffect, useRef } from "react";
 import classnames from "classnames";
-import { Menu, Tune, ArrowBack } from "@mui/icons-material";
+import { Menu, Tune, ArrowBack, Add } from "@mui/icons-material";
 import { NavbarMode } from "../App";
 import { Button } from "@mui/material";
 
@@ -28,9 +28,31 @@ const ScreenNavbar = ({navigation,destination}) =>{
     );
 }
 
+const LightScreenNavBar = ({navigation,destination}) => {
+  return (
+    <div className="flex bg-home w-screen h-9 justify-between items-center ">
+      <Button onClick={
+          () => {
+            navigation.navigate(destination);
+          }    
+      }>
+        <ArrowBack sx={{ color: "white" }} fontSize="medium" />
+      </Button>
+      <Button>
+        <Add sx={{ color: "white" }} fontSize="medium"/>
+      </Button>
+    </div>
+  );
+};
+
 ScreenNavbar.propTypes = {
     navigation : PropTypes.any.isRequired,
     destination : PropTypes.string.isRequired,
 }
 
-export {HomeScreenNavbar,ScreenNavbar};
+LightScreenNavBar.propTypes = {
+  navigation : PropTypes.any.isRequired,
+  destination : PropTypes.string.isRequired,
+}
+
+export {HomeScreenNavbar,ScreenNavbar,LightScreenNavBar};

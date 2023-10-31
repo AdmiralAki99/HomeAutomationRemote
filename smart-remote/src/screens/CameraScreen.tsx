@@ -11,10 +11,6 @@ function CameraScreen({route, navigation} : CameraProps){
 
     return(
         <View>
-            {/* <h1>Test Screen</h1>
-            <Button onClick={() => navigation.navigate('Light')}>
-                Light Screen
-            </Button> */}
             <ScreenNavbar navigation={navigation} destination={"Home"} />
         </View>
     )
