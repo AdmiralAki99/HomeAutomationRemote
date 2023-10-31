@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
 
 import { HomeScreenNavbar, ScreenNavbar } from '../components/Navbar';
+import LightCard from '../components/LightCard';
 
 type testProps = NativeStackScreenProps<ScreenParamList, 'Test'>;
 

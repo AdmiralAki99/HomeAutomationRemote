@@ -176,7 +176,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     <p className="text-gray-50">Card Content</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button>
+                    <button onClick={()=> navigation.navigate('Camera')}>
                       <ChevronRight sx={{ color: "white" }} />
                     </button>
                   </div>
