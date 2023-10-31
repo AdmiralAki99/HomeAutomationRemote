@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import LightScreen from './screens/LightScreen';
 import TestScreen from './screens/TestScreen';
+import CameraScreen from './screens/CameraScreen';
 
 const TPLSmartDevice = require('tplink-lightbulb');
 
@@ -28,10 +29,11 @@ function App() {
   console.log("Hello World")
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home'>
+      <Stack.Navigator initialRouteName='Light'>
         <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="Test" component={TestScreen}></Stack.Screen>
         <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
+        <Stack.Screen name="Camera" component={CameraScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

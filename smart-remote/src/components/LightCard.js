@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react';
+
 import LightSlider from './LightSlider';
+import Checkbox from './LightCheckbox';
 
 const LightCard = ({min,value,label,onChange}) => {
 
@@ -13,20 +15,29 @@ const LightCard = ({min,value,label,onChange}) => {
 
 
     return (
-      <a className="block max-w-lg w-80 h-40 p-6 bg-black border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
-        <div className="grid grid-rows-3 grid-cols-2 gap-4">
-          <div className="row row-start-1 row-end-3 text-white">{label}</div>
-          <div className="flex row-start-2 row-end-4 items-center justify-center h-full w-full object-fill pt-6 pl-6">
-            <LightSlider
-              min={0}
-              value={value}
-              onChange={({ min }) =>
-                console.log(`val = ${min}`)
-              }
-            ></LightSlider>
+      <>
+        <Checkbox
+          label="Subscribe to newsletter?"
+          isChecked={true}
+          id={"checkbox-1"}
+          onChange={() => {
+            // setSelectedLights(!selectedLights);
+            // console.log(`Selected Lights = ${selectedLights}`);
+          }}
+        />
+        <a className="block max-w-lg w-80 h-40 p-6 bg-black border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
+          <div className="grid grid-rows-3 grid-cols-2 gap-4">
+            <div className="row row-start-1 row-end-3 text-white">{label}</div>
+            <div className="flex row-start-2 row-end-4 items-center justify-center h-full w-full object-fill pt-6 pl-6">
+              <LightSlider
+                min={0}
+                value={value}
+                onChange={({ min }) => console.log(`val = ${min}`)}
+              ></LightSlider>
+            </div>
           </div>
-        </div>
-      </a>
+        </a>
+      </>
     );
 
 };
