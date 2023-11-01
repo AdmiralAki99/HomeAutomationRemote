@@ -1,16 +1,10 @@
 import React ,{useState, useEffect} from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Button,IconButton,Box,Card,CardContent,Grid,CardMedia,Paper,Slide,MobileStepper,Typography} from '@mui/material';
-import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMute,VolumeUp,Speaker,Apple,Lightbulb,LightMode,Camera,House,Person, Home,Menu} from '@mui/icons-material';
-import { CardTitle } from '../@/components/ui/card';
-import {Slider} from '../@/components/ui/slider';
-import { Carousel } from '@material-tailwind/react';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {Lightbulb,LightMode,Camera,House,Person, Home,Menu} from '@mui/icons-material';
 import {View} from 'react-native';
+
 import RangeSlider from '../components/RangeSlider';
-import LightSlider from '../components/LightSlider';
-import Checkbox from '../components/LightCheckbox';
 import LightCard from '../components/LightCard';
 
 import { LightScreenNavBar } from '../components/Navbar';

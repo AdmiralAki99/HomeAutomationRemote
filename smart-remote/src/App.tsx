@@ -29,7 +29,7 @@ function App() {
   console.log("Hello World")
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Light'>
+      <Stack.Navigator initialRouteName='Test'>
         <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="Test" component={TestScreen}></Stack.Screen>
         <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>

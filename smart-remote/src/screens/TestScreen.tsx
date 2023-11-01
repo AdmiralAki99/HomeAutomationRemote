@@ -6,7 +6,7 @@ import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
 
-import { HomeScreenNavbar, ScreenNavbar } from '../components/Navbar';
+import { HomeScreenNavbar, LightScreenNavBar, ScreenNavbar } from '../components/Navbar';
 import LightCard from '../components/LightCard';
 
 type testProps = NativeStackScreenProps<ScreenParamList, 'Test'>;
@@ -20,7 +20,7 @@ function TestScreen({route, navigation} : testProps){
             <Button onClick={() => navigation.navigate('Light')}>
                 Light Screen
             </Button> */}
-            <ScreenNavbar navigation={navigation} destination={"Home"} />
+            <LightScreenNavBar navigation={navigation} destination={"Home"} />
         </View>
     )
 
