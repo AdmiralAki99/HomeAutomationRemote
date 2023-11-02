@@ -13,6 +13,18 @@ type testProps = NativeStackScreenProps<ScreenParamList, 'Test'>;
 
 function TestScreen({route, navigation} : testProps){
     navigation.navigate('Test')
+    const [data,setData] = useState([{}])
+
+  const handleClick = () =>{
+    fetch("/test").then(
+      res => res.json()
+    ).then(
+      data => {
+        setData(data)
+        console.log(data)
+      }
+    )
+  }
 
     return(
         <View>
@@ -21,6 +33,7 @@ function TestScreen({route, navigation} : testProps){
                 Light Screen
             </Button> */}
             <LightScreenNavBar navigation={navigation} destination={"Home"} />
+            <Button onClick={handleClick}>Press This</Button>
         </View>
     )
 
