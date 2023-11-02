@@ -8,6 +8,7 @@ import { ScreenParamList } from '../App';
 
 import { HomeScreenNavbar, LightScreenNavBar, ScreenNavbar } from '../components/Navbar';
 import LightCard from '../components/LightCard';
+import { light } from '@mui/material/styles/createPalette';
 
 type testProps = NativeStackScreenProps<ScreenParamList, 'Test'>;
 
@@ -15,8 +16,8 @@ function TestScreen({route, navigation} : testProps){
     navigation.navigate('Test')
     const [data,setData] = useState([{}])
 
-  const handleClick = () =>{
-    fetch("/test").then(
+  const handleClick = async () =>{
+    await fetch("/light",{method:'GET'}).then(
       res => res.json()
     ).then(
       data => {
@@ -34,6 +35,11 @@ function TestScreen({route, navigation} : testProps){
             </Button> */}
             <LightScreenNavBar navigation={navigation} destination={"Home"} />
             <Button onClick={handleClick}>Press This</Button>
+            {
+              data? Object.keys(data).map((light,index)=>(
+                <p>{light}</p>
+              )) : <h1>loading</h1>
+            }
         </View>
     )
 

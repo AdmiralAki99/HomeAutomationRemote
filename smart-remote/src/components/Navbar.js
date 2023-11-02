@@ -34,15 +34,36 @@ const ScreenNavbar = ({navigation,destination}) =>{
 
 const LightScreenNavBar = ({navigation,destination}) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [deviceData, setData] = useState([{}]);
   const menuOpen = Boolean(menuAnchor);
 
   const handleOpenMenu = (event) => {
     setMenuAnchor(event.currentTarget);
+    handleLightsList();
   };
 
   const handleCloseMenu = () => {
     setMenuAnchor(null);
   };
+
+  const handleLightsList = async () => {
+    await fetch("/light",{method:'GET'}).then(
+      res => res.json()
+    ).then(
+      data => {
+        setData(data)
+        console.log(data)
+      }
+    )
+  };
+
+  const printDevices = () => {
+    console.log(deviceData)
+  };
+
+  const createLoadingLightsMenu = () => {
+
+  }
 
   return (
     <div className="flex bg-home w-screen h-9 justify-between items-center ">
@@ -63,17 +84,17 @@ const LightScreenNavBar = ({navigation,destination}) => {
         >
           <Add sx={{ color: "white" }} fontSize="medium" />
         </Button>
-        <Menu
+        {/* <Menu
           id="light-menu"
           anchorEl={menuAnchor}
           open={menuOpen}
           onClose={handleCloseMenu}
           MenuListProps={{ "aria-labelledby": "add-button" }}
         >
+          <MenuItem onClick={handleCloseMenu}></MenuItem>
           <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
           <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
-          <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
-        </Menu>
+        </Menu> */}
       </div>
     </div>
   );
