@@ -32,13 +32,27 @@
 # if __name__ == "__main__":
 #     main()
 
-from flask import Flask
+from flask import Flask, redirect,url_for,request
+import asyncio
+from kasa import (Discover,SmartBulb)
 
 app = Flask(__name__)
+
+devices = {}
 
 @app.route("/test")
 def hello_world():
     return {'members': ["member1", "member2", "member3"]}
+
+@app.route("/light",methods=['GET','POST'])
+def light():
+    if request.method == 'POST':
+        return {'light': "off"}
+    else:
+        return {'Night Light': "on", 'Desk Light': "off",'Bed Light': "off",'Ceiling Light': "off"}
+    
+def discover_devices():
+    devices = asyncio.run(Discover.discover())
 
 if __name__ == "__main__":
     app.run()
