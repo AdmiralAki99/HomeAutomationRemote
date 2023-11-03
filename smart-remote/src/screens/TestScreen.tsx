@@ -34,12 +34,6 @@ function TestScreen({route, navigation} : testProps){
                 Light Screen
             </Button> */}
             <LightScreenNavBar navigation={navigation} destination={"Home"} />
-            <Button onClick={handleClick}>Press This</Button>
-            {
-              data? Object.keys(data).map((light,index)=>(
-                <p>{light}</p>
-              )) : <h1>loading</h1>
-            }
         </View>
     )
 

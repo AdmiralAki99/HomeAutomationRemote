@@ -18,14 +18,26 @@ function LightScreen({route,navigation}: LightProps){
   const [masterLightIntensity, setMasterLightIntensity] = useState(0);
   const [lightArray, setLightArray] = useState([0,0,0,0]);
   const [selectedLights, setSelectedLights] = useState(false);
+  const [lights,setLights] = useState([{}])
 
   const setLightIntensity = (intensity: number) => {
     setMasterLightIntensity(intensity);
   }
 
+  const handleLightsList = async () => {
+    await fetch("/light",{method:'GET'}).then(
+      res => res.json()
+    ).then(
+      data => {
+        setLights(data)
+      }
+    )
+  };
+
   const handleMasterLightIntensity = (intensity:number) => {
     setLightIntensity(intensity);
   }
+  handleLightsList();
 
     return (
       <View style={{ alignItems: "center" }}>
@@ -39,46 +51,26 @@ function LightScreen({route,navigation}: LightProps){
               <div className="flex items-center justify-center">
                 <div className="grid grid-cols-2 items-center bg-home justify-center gap-6 p-8">
                   <div className="grid grid-cols-1 items-center justify-center gap-4 p-6">
-                    <div className="flex items-center mb-4 gap-6">
-                      <LightCard
-                        min={0}
-                        value={masterLightIntensity}
-                        label="Stand"
-                        onChange={({ min }: { min: number }) => {}}
-                      />
-                    </div>
-                    <div className="flex items-center mb-4 gap-6">
-                      <LightCard
-                        min={0}
-                        value={masterLightIntensity}
-                        label="Stand"
-                        onChange={({ min }: { min: number }) => {}}
-                      />
-                    </div>
-                    <div className="flex items-center mb-4 gap-6">
-                      {/* Updated the Basic Template that is made into Light Card, need to delete after checking functionality*/}
-                      <LightCard
-                        min={0}
-                        value={masterLightIntensity}
-                        label="Computer"
-                        onChange={({ min }: { min: number }) => {}}
-                      />
-                    </div>
-                    <div className="flex items-center mb-4 gap-6">
-                      <LightCard
-                        min={0}
-                        value={masterLightIntensity}
-                        label="Light #2"
-                        onChange={({ min }: { min: number }) => {}}
-                      />
-                    </div>
+                    {lights ? (
+                      Object.keys(lights).map((light, index) => (
+                        <div className="flex items-center mb-4 gap-10">
+                          <LightCard
+                            min={0}
+                            value={masterLightIntensity}
+                            label={light}
+                            onChange={({ min }: { min: number }) => {}}
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <h1 className="text-white">Loading...</h1>
+                    )}
                   </div>
                   <div className="flex items-center h-full object-fill">
                     <RangeSlider
                       min={0}
                       onChange={({ min }: { min: number }) => {
                         handleMasterLightIntensity(min);
-                        console.log(`Light Array = ${lightArray}`);
                       }}
                     ></RangeSlider>
                   </div>
@@ -111,3 +103,5 @@ function LightScreen({route,navigation}: LightProps){
   }
 
   export default LightScreen;
+
+  //TODO: Implement Dynamic Light Cards
