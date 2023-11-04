@@ -35,16 +35,17 @@
 from flask import Flask, redirect,url_for,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+
 import asyncio
 from kasa import (Discover,SmartBulb)
 
 import os
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///light.sqlite'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# db = SQLAlchemy(app)
-# ma = Marshmallow(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///light.sqlite'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 devices = {'Night Light': "on", 'Desk Light': "off",'Bed Light': "off",'Ceiling Light': "off"}
 
@@ -60,7 +61,6 @@ class SmartLightSchema(ma.Schema):
 
 smart_light_schema = SmartLightSchema()
 smart_lights_schema = SmartLightSchema(many=True)
-
         
 @app.route("/test")
 def hello_world():
