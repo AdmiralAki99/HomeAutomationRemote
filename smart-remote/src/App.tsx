@@ -7,12 +7,14 @@ import HomeScreen from './screens/HomeScreen';
 import LightScreen from './screens/LightScreen';
 import TestScreen from './screens/TestScreen';
 import CameraScreen from './screens/CameraScreen';
+import MusicPlayerScreen from './screens/MusicPlayerScreen';
 
 export type ScreenParamList = {
   Light: undefined;
   Test: undefined;
   Home: undefined;
   Camera : undefined;
+  Music: undefined;
 }
 
 export type NavbarMode = {
@@ -31,6 +33,7 @@ function App() {
         <Stack.Screen name="Test" component={TestScreen}></Stack.Screen>
         <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
         <Stack.Screen name="Camera" component={CameraScreen}></Stack.Screen>
+        <Stack.Screen name='Music' component={MusicPlayerScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

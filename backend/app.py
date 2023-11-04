@@ -33,13 +33,35 @@
 #     main()
 
 from flask import Flask, redirect,url_for,request
+from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 import asyncio
 from kasa import (Discover,SmartBulb)
 
+import os
+
 app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///light.sqlite'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)
+# ma = Marshmallow(app)
 
-devices = {}
+devices = {'Night Light': "on", 'Desk Light': "off",'Bed Light': "off",'Ceiling Light': "off"}
 
+class SmartLight(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    ip = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(100), nullable=False)
+
+class SmartLightSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'ip', 'state')
+
+smart_light_schema = SmartLightSchema()
+smart_lights_schema = SmartLightSchema(many=True)
+
+        
 @app.route("/test")
 def hello_world():
     return {'members': ["member1", "member2", "member3"]}
@@ -49,10 +71,11 @@ def light():
     if request.method == 'POST':
         return {'light': "off"}
     else:
-        return {'Night Light': "on", 'Desk Light': "off",'Bed Light': "off",'Ceiling Light': "off"}
+        return devices
     
 def discover_devices():
     devices = asyncio.run(Discover.discover())
 
 if __name__ == "__main__":
+    # db.create_all()
     app.run()
