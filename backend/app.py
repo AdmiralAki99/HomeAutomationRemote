@@ -41,10 +41,11 @@ from kasa import (Discover,SmartBulb)
 
 import os
 
+base_dir = os.path.abspath(os.path.dirname(__file__))
 database_name = './database/lights.sqlite'
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir,"database/database.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -74,8 +75,9 @@ smart_lights_schema = SmartLightSchema(many=True)
         
 @app.route("/test")
 def hello_world():
-    # return jsonify(json_list = SmartLight.query.all())
-    return {'hello': 'world'}
+    lights = SmartLight.query.all()
+    light_list = [{'name': light.name, 'ip': light.ip, 'state': light.state} for light in lights]
+    return jsonify(light_list)
 
 @app.route("/light",methods=['GET','POST'])
 def light():
