@@ -34,6 +34,7 @@
 
 from flask import Flask, redirect,url_for,request,jsonify
 from flask_sqlalchemy import SQLAlchemy
+# from flask_marshmallow import Marshmallow
 from flask_marshmallow import Marshmallow
 
 import asyncio
@@ -79,12 +80,44 @@ def hello_world():
     light_list = [{'name': light.name, 'ip': light.ip, 'state': light.state} for light in lights]
     return jsonify(light_list)
 
-@app.route("/light",methods=['GET','POST'])
-def light():
-    if request.method == 'POST':
-        return {'light': "off"}
+@app.route("/light/<int:light_id>",methods=['GET','POST','PUT'])
+def handle_request(light_id):
+    if request.method == 'GET':
+        light = SmartLight.query.get(light_id)
+        if light is None:
+            return jsonify({'message': 'Light not found'}), 404
+        else:
+            return jsonify({'name': light.name, 'ip': light.ip, 'state': light.state})
+    elif request.method == 'POST':
+        return {"Request": "POST"}
+    elif request.method == 'PUT':
+        light = SmartLight.query.get(light_id)
+        if light is None:
+            return jsonify({'message': 'Light not found'}), 404
+        else:
+            light.state = request.json['state']
+            db.session.commit()
+            return jsonify({'message': 'Light Status Updated Successfully'})
+
+def get_light(light_id):
+    light = SmartLight.query.get(light_id)
+    if light is None:
+        return jsonify({'message': 'Light not found'}), 404
     else:
-        return devices
+        return jsonify({'name': light.name, 'ip': light.ip, 'state': light.state})
+
+def set_light(light_id):
+    ...
+
+def update_light(light_id):
+    light = SmartLight.query.get(light_id)
+    if light is None:
+        return jsonify({'message': 'Light not found'}), 404
+    else:
+        light.state = request.json['state']
+        db.session.commit()
+        return jsonify({'message': 'Light Status Updated Successfully'})
+
     
 def discover_devices():
     devices = asyncio.run(Discover.discover())

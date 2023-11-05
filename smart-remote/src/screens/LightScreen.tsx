@@ -37,6 +37,7 @@ function LightScreen({route,navigation}: LightProps){
   const handleMasterLightIntensity = (intensity:number) => {
     setLightIntensity(intensity);
   }
+
   handleLightsList();
 
     return (
@@ -104,4 +105,4 @@ function LightScreen({route,navigation}: LightProps){
 
   export default LightScreen;
 
-  //TODO: Implement Dynamic Light Cards
+  //TODO: Test out GET,POST and PUT Requests for light info

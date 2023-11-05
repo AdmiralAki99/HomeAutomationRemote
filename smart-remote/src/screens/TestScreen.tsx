@@ -14,14 +14,24 @@ type testProps = NativeStackScreenProps<ScreenParamList, 'Test'>;
 
 function TestScreen({route, navigation} : testProps){
     navigation.navigate('Test')
-    const [data,setData] = useState([{}])
+    const [data,setData] = useState<Record<string,any>>([{}])
 
   const handleClick = async () =>{
-    await fetch("/light",{method:'GET'}).then(
+    await fetch("/light/1",{method:'GET'}).then(
       res => res.json()
     ).then(
       data => {
         setData(data)
+      }
+    )
+  }
+
+  const updateLight = async () =>{
+    await fetch("/light/1",{method:'POST', body:JSON.stringify({state:'off'})}).then(
+      res => res.json()
+    ).then(
+      data => {
+        // setData(data)
         console.log(data)
       }
     )
@@ -34,12 +44,12 @@ function TestScreen({route, navigation} : testProps){
                 Light Screen
             </Button> */}
             <LightScreenNavBar navigation={navigation} destination={"Home"} />
-            <Button onClick={handleClick}>Press This</Button>
-            {
-              data? Object.keys(data).map((light,index)=>(
-                <p>{light}</p>
+            <Button onClick={updateLight}>Press This</Button>
+            {/* {
+              data? Object.keys(data).map((key)=>(
+                <p>{key}: {data[key]}</p>
               )) : <h1>loading</h1>
-            }
+            } */}
         </View>
     )
 
