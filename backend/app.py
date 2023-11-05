@@ -32,7 +32,7 @@
 # if __name__ == "__main__":
 #     main()
 
-from flask import Flask, redirect,url_for,request
+from flask import Flask, redirect,url_for,request,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
@@ -41,8 +41,10 @@ from kasa import (Discover,SmartBulb)
 
 import os
 
+database_name = './database/lights.sqlite'
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///light.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -55,6 +57,14 @@ class SmartLight(db.Model):
     ip = db.Column(db.String(100), nullable=False)
     state = db.Column(db.String(100), nullable=False)
 
+    def __init__(self, name, ip, state):
+        self.name = name
+        self.ip = ip
+        self.state = state
+
+    def __repr__(self) -> str:
+        return f'<SmartLight {self.name}>'
+
 class SmartLightSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'ip', 'state')
@@ -64,7 +74,8 @@ smart_lights_schema = SmartLightSchema(many=True)
         
 @app.route("/test")
 def hello_world():
-    return {'members': ["member1", "member2", "member3"]}
+    # return jsonify(json_list = SmartLight.query.all())
+    return {'hello': 'world'}
 
 @app.route("/light",methods=['GET','POST'])
 def light():
@@ -77,5 +88,4 @@ def discover_devices():
     devices = asyncio.run(Discover.discover())
 
 if __name__ == "__main__":
-    # db.create_all()
     app.run()
