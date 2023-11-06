@@ -52,6 +52,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir,"data
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+sp = SpotifyManager()
 
 devices = {'Night Light': "on", 'Desk Light': "off",'Bed Light': "off",'Ceiling Light': "off"}
 
@@ -81,6 +82,8 @@ def hello_world():
     lights = SmartLight.query.all()
     light_list = [{'name': light.name, 'ip': light.ip, 'state': light.state} for light in lights]
     return jsonify(light_list)
+
+""" Smart Light Routes """
 
 @app.route("/light/all",methods=['GET'])
 def get_all_lights():
@@ -129,30 +132,53 @@ def handle_request(light_id):
             db.session.commit()
             return jsonify({'message': 'Light Deleted Successfully'})
 
-def get_light(light_id):
-    light = SmartLight.query.get(light_id)
-    if light is None:
-        return jsonify({'message': 'Light not found'}), 404
-    else:
-        return jsonify({'name': light.name, 'ip': light.ip, 'state': light.state})
+# def get_light(light_id):
+#     light = SmartLight.query.get(light_id)
+#     if light is None:
+#         return jsonify({'message': 'Light not found'}), 404
+#     else:
+#         return jsonify({'name': light.name, 'ip': light.ip, 'state': light.state})
 
-def set_light(light_id):
-    ...
+# def set_light(light_id):
+#     ...
 
-def update_light(light_id):
-    light = SmartLight.query.get(light_id)
-    if light is None:
-        return jsonify({'message': 'Light not found'}), 404
-    else:
-        light.state = request.json['state']
-        db.session.commit()
-        return jsonify({'message': 'Light Status Updated Successfully'})
+# def update_light(light_id):
+#     light = SmartLight.query.get(light_id)
+#     if light is None:
+#         return jsonify({'message': 'Light not found'}), 404
+#     else:
+#         light.state = request.json['state']
+#         db.session.commit()
+#         return jsonify({'message': 'Light Status Updated Successfully'})
 
-    
+""" Spotify Routes """
+
+@app.route("/spotify/get/current",methods=['GET'])
+def get_current_playback():
+  return jsonify(sp.get_current_song())
+
+@app.route("/spotify/pause",methods=['GET'])
+def pause_playback():
+    sp.pause_song()
+    return jsonify({'message': 'Playback Paused'})
+
+# @app.route("/spotify/play",methods=['PUT','POST'])
+# def play_playback():
+#     sp.resume_song()
+#     return jsonify({'message': 'Playback Resumed'})
+
+@app.route("/spotify/next",methods=['POST'])
+def skip_playback():
+    sp.skip_song()
+    return jsonify({'message': 'Playback Skipped'})
+
+# @app.route("/spotify/prev",methods=['POST'])
+# def prev_playback():
+#     sp.prev_song()
+#     return jsonify({'message': 'Playback Previous'})
+
 def discover_devices():
     devices = asyncio.run(Discover.discover())
 
 if __name__ == "__main__":
-    # app.run()
-    sp = SpotifyManager()
-    print(sp.get_current_playback())
+    app.run()
