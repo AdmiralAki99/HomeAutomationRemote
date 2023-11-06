@@ -32,6 +32,8 @@
 # if __name__ == "__main__":
 #     main()
 
+from spotifyManager import SpotifyManager
+
 from flask import Flask, redirect,url_for,request,jsonify
 from flask_sqlalchemy import SQLAlchemy
 # from flask_marshmallow import Marshmallow
@@ -151,4 +153,6 @@ def discover_devices():
     devices = asyncio.run(Discover.discover())
 
 if __name__ == "__main__":
-    app.run()
+    # app.run()
+    sp = SpotifyManager()
+    
