@@ -18,27 +18,32 @@ function LightScreen({route,navigation}: LightProps){
   const [masterLightIntensity, setMasterLightIntensity] = useState(0);
   const [lightArray, setLightArray] = useState([0,0,0,0]);
   const [selectedLights, setSelectedLights] = useState(false);
-  const [lights,setLights] = useState([{}])
+  const [lights,setLights] = useState<Record<string,any>>([])
 
   const setLightIntensity = (intensity: number) => {
     setMasterLightIntensity(intensity);
   }
 
   const handleLightsList = async () => {
-    await fetch("/light",{method:'GET'}).then(
-      res => res.json()
-    ).then(
-      data => {
-        setLights(data)
-      }
-    )
+    await fetch("/light/all", { method: "GET" })
+      .then((res) => res.json())
+      .then((val) => {
+        setLights(val);
+      });
   };
 
   const handleMasterLightIntensity = (intensity:number) => {
     setLightIntensity(intensity);
   }
 
-  handleLightsList();
+  useEffect(()=> {
+    const timeInterval = setInterval(()=>{
+      console.log("Hello")
+      handleLightsList()
+    },10000)
+
+    return () => clearInterval(timeInterval)
+  },[handleLightsList])
 
     return (
       <View style={{ alignItems: "center" }}>
@@ -53,12 +58,12 @@ function LightScreen({route,navigation}: LightProps){
                 <div className="grid grid-cols-2 items-center bg-home justify-center gap-6 p-8">
                   <div className="grid grid-cols-1 items-center justify-center gap-4 p-6">
                     {lights ? (
-                      Object.keys(lights).map((light, index) => (
-                        <div className="flex items-center mb-4 gap-10">
+                      lights.map((light:any, index:any) => (
+                        <div className="flex items-center mb-4 gap-10" key={index}>
                           <LightCard
                             min={0}
                             value={masterLightIntensity}
-                            label={light}
+                            label={light["name"]}
                             onChange={({ min }: { min: number }) => {}}
                           />
                         </div>
