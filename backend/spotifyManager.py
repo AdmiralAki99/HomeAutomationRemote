@@ -6,6 +6,8 @@ import os
 
 class SpotifyManager():
 
+    scope = "user-read-playback-state,user-modify-playback-state,user-read-playback-state,user-read-private,user-read-email,user-top-read"
+
     def __init__(self):
         super(SpotifyManager).__init__()
         load_dotenv()
@@ -14,7 +16,7 @@ class SpotifyManager():
         self.client_secret_id = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
         self.redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
 
-        self.auth = SpotifyOAuth(self.client_id,self.client_secret_id,self.redirect_uri)
+        self.auth = SpotifyOAuth(self.client_id,self.client_secret_id,self.redirect_uri,scope=self.scope)
         self.token_dict = self.auth.get_access_token()
         self.access_token = self.token_dict['access_token']
 
@@ -26,8 +28,8 @@ class SpotifyManager():
     def play_song(self, song_uri):
         self.sp.start_playback(uris=[song_uri])
 
-    def get_current_song(self):
-        return self.sp.current_playback()
+    def get_current_playback(self):
+        return self.sp.current_user_playing_track()
     
     def pause_song(self):
         self.sp.pause_playback()

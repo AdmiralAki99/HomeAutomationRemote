@@ -155,4 +155,4 @@ def discover_devices():
 if __name__ == "__main__":
     # app.run()
     sp = SpotifyManager()
-    
+    print(sp.get_current_playback())
