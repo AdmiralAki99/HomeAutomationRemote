@@ -80,6 +80,15 @@ def hello_world():
     light_list = [{'name': light.name, 'ip': light.ip, 'state': light.state} for light in lights]
     return jsonify(light_list)
 
+@app.route("/light/all",methods=['GET'])
+def get_all_lights():
+    lights = SmartLight.query.all()
+    if lights is None:
+        pass
+    else:
+        light_list = [{'name':light.name, 'ip':light.ip, 'state':light.state} for light in lights]
+        return jsonify(light_list)
+
 @app.route("/light/<int:light_id>",methods=['GET','POST','PUT','DELETE'])
 def handle_request(light_id):
     if request.method == 'GET':
@@ -88,6 +97,7 @@ def handle_request(light_id):
             return jsonify({'message': 'Light not found'}), 404
         else:
             return jsonify({'name': light.name, 'ip': light.ip, 'state': light.state})
+        
     elif request.method == 'POST':
         light_keys = ['name', 'ip', 'state']
         if not all(key in request.json for key in light_keys):
@@ -101,11 +111,13 @@ def handle_request(light_id):
     elif request.method == 'PUT':
         light = SmartLight.query.get(light_id)
         if light is None:
-            return jsonify({'message': 'Light not found'}), 404
+            return jsonify({'message': 'Light not found'})
         else:
             light.state = request.json['state']
             db.session.commit()
             return jsonify({'message': 'Light Status Updated Successfully'})
+        # return jsonify({'message': 'PUT request received'})
+        
     elif request.method == 'DELETE':
         light = SmartLight.query.get(light_id)
         if light is None:
