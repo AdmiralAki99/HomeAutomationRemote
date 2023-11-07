@@ -1,9 +1,9 @@
 import { Button,IconButton,Box,Card,CardContent,Grid,CardMedia,Paper,Slide,MobileStepper,Typography} from '@mui/material';
-import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMute,VolumeUp,Speaker,Apple,Lightbulb,LightMode,Camera,House,Person, Home,Menu} from '@mui/icons-material';
+import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMute,VolumeUp,Speaker,Apple,Lightbulb,LightMode,Camera,House,Person, Home,Menu,Google} from '@mui/icons-material';
 import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HomeScreenNavbar } from '../components/Navbar';
 
 type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
@@ -11,6 +11,30 @@ type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
 
 function HomeScreen({route, navigation} : HomeScreenProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [songInfo , setSongInfo] = useState<Record<string,any>>({});
+
+  const getSongName = async () => {
+    await fetch('/spotify/get/current',{method: 'GET'}).then(res => res.json()).then(
+      (val) => {
+        setSongInfo(val)
+      })
+  }
+
+  const nextSong = async () => {
+    await fetch('/spotify/next',{method: 'POST'}).then(res => res.json()).then(
+      (val) => {
+        console.log(val)
+      }
+    )
+  }
+
+  const isEmpty = (val: any) => val == null || !(Object.keys(val) || val).length;
+
+  useEffect(()=> {
+    const timeInterval = setInterval(()=>{
+      getSongName()
+    },3000)
+  },[])
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -94,16 +118,22 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                   </div>
                   <div className="col col-start-1 col-end-4 flex justify-center items-center bg-noir gap-4 ">
                     <img
-                      src="https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2762&q=80"
+                      src={
+                        isEmpty(songInfo)
+                          ? ""
+                          : songInfo["album"]["images"][0]["url"]
+                      }
                       alt="image 3"
                       className="w-10 h-10 object-cover shadow-lg shadow-gray-400/50"
                     />
                     <div className="row pt-2">
                       <h5 className="bg-noir text-white font-bold text-sm">
-                        Do I Wanna Know?
+                        {isEmpty(songInfo) === true ? "-" : songInfo["name"]}
                       </h5>
                       <h5 className="bg-noir text-white text-sm">
-                        Arctic Monkeys
+                        {isEmpty(songInfo) === true
+                          ? "-"
+                          : songInfo["artists"]["name"]}
                       </h5>
                     </div>
                     <div className="row pt-2">
@@ -111,13 +141,27 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                         <button>
                           <SkipPrevious sx={{ color: "white" }} />
                         </button>
-                        {isPlaying ? <Button onClick={()=>handlePlayPause()} size='small' disableRipple={true} style={{backgroundColor: 'transparent'}}>
-                          <Pause sx={{ color: "white" }} />
-                        </Button> :<Button onClick={()=>handlePlayPause()} size='small' disableRipple={true} style={{backgroundColor: 'transparent'}}>
-                          <PlayArrow sx={{ color: "white" }} />
-                        </Button>}
-                        <button>
-                          <SkipNext sx={{ color: "white" }} />
+                        {isPlaying ? (
+                          <Button
+                            onClick={() => handlePlayPause()}
+                            size="small"
+                            disableRipple={true}
+                            style={{ backgroundColor: "transparent" }}
+                          >
+                            <Pause sx={{ color: "white" }} />
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => handlePlayPause()}
+                            size="small"
+                            disableRipple={true}
+                            style={{ backgroundColor: "transparent" }}
+                          >
+                            <PlayArrow sx={{ color: "white" }} />
+                          </Button>
+                        )}
+                        <button onClick={nextSong}>
+                            <SkipNext sx={{ color: "white" }} />
                         </button>
                       </h5>
                     </div>
@@ -153,9 +197,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     <p className="text-gray-50">Lights: 12</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button onClick={
-                      () => navigation.navigate('Light')
-                    }>
+                    <button onClick={() => navigation.navigate("Light")}>
                       <ChevronRight sx={{ color: "white" }} />
                     </button>
                   </div>
@@ -176,7 +218,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     <p className="text-gray-50">Card Content</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button onClick={()=> navigation.navigate('Camera')}>
+                    <button onClick={() => navigation.navigate("Camera")}>
                       <ChevronRight sx={{ color: "white" }} />
                     </button>
                   </div>

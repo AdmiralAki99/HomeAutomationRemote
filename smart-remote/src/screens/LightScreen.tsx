@@ -38,12 +38,11 @@ function LightScreen({route,navigation}: LightProps){
 
   useEffect(()=> {
     const timeInterval = setInterval(()=>{
-      console.log("Hello")
       handleLightsList()
-    },10000)
+    },3000)
 
     return () => clearInterval(timeInterval)
-  },[handleLightsList])
+  },[])
 
     return (
       <View style={{ alignItems: "center" }}>
