@@ -1,5 +1,5 @@
 import { Button,IconButton,Box,Card,CardContent,Grid,CardMedia,Paper,Slide,MobileStepper,Typography} from '@mui/material';
-import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMute,VolumeUp,Speaker,Apple,Lightbulb,LightMode,Camera,House,Person, Home,Menu,Google} from '@mui/icons-material';
+import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMute,VolumeUp,Speaker,Apple,Lightbulb,LightMode,Camera,House,Person, Home,Menu,Google,CalendarMonth} from '@mui/icons-material';
 import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
@@ -219,6 +219,27 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
                     <button onClick={() => navigation.navigate("Camera")}>
+                      <ChevronRight sx={{ color: "white" }} />
+                    </button>
+                  </div>
+                </div>
+              </a>
+              <a className="block max-w-lg w-80 h-30 bg-noir rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70 relative">
+                <div className="grid grid-rows-3 max-h-40 grid-flow-col gap-4">
+                  <div className="row row-start-1 row-end-4 flex justify-center items-center bg-noir border-r border-r-white">
+                    <button>
+                      <CalendarMonth sx={{ color: "white" }} fontSize="large" />
+                    </button>
+                  </div>
+                  <div className="row row-start-1 items-center bg-noir mb-auto">
+                    <h5 className="text-5xl font-bold tracking-tight text-white pt-7">
+                      Calendar
+                    </h5>
+                    <p className="text-gray-50 pt-6">Events Today : 1</p>
+                    <p className="text-gray-50">Day Looks: Busy</p>
+                  </div>
+                  <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
+                    <button onClick={() => navigation.navigate("Calendar")}>
                       <ChevronRight sx={{ color: "white" }} />
                     </button>
                   </div>

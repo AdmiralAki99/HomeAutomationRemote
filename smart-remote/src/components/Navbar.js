@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import classnames from "classnames";
 import {Tune, ArrowBack, Add } from "@mui/icons-material";
 import { NavbarMode } from "../App";
+
 import { Button } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -34,9 +35,30 @@ const ScreenNavbar = ({navigation,destination}) =>{
 
 //TODO: Create Different Button Functions To Communicate With Backend
 
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 const LightScreenNavBar = ({navigation,destination}) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const menuOpen = Boolean(menuAnchor);
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  }
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  }
 
   const handleOpenMenu = (event) => {
     setMenuAnchor(event.currentTarget);

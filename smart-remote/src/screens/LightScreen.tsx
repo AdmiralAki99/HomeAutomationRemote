@@ -37,11 +37,7 @@ function LightScreen({route,navigation}: LightProps){
   }
 
   useEffect(()=> {
-    const timeInterval = setInterval(()=>{
-      handleLightsList()
-    },3000)
-
-    return () => clearInterval(timeInterval)
+    handleLightsList();
   },[])
 
     return (
