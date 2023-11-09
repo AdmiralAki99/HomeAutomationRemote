@@ -14,18 +14,30 @@ import { error } from 'console';
 
 type testProps = NativeStackScreenProps<ScreenParamList, 'Test'>;
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  height: 600,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
+
+
 function TestScreen({route, navigation} : testProps){
     navigation.navigate('Test')
     const [data,setData] = useState<Record<string,any>>([])
+    const [modalOpen, setOpen] = useState(false);
 
-  const handleClick = async () =>{
-    await fetch("/light/all",{method:'GET'}).then(
-      res => res.json()
-    ).then(
-      val => {
-        setData(val)
-      }
-    )
+  const handleOpen = () =>{
+    setOpen(true)
+  }
+
+  const handleClose = () =>{
+    setOpen(false)
   }
 
   const isEmpty = (val: any) => val == null || !(Object.keys(val) || val).length;
@@ -51,8 +63,8 @@ function TestScreen({route, navigation} : testProps){
                 Light Screen
             </Button> */}
         <LightScreenNavBar navigation={navigation} destination={"Home"} />
-        <Button onClick={handleClick}>Press This</Button>
-        {isEmpty(data) === true ? (
+        <Button onClick={handleOpen}>Press This</Button>
+        {/* {isEmpty(data) === true ? (
           <h1>Loading....</h1>
         ) : (
           data.map((light: any, index: any) => (
@@ -60,7 +72,7 @@ function TestScreen({route, navigation} : testProps){
               <h1>{light["name"]}</h1>
             </div>
           ))
-        )}
+        )} */}
       </View>
     );
 
