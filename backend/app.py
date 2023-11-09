@@ -131,6 +131,10 @@ def handle_request(light_id):
             db.session.delete(light)
             db.session.commit()
             return jsonify({'message': 'Light Deleted Successfully'})
+        
+@app.route("/light/scan",methods=['GET'])
+def scan_lights():
+    return {'Name': 'Desk Light', 'IP': '192.168.0.21', 'State': 'on'}
 
 # def get_light(light_id):
 #     light = SmartLight.query.get(light_id)
