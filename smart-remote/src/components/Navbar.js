@@ -9,7 +9,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridValueGetterParams, GridApi } from '@mui/x-data-grid';
 
 const HomeScreenNavbar = () => {
     return(
@@ -69,27 +69,57 @@ const columns = [
     width: 40,
     editable: true,
   },
+  {
+    field: 'Actions',
+    headerName: 'Actions',
+    sortable: false,
+    renderCell: (params) => {
+      const onClick = (e) => {
+        e.stopPropagation();
+        const api = params.api;
+       
+        return <Button>Click</Button>
+      };
+    }
+  }
 ];
 
 const rows = [
-  { id: 1, Name: 'Snow', Model: 'Jon', State: 35 },
-  { id: 2, Name: 'Lannister', Model: 'Cersei', State: 42 },
-  { id: 3, Name: 'Lannister', Model: 'Jaime', State: 45 },
-  { id: 4, Name: 'Stark', Model: 'Arya', State: 16 },
-  { id: 5, Name: 'Targaryen', Model: 'Daenerys', State: null },
-  { id: 6, Name: 'Melisandre', Model: null, State: 150 },
-  { id: 7, Name: 'Clifford', Model: 'Ferrara', State: 44 },
-  { id: 8, Name: 'Frances', Model: 'Rossini', State: 36 },
-  { id: 9, Name: 'Roxie', Model: 'Harvey', State: 65 },
+  { Name: 'Snow', Model: 'Jon', State: 35 },
+  { Name: 'Lannister', Model: 'Cersei', State: 42 },
+  { Name: 'Lannister', Model: 'Jaime', State: 45 },
+  { Name: 'Stark', Model: 'Arya', State: 16 },
+  { Name: 'Targaryen', Model: 'Daenerys', State: null },
+  { Name: 'Melisandre', Model: null, State: 150 },
+  { Name: 'Clifford', Model: 'Ferrara', State: 44 },
+  { Name: 'Frances', Model: 'Rossini', State: 36 },
+  { Name: 'Roxie', Model: 'Harvey', State: 65 },
 ];
 
 
 const LightScreenNavBar = ({navigation,destination}) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [startScan, setStartScan] = useState(false);
+  const [scanList, setScanList] = useState([]); // [{name: "Light1", model: "model1"},{name: "Light2", model: "model2"}
   const menuOpen = Boolean(menuAnchor);
 
+  const handleScanList = async () => {
+    fetch("/light/scan", { method: "GET" }).then((response) => {
+      response.json().then((data) => {
+        setScanList(data);
+      });
+    });
+    console.log(scanList);
+  }
+
+  useEffect(()=>{
+    handleScanList();
+    console.log("Start Scan")
+  },[])
+
   const handleOpenModal = () => {
+    setStartScan(true);
     setModalOpen(true);
   }
 
@@ -142,7 +172,11 @@ const LightScreenNavBar = ({navigation,destination}) => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <DataGrid rows={rows} columns={columns} checkboxSelection ></DataGrid>
+            <div className="flex justify-end items-end">
+              <Button onClick={handleCloseModal}>Close</Button>
+              <Button onClick={handleScanList}>Scan</Button>
+            </div>
+            <DataGrid rows={scanList} columns={columns} checkboxSelection ></DataGrid>
           </Box>
         </Modal>
 
