@@ -134,7 +134,10 @@ def handle_request(light_id):
         
 @app.route("/light/scan",methods=['GET'])
 def scan_lights():
-    return {'Name': 'Desk Light', 'IP': '192.168.0.21', 'State': 'on'}
+    light = [{'id': 1,'Name': 'Desk Light', 'IP': '192.168.0.21', 'State': 'On'},
+            {'id': 2,'Name': 'Lamp Light', 'IP': '192.168.0.1', 'State': 'Off'}]
+
+    return light
 
 # def get_light(light_id):
 #     light = SmartLight.query.get(light_id)
