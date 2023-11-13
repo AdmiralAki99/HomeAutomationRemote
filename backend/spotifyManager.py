@@ -45,8 +45,19 @@ class SpotifyManager():
         """
         return self.sp.current_user_playing_track()
     
+    def get_current_playback_device(self):
+        """
+        Gets the current playback device of the user
+
+        Returns:
+            _type_: Playback Info of current device
+        """
+        return self.sp.current_playback()
+    
     def get_current_song(self):
         playback = self.get_current_playback()
+        device = self.get_current_playback_device()
+
         details = {"album":{
             "album_type": playback['item']['album']['album_type'],
             "artists": playback['item']['album']['artists'],
@@ -59,6 +70,13 @@ class SpotifyManager():
         "artists":{
             "external_urls": playback['item']['artists'][0]['external_urls'],
             "name": playback['item']['artists'][0]['name'],
+        },
+        "device":{
+            "id": device['device']['id'],
+            "is_playing": device['is_playing'],
+            "name": device['device']['name'],
+            'type': device['device']['type'],
+            "volume_percent": device['device']['volume_percent'],
         },
         "duration_ms": playback['item']['duration_ms'],
         "explicit": playback['item']['explicit'],

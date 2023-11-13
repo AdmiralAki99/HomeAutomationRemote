@@ -139,6 +139,10 @@ def scan_lights():
 
     return light
 
+@app.route("/light/connect",methods=['POST'])
+def establish_connection():
+    ...
+
 # def get_light(light_id):
 #     light = SmartLight.query.get(light_id)
 #     if light is None:
@@ -169,23 +173,24 @@ def pause_playback():
     sp.pause_song()
     return jsonify({'message': 'Playback Paused'})
 
-# @app.route("/spotify/play",methods=['PUT','POST'])
-# def play_playback():
-#     sp.resume_song()
-#     return jsonify({'message': 'Playback Resumed'})
+@app.route("/spotify/play",methods=['GET'])
+def play_playback():
+    sp.resume_song()
+    return jsonify({'message': 'Playback Resumed'})
 
 @app.route("/spotify/next",methods=['POST'])
 def skip_playback():
     sp.skip_song()
     return jsonify({'message': 'Playback Skipped'})
 
-# @app.route("/spotify/prev",methods=['POST'])
-# def prev_playback():
-#     sp.prev_song()
-#     return jsonify({'message': 'Playback Previous'})
+@app.route("/spotify/prev",methods=['POST'])
+def prev_playback():
+    sp.rewind_song()
+    return jsonify({'message': 'Playback Previous'})
 
 def discover_devices():
     devices = asyncio.run(Discover.discover())
 
 if __name__ == "__main__":
     app.run()
+    
