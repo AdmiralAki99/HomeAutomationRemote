@@ -67,7 +67,7 @@ function LightScreen({route,navigation}: LightProps){
                       <h1 className="text-white">Loading...</h1>
                     )}
                   </div>
-                  <div className="flex items-center h-full object-fill">
+                  <div className="flex items-center h-full">
                     <RangeSlider
                       min={0}
                       onChange={({ min }: { min: number }) => {
