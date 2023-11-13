@@ -5,6 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
 import { useEffect, useState } from 'react';
 import { HomeScreenNavbar } from '../components/Navbar';
+import { response } from 'express';
 
 type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
 
@@ -17,15 +18,48 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
     await fetch('/spotify/get/current',{method: 'GET'}).then(res => res.json()).then(
       (val) => {
         setSongInfo(val)
+        if(val["device"]["is_playing"] == true){
+          setIsPlaying(true)
+        }else{
+          setIsPlaying(false)
+        }
       })
   }
 
   const nextSong = async () => {
     await fetch('/spotify/next',{method: 'POST'}).then(res => res.json()).then(
       (val) => {
-        console.log(val)
+        // console.log(val)
       }
     )
+  }
+
+  const prevSong = async () => {
+    await fetch('/spotify/prev',{method: 'POST'}).then(response => response.json()).then(
+      // (val) => console.log(val)
+    )
+  }
+
+  const controlPlayback = async () => {
+    if(isPlaying){
+      await fetch('/spotify/pause',{method: 'GET'}).then(
+        (response) => response.json()
+      ).then(
+        (val) => {
+          console.log(val)
+          setIsPlaying(false)
+        }
+      )
+    }else{
+      await fetch('/spotify/play',{method: 'GET'}).then(
+        (response) => response.json()
+      ).then(
+        (val) => {
+          console.log(val)
+          setIsPlaying(true)
+        }
+      )
+    }
   }
 
   const isEmpty = (val: any) => val == null || !(Object.keys(val) || val).length;
@@ -33,11 +67,12 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
   useEffect(()=> {
     const timeInterval = setInterval(()=>{
       getSongName()
+      console.log(songInfo)
     },3000)
   },[])
 
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    controlPlayback()
   };
   
 

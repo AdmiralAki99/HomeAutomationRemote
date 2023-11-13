@@ -84,17 +84,17 @@ const columns = [
   }
 ];
 
-const rows = [
-  { Name: 'Snow', Model: 'Jon', State: 35 },
-  { Name: 'Lannister', Model: 'Cersei', State: 42 },
-  { Name: 'Lannister', Model: 'Jaime', State: 45 },
-  { Name: 'Stark', Model: 'Arya', State: 16 },
-  { Name: 'Targaryen', Model: 'Daenerys', State: null },
-  { Name: 'Melisandre', Model: null, State: 150 },
-  { Name: 'Clifford', Model: 'Ferrara', State: 44 },
-  { Name: 'Frances', Model: 'Rossini', State: 36 },
-  { Name: 'Roxie', Model: 'Harvey', State: 65 },
-];
+// const rows = [
+//   { Name: 'Snow', Model: 'Jon', State: 35 },
+//   { Name: 'Lannister', Model: 'Cersei', State: 42 },
+//   { Name: 'Lannister', Model: 'Jaime', State: 45 },
+//   { Name: 'Stark', Model: 'Arya', State: 16 },
+//   { Name: 'Targaryen', Model: 'Daenerys', State: null },
+//   { Name: 'Melisandre', Model: null, State: 150 },
+//   { Name: 'Clifford', Model: 'Ferrara', State: 44 },
+//   { Name: 'Frances', Model: 'Rossini', State: 36 },
+//   { Name: 'Roxie', Model: 'Harvey', State: 65 },
+// ];
 
 
 const LightScreenNavBar = ({navigation,destination}) => {
@@ -175,6 +175,7 @@ const LightScreenNavBar = ({navigation,destination}) => {
             <div className="flex justify-end items-end">
               <Button onClick={handleCloseModal}>Close</Button>
               <Button onClick={handleScanList}>Scan</Button>
+              <Button>Connect</Button>
             </div>
             <DataGrid rows={scanList} columns={columns} checkboxSelection ></DataGrid>
           </Box>
