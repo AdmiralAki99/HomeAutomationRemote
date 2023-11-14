@@ -91,7 +91,7 @@ def get_all_lights():
     if lights is None:
         pass
     else:
-        light_list = [{'name':light.name, 'ip':light.ip, 'state':light.state} for light in lights]
+        light_list = [{'name':light.name, 'ip':light.ip, 'state':light.state,'id':light.id} for light in lights]
         return jsonify(light_list)
 
 @app.route("/light/<int:light_id>",methods=['GET','POST','PUT','DELETE'])
@@ -190,6 +190,12 @@ def prev_playback():
 
 def discover_devices():
     devices = asyncio.run(Discover.discover())
+
+""" Calendar Routes """
+
+@app.route("/calendar/get",methods=['GET'])
+def get_calendar():
+    ...
 
 if __name__ == "__main__":
     app.run()
