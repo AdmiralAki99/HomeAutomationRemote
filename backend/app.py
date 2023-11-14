@@ -212,6 +212,6 @@ def get_calendar():
     ...
 
 if __name__ == "__main__":
-    refresh_token()
+    refresh_token() # Starting Spotify Refresh Token Thread
     app.run()
     

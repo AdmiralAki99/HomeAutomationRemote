@@ -1,6 +1,5 @@
 import React ,{useState, useEffect} from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Button,IconButton,Box,Card,CardContent,Grid,CardMedia,Paper,Slide,MobileStepper,Typography} from '@mui/material';
 import {Lightbulb,LightMode,Camera,House,Person, Home,Menu} from '@mui/icons-material';
 import {View} from 'react-native';
 
