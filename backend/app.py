@@ -40,6 +40,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 import asyncio
+import schedule
+import time
+import threading
 from kasa import (Discover,SmartBulb)
 
 import os
@@ -188,6 +191,17 @@ def prev_playback():
     sp.rewind_song()
     return jsonify({'message': 'Playback Previous'})
 
+def schedule_refresh_token():
+    schedule.every(50).minutes.do(sp.refresh_token)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+def refresh_token():
+    refresh_thread = threading.Thread(target=schedule_refresh_token)
+    refresh_thread.start()
+
 def discover_devices():
     devices = asyncio.run(Discover.discover())
 
@@ -198,5 +212,6 @@ def get_calendar():
     ...
 
 if __name__ == "__main__":
+    refresh_token()
     app.run()
     

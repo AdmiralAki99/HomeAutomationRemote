@@ -1,6 +1,7 @@
 import spotipy
 from spotipy import SpotifyOAuth
 import json
+import time
 from dotenv import load_dotenv
 import os
 
@@ -26,6 +27,8 @@ class SpotifyManager():
         # Creating and storing object for later use
         self.sp = spotipy.Spotify(auth=self.access_token)
         self.user = self.sp.current_user()
+        self.refresh_token()
+
 
     def play_song(self, song_uri):
         """
@@ -109,6 +112,11 @@ class SpotifyManager():
         Rewind Current Song
         """
         self.sp.previous_track()
+
+    def refresh_token(self):
+      self.auth.refresh_access_token(self.token_dict['refresh_token'])
+      self.token_dict = self.auth.get_access_token()
+      self.access_token = self.token_dict['access_token']
 
 
 """
