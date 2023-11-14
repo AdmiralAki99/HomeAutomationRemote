@@ -17,11 +17,21 @@ type LightProps = NativeStackScreenProps<ScreenParamList, 'Light'>;
 function LightScreen({route,navigation}: LightProps){
   const [masterLightIntensity, setMasterLightIntensity] = useState(0);
   const [lightArray, setLightArray] = useState([0,0,0,0]);
-  const [selectedLights, setSelectedLights] = useState(false);
+  const [selectedLights, setSelectedLights] = useState([false,false,false,false]);
   const [lights,setLights] = useState<Record<string,any>>([])
 
   const setLightIntensity = (intensity: number) => {
     setMasterLightIntensity(intensity);
+  }
+
+  const setElementInSelectedLightArray = (index: number) => {
+    const newLightArray = [...selectedLights];
+    if (newLightArray[index] == true) {
+      newLightArray[index] = false;
+    }else{
+      newLightArray[index] = true;
+    }
+    setSelectedLights(newLightArray);
   }
 
   const handleLightsList = async () => {
@@ -59,7 +69,12 @@ function LightScreen({route,navigation}: LightProps){
                             min={0}
                             value={masterLightIntensity}
                             label={light["name"]}
+                            isChecked={false}
                             onChange={({ min }: { min: number }) => {}}
+                            onCheck={() => {
+                              setElementInSelectedLightArray(index);
+                              console.log(selectedLights)
+                            }}
                           />
                         </div>
                       ))

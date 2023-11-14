@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import LightSlider from './LightSlider';
 import Checkbox from './LightCheckbox';
 
-const LightCard = ({min,value,label,onChange}) => {
+const LightCard = ({min,value,label,onChange,isChecked,onCheck}) => {
 
     const [minVal, setVal] = useState(value);
     const [labelName,setLabel] = useState(label);
@@ -18,12 +18,9 @@ const LightCard = ({min,value,label,onChange}) => {
       <>
         <Checkbox
           label="Subscribe to newsletter?"
-          isChecked={true}
+          isChecked={isChecked}
           id={"checkbox-1"}
-          onChange={() => {
-            // setSelectedLights(!selectedLights);
-            // console.log(`Selected Lights = ${selectedLights}`);
-          }}
+          onChange={onCheck}
         />
         <a className="block max-w-lg w-80 h-40 p-6 bg-black border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
           <div className="grid grid-rows-3 grid-cols-2 gap-4">
@@ -46,7 +43,9 @@ LightCard.propTypes = {
     min: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    isChecked: PropTypes.bool.isRequired,
+    onCheck: PropTypes.func.isRequired,
 }
 
 export default LightCard;
