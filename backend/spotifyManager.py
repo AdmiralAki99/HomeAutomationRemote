@@ -5,7 +5,7 @@ import time
 from dotenv import load_dotenv
 import os
 
-class SpotifyManager():
+class SpotifyManager:
 
     # Spotify Scopes
     scope = "user-read-playback-state,user-modify-playback-state,user-read-playback-state,user-read-private,user-read-email,user-top-read"
@@ -27,6 +27,33 @@ class SpotifyManager():
         # Creating and storing object for later use
         self.sp = spotipy.Spotify(auth=self.access_token)
         self.user = self.sp.current_user()
+
+    # def __init__(self,cache_handler):
+    #     super(SpotifyManager).__init__()
+
+    #     load_dotenv()
+
+    #     self.client_id = os.getenv('SPOTIFY_CLIENT_ID')
+    #     self.client_secret_id = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
+    #     self.redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
+
+    #     self.auth = SpotifyOAuth(self.client_id,self.client_secret_id,self.redirect_uri,scope=self.scope,cache_handler=cache_handler)
+    #     self.token_dict = self.auth.get_access_token()
+    #     self.access_token = self.token_dict['access_token']
+
+    #     self.sp = spotipy.Spotify(auth_manager=self.auth)
+
+    
+    # def __init__(self,auth_manager):
+    #     super(SpotifyManager).__init__()
+
+    #     load_dotenv()
+
+    #     self.client_id = os.getenv('SPOTIFY_CLIENT_ID')
+    #     self.client_secret_id = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
+    #     self.redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
+
+    #     self.sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
     def play_song(self, song_uri):
@@ -59,6 +86,9 @@ class SpotifyManager():
     def get_current_song(self):
         playback = self.get_current_playback()
         device = self.get_current_playback_device()
+
+        if playback is None:
+            return {'message': 'No Song Playing'}
 
         details = {"album":{
             "album_type": playback['item']['album']['album_type'],
@@ -111,6 +141,23 @@ class SpotifyManager():
         Rewind Current Song
         """
         self.sp.previous_track()
+
+    def set_cache_handler(self,cache_handler):
+        self.sp.cache_handler = cache_handler
+
+    def get_cache_handler(self):
+        return self.sp.cache_handler
+    
+    def set_auth(self,auth):
+        self.auth = auth
+
+    def get_auth(self):
+        return self.auth
+    
+    def set_new_manager(self):
+        self.sp = spotipy.Spotify(auth_manager=self.auth)
+    
+
 
     # def refresh_token(self):
     #   print("Refreshing Token")
