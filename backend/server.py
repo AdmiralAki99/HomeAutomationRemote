@@ -1,10 +1,12 @@
 import os
 
-from flask import Flask, redirect,url_for,request,jsonify
+from flask import Flask, redirect,url_for,request,jsonify,session
+from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 from spotifyManager import SpotifyManager
+import spotipy
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -15,9 +17,16 @@ class Server:
     def __init__(self) -> None:
         self.app = Flask(__name__)
         self.app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir,"database/database.db")}'
+        self.app.config['SESSION_TYPE'] = 'filesystem'
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        self.app.config['SESSION_FILE_DIR'] = './.flask_session/'
         self.db = SQLAlchemy(self.app)
         self.ma = Marshmallow(self.app)
+        self.session = Session(self.app)
+
+        # self.cache_handler = spotipy.FlaskSessionCacheHandler(session)
+        # self.spotify_manager = SpotifyManager(self.cache_handler)
+
 
         class SmartLight(self.db.Model):
             id = self.db.Column(self.db.Integer, primary_key=True)
@@ -118,6 +127,11 @@ class Server:
         def prev_playback():
             self.spotify_manager.rewind_song()
             return jsonify({'message': 'Playback Previous'})
+        
+        """ Calendar Routes """
+        @self.app.route("/calendar/get/all")
+        def get_all_events():
+            ...
    
     def run(self):
         self.app.run()
