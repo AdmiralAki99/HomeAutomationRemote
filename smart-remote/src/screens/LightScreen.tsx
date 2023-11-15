@@ -51,14 +51,14 @@ function LightScreen({route,navigation}: LightProps){
 
     return (
       <View style={{ alignItems: "center" }}>
-        <div className="bg-home w-full h-screen">
+        <div className="bg-home w-screen">
           <LightScreenNavBar
             navigation={navigation}
             destination={"Home"}
           ></LightScreenNavBar>
           <div>
             <div>
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center w-screen">
                 <div className="grid grid-cols-2 items-center bg-home justify-center gap-6 p-8">
                   <div className="grid grid-cols-1 items-center justify-center gap-4 p-6">
                     {lights ? (
@@ -72,7 +72,7 @@ function LightScreen({route,navigation}: LightProps){
                             onChange={({ min }: { min: number }) => {}}
                             onCheck={() => {
                               setElementInSelectedLightArray(index);
-                              console.log(selectedLights)
+                              console.log('Selected Lights: '+selectedLights)
                             }}
                           />
                         </div>

@@ -46,7 +46,6 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
         (response) => response.json()
       ).then(
         (val) => {
-          console.log(val)
           setIsPlaying(false)
         }
       )
@@ -55,7 +54,6 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
         (response) => response.json()
       ).then(
         (val) => {
-          console.log(val)
           setIsPlaying(true)
         }
       )
@@ -67,7 +65,6 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
   useEffect(()=> {
     const timeInterval = setInterval(()=>{
       getSongName()
-      console.log(songInfo)
     },3000)
   },[])
 
