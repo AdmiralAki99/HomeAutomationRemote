@@ -2,7 +2,7 @@ import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 
-import { Modal } from '@mui/material';
+import { Calendar } from '../@/components/ui/calendar';
 
 import { ScreenNavbar } from '../components/Navbar';
 import { ScreenParamList } from '../App';
@@ -10,7 +10,7 @@ import { ScreenParamList } from '../App';
 type CalendarProps = NativeStackScreenProps<ScreenParamList, 'Calendar'>;
 
 function CalendarScreen({route, navigation} : CalendarProps){
-    navigation.navigate('Camera')
+    const [date,setDate] = useState<Date|undefined>(new Date())
 
     const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = () => {
@@ -23,7 +23,8 @@ function CalendarScreen({route, navigation} : CalendarProps){
     return (
       <View>
         <ScreenNavbar navigation={navigation} destination={"Home"} />
-        <div className='max-w-screen'>
+        <div className='max-w-screen w-screen'>
+          <Calendar mode='single' selected={date} onSelect={setDate} className='rounded-md border text-white border-white bg-black'/>
         </div>
       </View>
     );
