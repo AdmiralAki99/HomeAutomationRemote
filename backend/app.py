@@ -191,17 +191,6 @@ def prev_playback():
     sp.rewind_song()
     return jsonify({'message': 'Playback Previous'})
 
-def schedule_refresh_token():
-    schedule.every(50).minutes.do(sp.refresh_token)
-
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
-
-def refresh_token():
-    refresh_thread = threading.Thread(target=schedule_refresh_token)
-    refresh_thread.start()
-
 def discover_devices():
     devices = asyncio.run(Discover.discover())
 
@@ -212,6 +201,5 @@ def get_calendar():
     ...
 
 if __name__ == "__main__":
-    refresh_token() # Starting Spotify Refresh Token Thread
     app.run()
     

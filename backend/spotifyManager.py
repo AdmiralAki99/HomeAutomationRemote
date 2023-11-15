@@ -27,7 +27,6 @@ class SpotifyManager():
         # Creating and storing object for later use
         self.sp = spotipy.Spotify(auth=self.access_token)
         self.user = self.sp.current_user()
-        self.refresh_token()
 
 
     def play_song(self, song_uri):
@@ -113,7 +112,8 @@ class SpotifyManager():
         """
         self.sp.previous_track()
 
-    def refresh_token(self):
-      self.auth.refresh_access_token(self.token_dict['refresh_token'])
-      self.token_dict = self.auth.get_access_token()
-      self.access_token = self.token_dict['access_token']
+    # def refresh_token(self):
+    #   print("Refreshing Token")
+    #   self.auth.refresh_access_token(self.token_dict['refresh_token'])
+    #   self.token_dict = self.auth.get_access_token()
+    #   self.access_token = self.token_dict['access_token']
