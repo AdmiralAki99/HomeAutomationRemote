@@ -2,9 +2,11 @@ import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState, ReactDOM } from 'react';
 
-import { Calendar } from 'react-calendar'
+// import { Calendar } from 'react-calendar'
 
 import { ScreenNavbar } from '../components/Navbar';
+import Calendar from '../components/Calendar';
+
 import { ScreenParamList } from '../App';
 import '../stylesheets/calendar.css'
 
@@ -52,11 +54,12 @@ function CalendarScreen({route, navigation} : CalendarProps){
     <View>
       <ScreenNavbar navigation={navigation} destination={"Home"} />
       <div className="max-w-screen w-screen">
-        <Calendar
+        {/* <Calendar
           onClickDay={handleDateChange}
           value={date}
           className="w-screen"
-        />
+        /> */}
+        <Calendar />
       </div>
     </View>
   );
