@@ -17,6 +17,9 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
   const getSongName = async () => {
     await fetch('/spotify/get/current',{method: 'GET'}).then(res => res.json()).then(
       (val) => {
+        if(val == null){
+          return
+        }
         setSongInfo(val)
         if(val["device"]["is_playing"] == true){
           setIsPlaying(true)
@@ -151,7 +154,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                   <div className="col col-start-1 col-end-4 flex justify-center items-center bg-noir gap-4 ">
                     <img
                       src={
-                        isEmpty(songInfo)
+                          isEmpty(songInfo)
                           ? ""
                           : songInfo["album"]["images"][0]["url"]
                       }

@@ -2,11 +2,11 @@ import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState, ReactDOM } from 'react';
 
-import {Calendar} from 'react-calendar'
+import { Calendar } from 'react-calendar'
 
 import { ScreenNavbar } from '../components/Navbar';
 import { ScreenParamList } from '../App';
-import './calendar.css'
+import '../stylesheets/calendar.css'
 
 type CalendarProps = NativeStackScreenProps<ScreenParamList, 'Calendar'>;
 
@@ -20,6 +20,10 @@ function CalendarScreen({route, navigation} : CalendarProps){
   const clostModal = () => {
     setOpenModal(false);
   };
+
+  const handleDateChange = (date: Date) => {
+    console.log(`${date.getDate()}${date.getMonth()+1}${date.getFullYear()}`)
+  }
 
   const getEventsOnDate = (selectedDate: Date) => {
     const day = selectedDate.getDate();
@@ -48,7 +52,11 @@ function CalendarScreen({route, navigation} : CalendarProps){
     <View>
       <ScreenNavbar navigation={navigation} destination={"Home"} />
       <div className="max-w-screen w-screen">
-        <Calendar onChange={() => {}} value={date} className="w-screen" />
+        <Calendar
+          onClickDay={handleDateChange}
+          value={date}
+          className="w-screen"
+        />
       </div>
     </View>
   );
