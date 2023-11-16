@@ -129,9 +129,33 @@ class Server:
             return jsonify({'message': 'Playback Previous'})
         
         """ Calendar Routes """
-        @self.app.route("/calendar/get/all")
+
+        @self.app.route("/calendar/get/all",methods=['GET'])
         def get_all_events():
-            ...
+            print("All Calendar Events")
+            return jsonify({'message': 'All Calendar Events'})
+
+        @self.app.route("/calendar/get/<selected_date>",methods=['GET'])
+        def get_event_at_date(selected_date):
+            return jsonify({
+                "appointments": [
+                    {
+                        "id": 1,
+                        "title": "Meeting with Client",
+                        "description": "Discuss project requirements and timelines",
+                        "start_date": "2023-11-20T10:00:00",
+                        "end_date": "2023-11-20T11:30:00",
+                        "location": "123 Main St, City",
+                        "attendees": [
+                            {
+                                "name": "John Doe",
+                                "email": "john@example.com"
+                            }
+                        ]
+                    }
+                ]
+            })
+            
    
     def run(self):
         self.app.run()
