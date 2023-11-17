@@ -106,13 +106,13 @@
     text-align: right;
   }
   
-  
   /* Calendar */
   
   .calendar {
     display: block;
     position: relative;
     width: 100%;
+    max-height: 50vh;
     background: var(--neutral-color);
     border: 1px solid var(--border-color);
   }
