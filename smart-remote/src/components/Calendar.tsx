@@ -84,7 +84,9 @@ class Calendar extends React.Component{
           formattedDate = format(currentDay, dateFormat)
           const temp = currentDay
           days.push(
-            <div className={`col cell ${!isSameMonth(temp,mStart)? "disabled":isSameDay(currentDay,selectedDate)? "selected":""}`} onClick={()=>this.onDateClick(currentDay)}>
+            <div className={`col cell ${!isSameMonth(temp,mStart)? "disabled":isSameDay(temp,selectedDate)? "selected":""}`} onClick={()=>{
+              this.onDateClick(temp)
+              console.log(temp)}}>
               <span className="number">{formattedDate}</span>
               <span className="bg">{formattedDate}</span>
               <span className="event bg-bubblegum"></span>
@@ -112,7 +114,6 @@ class Calendar extends React.Component{
       this.setState({
         selectedDate: date
       })
-      console.log(date)
     }
 
     nextMonth = () =>{
