@@ -86,7 +86,9 @@ class Calendar extends React.Component{
           days.push(
             <div className={`col cell ${!isSameMonth(temp,mStart)? "disabled":isSameDay(currentDay,selectedDate)? "selected":""}`} onClick={()=>this.onDateClick(currentDay)}>
               <span className="number">{formattedDate}</span>
-            <span className="bg">{formattedDate}</span>
+              <span className="bg">{formattedDate}</span>
+              <span className="event bg-bubblegum"></span>
+              <span className="event bg-cyan-500"></span>
             </div>
           )
           currentDay = addDays(currentDay, 1)
