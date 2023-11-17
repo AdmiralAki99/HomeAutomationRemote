@@ -146,6 +146,8 @@ class Server:
                         "start_date": "2023-11-20T10:00:00",
                         "end_date": "2023-11-20T11:30:00",
                         "location": "123 Main St, City",
+                        "Calendar": "Work",
+                        "Color": "#FF0000",
                         "attendees": [
                             {
                                 "name": "John Doe",
