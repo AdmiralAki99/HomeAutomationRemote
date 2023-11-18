@@ -17,9 +17,18 @@ import { rowsMetaStateInitializer } from "@mui/x-data-grid/internals";
 
 class Calendar extends React.Component{
 
+    getEvents(month:Number, year:Number){
+      fetch("/calendar/get/16112023",{method:"GET"}).then(response => response.json()).then(
+        data => {
+          console.log(data['appointments'])
+        })
+    }
+
     state = {
         currentMonth: new Date(),
-        selectedDate: new Date()
+        selectedDate: new Date(),
+        monthEvents: [],
+        selectedEvents: []
     };
 
     renderHeader(){
@@ -85,8 +94,7 @@ class Calendar extends React.Component{
           const temp = currentDay
           days.push(
             <div className={`col cell ${!isSameMonth(temp,mStart)? "disabled":isSameDay(temp,selectedDate)? "selected":""}`} onClick={()=>{
-              this.onDateClick(temp)
-              console.log(temp)}}>
+              this.onDateClick(temp)}}>
               <span className="number">{formattedDate}</span>
               <span className="bg">{formattedDate}</span>
               <span className="event bg-bubblegum"></span>
