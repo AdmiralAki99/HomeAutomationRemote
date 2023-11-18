@@ -4,7 +4,7 @@ import { useState, ReactDOM } from 'react';
 
 // import { Calendar } from 'react-calendar'
 
-import { ScreenNavbar } from '../components/Navbar';
+import { CalendarScreenNavBar } from '../components/Navbar';
 import Calendar from '../components/Calendar';
 
 import { ScreenParamList } from '../App';
@@ -52,7 +52,7 @@ function CalendarScreen({route, navigation} : CalendarProps){
 
   return (
     <View>
-      <ScreenNavbar navigation={navigation} destination={"Home"} />
+      <CalendarScreenNavBar navigation={navigation} destination={"Home"} />
       <div className="max-w-screen w-screen">
         {/* <Calendar
           onClickDay={handleDateChange}

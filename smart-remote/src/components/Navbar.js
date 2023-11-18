@@ -9,7 +9,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import TextField from "@mui/material/TextField";
 import { DataGrid, GridColDef, GridValueGetterParams, GridApi } from '@mui/x-data-grid';
+import CalendarScreen from "../screens/CalendarScreen";
 
 const HomeScreenNavbar = () => {
     return(
@@ -186,6 +188,123 @@ const LightScreenNavBar = ({navigation,destination}) => {
   );
 };
 
+const CalendarScreenNavBar = ({navigation,destination}) => {
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [startScan, setStartScan] = useState(false);
+  const [scanList, setScanList] = useState([]); // [{name: "Light1", model: "model1"},{name: "Light2", model: "model2"}
+  const menuOpen = Boolean(menuAnchor);
+
+  const handleScanList = async () => {
+    fetch("/light/scan", { method: "GET" }).then((response) => {
+      response.json().then((data) => {
+        setScanList(data);
+      });
+    });
+    console.log(scanList);
+  }
+
+  useEffect(()=>{
+    handleScanList();
+    console.log("Start Scan")
+  },[])
+
+  const handleOpenModal = () => {
+    setStartScan(true);
+    setModalOpen(true);
+  }
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  }
+
+  const handleOpenMenu = (event) => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setMenuAnchor(null);
+  };
+
+  return (
+    <div className="flex bg-home w-screen h-9 justify-between items-center ">
+      <Button
+        onClick={() => {
+          navigation.navigate(destination);
+        }}
+      >
+        <ArrowBack sx={{ color: "white" }} fontSize="medium" />
+      </Button>
+      <div>
+        <Button
+          id="add-button"
+          aria-controls={menuOpen ? "light-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={menuOpen ? "true" : undefined}
+          onClick={handleOpenModal}
+        >
+          <Add sx={{ color: "white" }} fontSize="medium" />
+        </Button>
+        <Modal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <div>
+              <div class="w-full max-w-xs">
+                <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 text-sm font-bold mb-2"
+                      for="username"
+                    >
+                      Username
+                    </label>
+                    <input
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="username"
+                      type="text"
+                      placeholder="Username"
+                    />
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      class="block text-gray-700 text-sm font-bold mb-2"
+                      for="password"
+                    >
+                      Password
+                    </label>
+                    <input
+                      class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                      id="password"
+                      type="password"
+                      placeholder="******************"
+                    />
+                  </div>
+                  <div>
+                    <select class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline mt-2">
+                      <option>Calendar</option>
+                      <option>Personal</option>
+                      <option>Work</option>
+                      <option>University</option>
+                    </select>
+                  </div>
+                </form>
+                {/* <p class="text-center text-gray-500 text-xs">
+                  &copy;2020 Acme Corp. All rights reserved.
+                </p> */}
+              </div>
+            </div>
+          </Box>
+        </Modal>
+      </div>
+    </div>
+  );
+};
+
+
 ScreenNavbar.propTypes = {
     navigation : PropTypes.any.isRequired,
     destination : PropTypes.string.isRequired,
@@ -196,4 +315,9 @@ LightScreenNavBar.propTypes = {
   destination : PropTypes.string.isRequired,
 }
 
-export {HomeScreenNavbar,ScreenNavbar,LightScreenNavBar};
+CalendarScreenNavBar.propTypes = {
+  navigation : PropTypes.any.isRequired,
+  destination : PropTypes.string.isRequired,
+}
+
+export {HomeScreenNavbar,ScreenNavbar,LightScreenNavBar,CalendarScreenNavBar};
