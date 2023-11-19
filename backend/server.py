@@ -70,13 +70,12 @@ class Server:
             def __repr__(self) -> str:
                 return f'<CalendarEvent {self.title}>'
     
-class CalendarEventSchema(ma.Schema):
-    class Meta:
-        fields = ('id', 'title', 'start_time', 'end_time', 'all_day', 'description', 'calendar', 'status')
-
-
+        class CalendarEventSchema(self.ma.Schema):
+            class Meta:
+                fields = ('id', 'title', 'start_time', 'end_time', 'all_day', 'description', 'calendar', 'status')
             
         self.smart_light_schema = SmartLightSchema(many=True)
+        self.calendar_event_schema = CalendarEventSchema(many=True)
 
         @self.app.route("/test")
         def hello_world():
