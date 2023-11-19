@@ -45,6 +45,36 @@ class Server:
         class SmartLightSchema(self.ma.Schema):
             class Meta:
                 fields = ('id', 'name', 'ip', 'state')
+
+        class CalendarEvent(self.db.Model):
+            id = self.db.Column(self.db.Integer, primary_key=True)
+            title = self.db.Column(self.db.String(100), nullable=False)
+            start_time = self.db.Column(self.db.String(100), nullable=False)
+            end_time = self.db.Column(self.db.String(100), nullable=False)
+            all_day = self.db.Column(self.db.Boolean, nullable=False)
+            description = self.db.Column(self.db.String(100), nullable=False)
+            calendar = self.db.Column(self.db.String(100), nullable=False)
+            status = self.db.Column(self.db.Boolean, nullable=False)
+     
+            def __init__(self,id,title,start_time,end_time,all_day,description,calendar,status) -> None:
+                super().__init__()
+                self.id = id
+                self.title = title
+                self.start_time = start_time
+                self.end_time = end_time
+                self.all_day = all_day
+                self.description = description
+                self.calendar = calendar
+                self.status = status
+
+            def __repr__(self) -> str:
+                return f'<CalendarEvent {self.title}>'
+    
+class CalendarEventSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'title', 'start_time', 'end_time', 'all_day', 'description', 'calendar', 'status')
+
+
             
         self.smart_light_schema = SmartLightSchema(many=True)
 
@@ -157,6 +187,9 @@ class Server:
                     }
                 ]
             })
+        @self.app.route("/calendar/get/month/<month_id>",methods=['GET'])
+        def get_event_month(month_id):
+            ...
             
    
     def run(self):
