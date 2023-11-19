@@ -17,6 +17,9 @@ class Server:
     def __init__(self) -> None:
         self.app = Flask(__name__)
         self.app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir,"database/database.db")}'
+        self.app.config['SQLALCHEMY_BINDS'] = {
+            'calendar': f'sqlite:///{os.path.join(base_dir,"database/calendar.db")}'
+        }
         self.app.config['SESSION_TYPE'] = 'filesystem'
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         self.app.config['SESSION_FILE_DIR'] = './.flask_session/'
