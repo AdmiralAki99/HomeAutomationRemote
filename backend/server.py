@@ -212,7 +212,32 @@ class Server:
             })
         @self.app.route("/calendar/get/month/<month_id>",methods=['GET'])
         def get_event_month(month_id):
-            ...
+            query_results = CalendarEvent.query.filter_by(start_date_month = month_id).all()
+            if query_results is None or query_results == []:
+                return jsonify({'message': 'No Events Found'})
+            else:
+                appointments = []
+                for events in query_results:
+                    appointments.append({
+                        "id": events.id,
+                        "title": events.title,
+                        "description": events.description,
+                        "start_date_day": events.start_date_day,
+                        "start_date_month": events.start_date_month,
+                        "start_date_year": events.start_date_year,
+                        "start_time_hour": events.start_time_hour,
+                        "start_time_minute": events.start_time_minute,
+                        "end_date_day": events.end_date_day,
+                        "end_date_month": events.end_date_month,
+                        "end_date_year": events.end_date_year,
+                        "end_time_hour": events.end_time_hour,
+                        "end_time_minute": events.end_time_minute,
+                        "all_day": events.all_day,
+                        "calendar": events.calendar,
+                        "status": events.status,
+                        "colour": events.colour
+                    })
+                return jsonify(appointments)
         @self.app.route("/calendar/add/",methods=['POST'])
         def add_event():
             calendar_keys = ['id', 'title','start_date_day','start_date_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status','colour']
