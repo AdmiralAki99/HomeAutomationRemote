@@ -50,6 +50,7 @@ class Server:
                 fields = ('id', 'name', 'ip', 'state')
 
         class CalendarEvent(self.db.Model):
+            __bind_key__ = 'calendar'
             id = self.db.Column(self.db.Integer, primary_key=True)
             title = self.db.Column(self.db.String(100), nullable=False)
             start_time = self.db.Column(self.db.String(100), nullable=False)
@@ -192,6 +193,15 @@ class Server:
         @self.app.route("/calendar/get/month/<month_id>",methods=['GET'])
         def get_event_month(month_id):
             ...
+        @self.app.route("/calendar/add/",methods=['POST'])
+        def add_event():
+            calendar_keys = ['id', 'title', 'start_time', 'end_time', 'all_day', 'description', 'calendar', 'status']
+            if not all(key in request.json for key in calendar_keys):
+                return jsonify({'error': 'Some elements are missing'}), 400
+            event = CalendarEvent(request.json['id'],request.json['title'],request.json['start_time'],request.json['end_time'],request.json['all_day'],request.json['description'],request.json['calendar'],request.json['status'])
+            self.db.session.add(event)
+            self.db.session.commit()
+            return jsonify({'message': 'Event Added Successfully'})
             
    
     def run(self):
