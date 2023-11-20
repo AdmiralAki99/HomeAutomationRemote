@@ -5,6 +5,8 @@ from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
+from datetime import date
+
 from spotifyManager import SpotifyManager
 import spotipy
 
@@ -237,7 +239,47 @@ class Server:
                         "status": events.status,
                         "colour": events.colour
                     })
-                return jsonify(appointments)
+                return jsonify({"appointments":appointments})
+        
+        @self.app.route("/calendar/get/today",methods=['GET'])
+        def get_todays_events():
+            today = date.today()
+            query_results = CalendarEvent.query.filter_by(start_date_day = today.day,start_date_month = today.month,start_date_year = today.year).all()
+            if query_results is None or query_results == []:
+                return jsonify({'message': 'No Events Found'})
+            else:
+                appointments = []
+                for events in query_results:
+                    appointments.append({
+                        "id": events.id,
+                        "title": events.title,
+                        "description": events.description,
+                        "start_date_day": events.start_date_day,
+                        "start_date_month": events.start_date_month,
+                        "start_date_year": events.start_date_year,
+                        "start_time_hour": events.start_time_hour,
+                        "start_time_minute": events.start_time_minute,
+                        "end_date_day": events.end_date_day,
+                        "end_date_month": events.end_date_month,
+                        "end_date_year": events.end_date_year,
+                        "end_time_hour": events.end_time_hour,
+                        "end_time_minute": events.end_time_minute,
+                        "all_day": events.all_day,
+                        "calendar": events.calendar,
+                        "status": events.status,
+                        "colour": events.colour
+                    })
+                return jsonify({"appointments":appointments})
+
+        @self.app.route("/calendar/get/today/count",methods=['GET'])    
+        def get_todays_events_count():
+            today = date.today()
+            query_results = CalendarEvent.query.filter_by(start_date_day = today.day,start_date_month = today.month,start_date_year = today.year).all()
+            if query_results is None or query_results == []:
+                return jsonify({'count':0})
+            else:
+                return jsonify({'count':len(query_results)})
+
         @self.app.route("/calendar/add/",methods=['POST'])
         def add_event():
             calendar_keys = ['id', 'title','start_date_day','start_date_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status','colour']
