@@ -53,30 +53,50 @@ class Server:
             __bind_key__ = 'calendar'
             id = self.db.Column(self.db.Integer, primary_key=True)
             title = self.db.Column(self.db.String(100), nullable=False)
-            start_time = self.db.Column(self.db.String(100), nullable=False)
-            end_time = self.db.Column(self.db.String(100), nullable=False)
+            start_date_day = self.db.Column(self.db.Integer, nullable=False)
+            start_date_month = self.db.Column(self.db.Integer, nullable=False)
+            start_date_year = self.db.Column(self.db.Integer, nullable=False)
+            start_time_hour = self.db.Column(self.db.Integer, nullable=False)
+            start_time_minute = self.db.Column(self.db.Integer, nullable=False)
+            end_date_day = self.db.Column(self.db.Integer, nullable=False)
+            end_date_month = self.db.Column(self.db.Integer, nullable=False)
+            end_date_year = self.db.Column(self.db.Integer, nullable=False)
+            end_time_hour = self.db.Column(self.db.Integer, nullable=False)
+            end_time_minute = self.db.Column(self.db.Integer, nullable=False)
             all_day = self.db.Column(self.db.Boolean, nullable=False)
             description = self.db.Column(self.db.String(100), nullable=False)
             calendar = self.db.Column(self.db.String(100), nullable=False)
             status = self.db.Column(self.db.Boolean, nullable=False)
+            colour = self.db.Column(self.db.String(10), nullable=False)
+
      
-            def __init__(self,id,title,start_time,end_time,all_day,description,calendar,status) -> None:
+            def __init__(self,id,title,start_date_day,start_date_month,start_date_year,end_date_day,end_date_month,end_date_year,start_time_hour,start_time_minute,end_time_hour,end_time_minute,all_day,description,calendar,status,colour) -> None:
                 super().__init__()
                 self.id = id
                 self.title = title
-                self.start_time = start_time
-                self.end_time = end_time
+                self.start_date_day = start_date_day
+                self.start_date_month = start_date_month
+                self.start_date_year = start_date_year
+                self.start_time_hour = start_time_hour
+                self.start_time_minute = start_time_minute
+                self.end_date_day = end_date_day
+                self.end_date_month = end_date_month
+                self.end_date_year = end_date_year
+                self.end_time_hour = end_time_hour
+                self.end_time_minute = end_time_minute
                 self.all_day = all_day
                 self.description = description
                 self.calendar = calendar
                 self.status = status
+                self.colour = colour
+
 
             def __repr__(self) -> str:
                 return f'<CalendarEvent {self.title}>'
     
         class CalendarEventSchema(self.ma.Schema):
             class Meta:
-                fields = ('id', 'title', 'start_time', 'end_time', 'all_day', 'description', 'calendar', 'status')
+                fields = ('id', 'title', 'start_date_day', 'start_day_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status')
             
         self.smart_light_schema = SmartLightSchema(many=True)
         self.calendar_event_schema = CalendarEventSchema(many=True)
@@ -195,10 +215,10 @@ class Server:
             ...
         @self.app.route("/calendar/add/",methods=['POST'])
         def add_event():
-            calendar_keys = ['id', 'title', 'start_time', 'end_time', 'all_day', 'description', 'calendar', 'status']
+            calendar_keys = ['id', 'title','start_date_day','start_date_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status','colour']
             if not all(key in request.json for key in calendar_keys):
                 return jsonify({'error': 'Some elements are missing'}), 400
-            event = CalendarEvent(request.json['id'],request.json['title'],request.json['start_time'],request.json['end_time'],request.json['all_day'],request.json['description'],request.json['calendar'],request.json['status'])
+            event = CalendarEvent(request.json['id'],request.json['title'],request.json['start_date_day'],request.json['start_date_month'],request.json['start_date_year'],request.json['start_time_hour'],request.json['start_time_minute'],request.json['end_date_day'],request.json['end_date_month'],request.json['end_date_year'],request.json['end_time_hour'],request.json['end_time_minute'],request.json['all_day'],request.json['description'],request.json['calendar'],request.json['status'],request.json['colour'])
             self.db.session.add(event)
             self.db.session.commit()
             return jsonify({'message': 'Event Added Successfully'})
