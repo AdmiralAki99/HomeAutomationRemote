@@ -311,15 +311,27 @@ class Server:
                 return jsonify({'message': 'Event Changed to Ongoing Successfully'})
 
         @self.app.route("/calendar/change/start/<int:event_id>",methods=['POST'])    
-        def change_start_time(event_id,new_start_time):
+        def change_start_time(event_id,new_start_hour,new_start_minute):
             event = CalendarEvent.query.get(event_id)
             if event is None:
                 return jsonify({'message': 'Event not found'})
             else:
-                event.start_time_hour = new_start_time.hour
-                event.start_time_minute = new_start_time.minute
+                event.start_time_hour = new_start_hour
+                event.start_time_minute = new_start_minute
                 self.db.session.commit()
                 return jsonify({'message': 'Event Start Time Changed Successfully'})
+            
+        
+        def change_event_time(event_id,new_end_hour,new_end_minute):
+            event = CalendarEvent.query.get(event_id)
+            if event is None:
+                return jsonify({'message': 'Event not found'})
+            else:
+                event.end_time_hour = new_end_hour
+                event.end_time_minute = new_end_minute
+                self.db.session.commit()
+                return jsonify({'message': 'Event End Time Changed Successfully'})
+
             
    
     def run(self):
