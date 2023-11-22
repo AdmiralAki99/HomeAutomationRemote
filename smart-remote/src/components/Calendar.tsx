@@ -17,8 +17,8 @@ import { rowsMetaStateInitializer } from "@mui/x-data-grid/internals";
 
 class Calendar extends React.Component{
 
-    getEvents(month:Number, year:Number){
-      fetch("/calendar/get/16112023",{method:"GET"}).then(response => response.json()).then(
+    getEvents(date:Number,month:Number, year:Number){
+      fetch(`/calendar/get/${date}${month}${year}`,{method:"GET"}).then(response => response.json()).then(
         data => {
           console.log(data['appointments'])
         })
