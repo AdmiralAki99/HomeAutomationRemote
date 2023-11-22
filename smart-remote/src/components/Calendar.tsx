@@ -15,13 +15,28 @@ import { isSameDay, startOfMonth } from "date-fns";
 import parse from "date-fns/parse";
 import { rowsMetaStateInitializer } from "@mui/x-data-grid/internals";
 
+type CalendarProps = {
+    currentMonth: Date,
+    selectedDate: Date,
+    monthEvents: [],
+    selectedEvents: []
+}
+
 class Calendar extends React.Component{
 
-    getEvents(date:Number,month:Number, year:Number){
-      fetch(`/calendar/get/${date}${month}${year}`,{method:"GET"}).then(response => response.json()).then(
+    getEventsForDate(date:Number,month:Number, year:Number){
+      fetch(`/calendar/get/${date}-${month}-${year}`,{method:"GET"}).then(response => response.json()).then(
         data => {
           console.log(data['appointments'])
         })
+    }
+
+    getEventsForMonth(month:Number, year:Number){
+      fetch(`/calendar/get/month/${month}-${year}`,{method:"GET"}).then(response => response.json()).then(
+        data => {
+          console.log(data['appointments'])
+        }
+      )
     }
 
     state = {
@@ -122,6 +137,7 @@ class Calendar extends React.Component{
       this.setState({
         selectedDate: date
       })
+      this.getEventsForDate(date.getDate(),date.getMonth()+1,date.getFullYear())
     }
 
     nextMonth = () =>{
@@ -134,6 +150,14 @@ class Calendar extends React.Component{
       this.setState({
         currentMonth: subMonths(this.state.currentMonth, 1)
       })
+    }
+
+    componentDidMount(): void {
+      this.getEventsForMonth(this.state.currentMonth.getMonth()+1,this.state.currentMonth.getFullYear())
+    }
+
+    componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<{}>, snapshot?: any): void {
+      this.getEventsForMonth(this.state.currentMonth.getMonth()+1,this.state.currentMonth.getFullYear())
     }
 
     render() {
