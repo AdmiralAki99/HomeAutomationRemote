@@ -192,26 +192,35 @@ class Server:
 
         @self.app.route("/calendar/get/<selected_date>",methods=['GET'])
         def get_event_at_date(selected_date):
-            return jsonify({
-                "appointments": [
-                    {
-                        "id": 1,
-                        "title": "Meeting with Client",
-                        "description": "Discuss project requirements and timelines",
-                        "start_date": "2023-11-20T10:00:00",
-                        "end_date": "2023-11-20T11:30:00",
-                        "location": "123 Main St, City",
-                        "Calendar": "Work",
-                        "Color": "#FF0000",
-                        "attendees": [
-                            {
-                                "name": "John Doe",
-                                "email": "john@example.com"
-                            }
-                        ]
-                    }
-                ]
-            })
+            day = selected_date.split('-')[0]
+            month = selected_date.split('-')[1]
+            year = selected_date.split('-')[2]
+            query_results = CalendarEvent.query.filter_by(start_date_day = day,start_date_month = month,start_date_year = year).all()
+            if query_results is None or query_results == []:
+                return jsonify({'message': 'No Events Found'})
+            else:
+                appointments = []
+                for events in query_results:
+                    appointments.append({
+                        "id": events.id,
+                        "title": events.title,
+                        "description": events.description,
+                        "start_date_day": events.start_date_day,
+                        "start_date_month": events.start_date_month,
+                        "start_date_year": events.start_date_year,
+                        "start_time_hour": events.start_time_hour,
+                        "start_time_minute": events.start_time_minute,
+                        "end_date_day": events.end_date_day,
+                        "end_date_month": events.end_date_month,
+                        "end_date_year": events.end_date_year,
+                        "end_time_hour": events.end_time_hour,
+                        "end_time_minute": events.end_time_minute,
+                        "all_day": events.all_day,
+                        "calendar": events.calendar,
+                        "status": events.status,
+                        "colour": events.colour
+                    })
+                return jsonify({"appointments":appointments})
         @self.app.route("/calendar/get/month/<month_id>",methods=['GET'])
         def get_event_month(month_id):
             query_results = CalendarEvent.query.filter_by(start_date_month = month_id).all()
