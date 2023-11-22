@@ -223,7 +223,9 @@ class Server:
                 return jsonify({"appointments":appointments})
         @self.app.route("/calendar/get/month/<month_id>",methods=['GET'])
         def get_event_month(month_id):
-            query_results = CalendarEvent.query.filter_by(start_date_month = month_id).all()
+            month = month_id.split('-')[0]
+            year_id = month_id.split('-')[1]
+            query_results = CalendarEvent.query.filter_by(start_date_month = month,start_date_year = year_id).all()
             if query_results is None or query_results == []:
                 return jsonify({'message': 'No Events Found'})
             else:
