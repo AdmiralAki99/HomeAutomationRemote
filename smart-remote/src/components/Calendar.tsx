@@ -27,14 +27,18 @@ class Calendar extends React.Component{
     getEventsForDate(date:Number,month:Number, year:Number){
       fetch(`/calendar/get/${date}-${month}-${year}`,{method:"GET"}).then(response => response.json()).then(
         data => {
-          console.log(data['appointments'])
+          this.setState({
+            selectedEvents: data['appointments']
+          })
         })
     }
 
     getEventsForMonth(month:Number, year:Number){
       fetch(`/calendar/get/month/${month}-${year}`,{method:"GET"}).then(response => response.json()).then(
         data => {
-          console.log(data['appointments'])
+          this.setState({
+            monthEvents: data
+          })
         }
       )
     }
@@ -42,7 +46,7 @@ class Calendar extends React.Component{
     state = {
         currentMonth: new Date(),
         selectedDate: new Date(),
-        monthEvents: [],
+        monthEvents: {},
         selectedEvents: []
     };
 
@@ -112,8 +116,8 @@ class Calendar extends React.Component{
               this.onDateClick(temp)}}>
               <span className="number">{formattedDate}</span>
               <span className="bg">{formattedDate}</span>
-              <span className="event bg-bubblegum"></span>
-              <span className="event bg-cyan-500"></span>
+              {(`${temp.getDate()}-${temp.getMonth()+1}-${temp.getFullYear()}` in this.state.monthEvents)? <span className="event bg-cyan-500"></span>:""}
+              {/* <span className="event bg-cyan-500"></span> */}
             </div>
           )
           currentDay = addDays(currentDay, 1)
@@ -137,7 +141,7 @@ class Calendar extends React.Component{
       this.setState({
         selectedDate: date
       })
-      this.getEventsForDate(date.getDate(),date.getMonth()+1,date.getFullYear())
+      this.state.monthEvents
     }
 
     nextMonth = () =>{
