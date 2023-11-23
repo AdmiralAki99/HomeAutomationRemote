@@ -230,8 +230,11 @@ class Server:
                 return jsonify({'message': 'No Events Found'})
             else:
                 appointments = []
+                event_dict = {}
                 for events in query_results:
-                    appointments.append({
+                    key = f'{events.start_date_day}-{events.start_date_month}-{events.start_date_year}'
+                    if key in event_dict:
+                        event_dict[key].append({
                         "id": events.id,
                         "title": events.title,
                         "description": events.description,
@@ -250,7 +253,27 @@ class Server:
                         "status": events.status,
                         "colour": events.colour
                     })
-                return jsonify({"appointments":appointments})
+                    else:
+                        event_dict[key] = [{
+                        "id": events.id,
+                        "title": events.title,
+                        "description": events.description,
+                        "start_date_day": events.start_date_day,
+                        "start_date_month": events.start_date_month,
+                        "start_date_year": events.start_date_year,
+                        "start_time_hour": events.start_time_hour,
+                        "start_time_minute": events.start_time_minute,
+                        "end_date_day": events.end_date_day,
+                        "end_date_month": events.end_date_month,
+                        "end_date_year": events.end_date_year,
+                        "end_time_hour": events.end_time_hour,
+                        "end_time_minute": events.end_time_minute,
+                        "all_day": events.all_day,
+                        "calendar": events.calendar,
+                        "status": events.status,
+                        "colour": events.colour
+                    }]
+                return jsonify(event_dict)
         
         @self.app.route("/calendar/get/today",methods=['GET'])
         def get_todays_events():
