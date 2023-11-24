@@ -1,70 +1,57 @@
-# Getting Started with Create React App (cra-electron-forge-demo)
+# Home Automation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This project was made to understand basics [React Framework](https://react.dev), Web server basics and learning how to join the Python Backend to React Frontend.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+### Smart Light Control (Kasa)
+<ul>
+    <li>Control and manage smart bulbs integrated with the application.</li>
+    <li>Turn bulbs on/off, adjust brightness</li>
+</ul>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Spotify Playback Control
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+<ul>
+    <li>Integrate Spotify functionality to play, pause, skip tracks, and control music playback within the application.</li>
+    <li>Display Playback Metadata Information</li>
+    <li>Control Music Playback (No Searching yet..)</li>
+</ul>
 
-### `npm test`
+### Calendar Event Management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<ul>
+    <li>View, create, and manage calendar events within the application.</li>
+    <li>Display upcoming events, add new events, and modify existing ones through the interface.</li>
+</ul>
 
-### `npm run build`
+## Technologies Used
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<ol>
+    <li> React Framework</li>
+    <li> Flask</li>
+    <li> Postman</li>
+    <li> Electron</li>
+</ol>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Learning Objectives
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<ul>
+    <li> Understand React Framework Basics</li>
+    <li> Get Familiar With Typescript</li>
+    <li> Understand Server Hosting On Local Device</li>
+    <li> Get Used To Postman API For Testing</li>
+    <li> Understanding React Components</li>
+</ul>
 
-### `npm run eject`
+## Future Improvements
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+<ul>
+    <li> Backup Procedure</li>
+    <li> Spotify API Overhaul</li>
+    <li> Weather API</li>
+    <li> Modernize UI</li>
+</ul>
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
