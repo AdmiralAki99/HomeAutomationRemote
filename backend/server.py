@@ -365,6 +365,16 @@ class Server:
                 event.end_time_minute = new_end_minute
                 self.db.session.commit()
                 return jsonify({'message': 'Event End Time Changed Successfully'})
+            
+        @self.app.route("/calendar/delete/date/<int:event_id>",methods=['POST'])
+        def delete_event(event_id):
+            event = CalendarEvent.query.get(event_id)
+            if event is None:
+                return jsonify({'message': 'Event not found'})
+            else:
+                self.db.session.delete(event)
+                self.db.session.commit()
+                return jsonify({'message': 'Event Deleted Successfully'})
 
             
    
