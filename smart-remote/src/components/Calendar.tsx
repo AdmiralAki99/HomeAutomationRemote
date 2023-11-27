@@ -50,6 +50,8 @@ const eventStyle = {
   p: 4,
 };
 
+const isEmpty = (val: any) => val == null || !(Object.keys(val) || val).length;
+
 class Calendar extends React.Component{
 
     getEventsForDate(date:Number,month:Number, year:Number){
@@ -179,12 +181,14 @@ class Calendar extends React.Component{
       
     }
 
+    
+
     renderEventList(){
       return(
         <div>
           <Box>
             <List>
-              {this.state.dayEvents.length === 0 ? <ListItem><ListItemText primary="No events for this day"></ListItemText></ListItem>:this.state.dayEvents.map((event:any)=>{
+              {(isEmpty(this.state.dayEvents)) ? <ListItem><ListItemText primary="No events for this day"></ListItemText></ListItem>:this.state.dayEvents.map((event:any)=>{
                 return (
                   <ListItem>
                     <ListItemAvatar>
