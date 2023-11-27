@@ -15,11 +15,23 @@ import { isSameDay, startOfMonth } from "date-fns";
 import parse from "date-fns/parse";
 import { rowsMetaStateInitializer } from "@mui/x-data-grid/internals";
 
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Button from '@mui/material/Button';
+
 interface CalendarComponentState{
     currentMonth: Date,
     selectedDate: Date,
     monthEvents: {[key:string]:any[]},
-    selectedEvents: any[]
+    dayEvents: any[]
 }
 
 class Calendar extends React.Component{
@@ -28,7 +40,7 @@ class Calendar extends React.Component{
       fetch(`/calendar/get/${date}-${month}-${year}`,{method:"GET"}).then(response => response.json()).then(
         data => {
           this.setState({
-            selectedEvents: data['appointments']
+            dayEvents: data['appointments']
           })
         })
     }
@@ -54,13 +66,7 @@ class Calendar extends React.Component{
       currentMonth: new Date(),
       selectedDate: new Date(),
       monthEvents: {},
-      selectedEvents: []
-    }
-
-    monthlyEventUI(key:string){
-      const events = this.state.monthEvents[key]
-
-
+      dayEvents: [],
     }
 
     renderHeader(){
@@ -152,29 +158,58 @@ class Calendar extends React.Component{
       )
     }
 
+    handleEventClick(){
+      
+    }
+
+    renderEventList(){
+      return(
+        <div>
+          <Box>
+            <List>
+              {this.state.dayEvents.map((event:any)=>{
+                return (
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar style={{backgroundColor:event.colour}}></Avatar>
+                    </ListItemAvatar>
+                    {/* <Button variant="text"><ListItemText primary={event.title}></ListItemText></Button> */}
+                    <ListItemText primary={event.title} secondary={event.time}></ListItemText>
+                    <IconButton edge="end" aria-label="Edit">
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItem>
+                )
+              })}
+            </List>
+          </Box>
+        </div>
+      )
+    }
+
     onDateClick = (date:Date) =>{
       this.setState({
         selectedDate: date
       })
 
       const dateKey = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
-
-      if(dateKey in this.state.monthEvents){
-        console.log("Date key exists")
-        console.log(this.state.monthEvents[dateKey][0].colour)
-      }
-      
+      this.state.dayEvents = this.state.monthEvents[dateKey]
     }
 
     nextMonth = () =>{
       this.setState({
-        currentMonth: addMonths(this.state.currentMonth, 1)
+        currentMonth: addMonths(this.state.currentMonth, 1),
+        dayEvents: []
       })
     }
 
     prevMonth = () =>{
       this.setState({
-        currentMonth: subMonths(this.state.currentMonth, 1)
+        currentMonth: subMonths(this.state.currentMonth, 1),
+        dayEvents: []
       })
     }
 
@@ -192,6 +227,7 @@ class Calendar extends React.Component{
             {this.renderHeader()}
             {this.renderDays()}
             {this.renderCells()}
+            {this.renderEventList()}
           </div>
         );
     }
