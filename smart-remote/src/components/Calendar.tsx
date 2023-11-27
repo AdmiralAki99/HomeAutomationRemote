@@ -25,14 +25,30 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import DoneIcon from '@mui/icons-material/Done';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
 interface CalendarComponentState{
     currentMonth: Date,
     selectedDate: Date,
     monthEvents: {[key:string]:any[]},
     dayEvents: any[]
+    open : boolean
 }
+
+const eventStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  height: 600,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
 
 class Calendar extends React.Component{
 
@@ -67,6 +83,7 @@ class Calendar extends React.Component{
       selectedDate: new Date(),
       monthEvents: {},
       dayEvents: [],
+      open: false
     }
 
     renderHeader(){
@@ -167,7 +184,7 @@ class Calendar extends React.Component{
         <div>
           <Box>
             <List>
-              {this.state.dayEvents.map((event:any)=>{
+              {this.state.dayEvents.length === 0 ? <ListItem><ListItemText primary="No events for this day"></ListItemText></ListItem>:this.state.dayEvents.map((event:any)=>{
                 return (
                   <ListItem>
                     <ListItemAvatar>
@@ -175,8 +192,11 @@ class Calendar extends React.Component{
                     </ListItemAvatar>
                     {/* <Button variant="text"><ListItemText primary={event.title}></ListItemText></Button> */}
                     <ListItemText primary={event.title} secondary={event.time}></ListItemText>
-                    <IconButton edge="end" aria-label="Edit">
+                    <IconButton edge="end" aria-label="Edit" onClick={()=>{this.setState({open:true})}}>
                       <EditIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="Edit">
+                      <DoneIcon />
                     </IconButton>
                     <IconButton edge="end" aria-label="delete">
                       <DeleteIcon />
@@ -186,6 +206,28 @@ class Calendar extends React.Component{
               })}
             </List>
           </Box>
+        </div>
+      )
+    }
+
+    renderEventModal(){
+      return(
+        <div>
+          <Modal
+            open={this.state.open}
+            onClose={()=>{this.setState({open:false})}}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={eventStyle}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Event
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                This modal will show the info about the event that is selected
+              </Typography>
+            </Box>
+          </Modal>
         </div>
       )
     }
@@ -225,6 +267,7 @@ class Calendar extends React.Component{
         return (
           <div className="calendar">
             {this.renderHeader()}
+            {this.renderEventModal()}
             {this.renderDays()}
             {this.renderCells()}
             {this.renderEventList()}
