@@ -355,7 +355,7 @@ class Server:
                 self.db.session.commit()
                 return jsonify({'message': 'Event Start Time Changed Successfully'})
             
-        
+        @self.app.route("/calendar/change/end/<int:event_id>",methods=['POST'])
         def change_event_time(event_id,new_end_hour,new_end_minute):
             event = CalendarEvent.query.get(event_id)
             if event is None:

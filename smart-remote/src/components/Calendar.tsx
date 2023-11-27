@@ -15,11 +15,11 @@ import { isSameDay, startOfMonth } from "date-fns";
 import parse from "date-fns/parse";
 import { rowsMetaStateInitializer } from "@mui/x-data-grid/internals";
 
-type CalendarProps = {
+interface CalendarComponentState{
     currentMonth: Date,
     selectedDate: Date,
-    monthEvents: [],
-    selectedEvents: []
+    monthEvents: {[key:string]:any[]},
+    selectedEvents: any[]
 }
 
 class Calendar extends React.Component{
@@ -43,12 +43,25 @@ class Calendar extends React.Component{
       )
     }
 
-    state = {
-        currentMonth: new Date(),
-        selectedDate: new Date(),
-        monthEvents: {},
-        selectedEvents: []
-    };
+    // state = {
+    //     currentMonth: new Date(),
+    //     selectedDate: new Date(),
+    //     monthEvents: {[key:String]:any[]},
+    //     selectedEvents: []
+    // };
+
+    state : CalendarComponentState = {
+      currentMonth: new Date(),
+      selectedDate: new Date(),
+      monthEvents: {},
+      selectedEvents: []
+    }
+
+    monthlyEventUI(key:string){
+      const events = this.state.monthEvents[key]
+
+
+    }
 
     renderHeader(){
       const dateType = "MMMM yyyy";
@@ -116,7 +129,9 @@ class Calendar extends React.Component{
               this.onDateClick(temp)}}>
               <span className="number">{formattedDate}</span>
               <span className="bg">{formattedDate}</span>
-              {(`${temp.getDate()}-${temp.getMonth()+1}-${temp.getFullYear()}` in this.state.monthEvents)? <span className="event bg-cyan-500"></span>:""}
+              {(`${temp.getDate()}-${temp.getMonth()+1}-${temp.getFullYear()}` in this.state.monthEvents)? this.state.monthEvents[`${temp.getDate()}-${temp.getMonth()+1}-${temp.getFullYear()}`].map((event:any)=>{
+                return <span className="event" style={{backgroundColor:event.colour}}></span>
+              }):""}
               {/* <span className="event bg-cyan-500"></span> */}
             </div>
           )
@@ -141,7 +156,14 @@ class Calendar extends React.Component{
       this.setState({
         selectedDate: date
       })
-      this.state.monthEvents
+
+      const dateKey = `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
+
+      if(dateKey in this.state.monthEvents){
+        console.log("Date key exists")
+        console.log(this.state.monthEvents[dateKey][0].colour)
+      }
+      
     }
 
     nextMonth = () =>{
