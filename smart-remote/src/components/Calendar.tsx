@@ -29,6 +29,10 @@ import DoneIcon from '@mui/icons-material/Done';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import FormGroup from '@mui/material/FormGroup';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 interface CalendarComponentState{
     currentMonth: Date,
@@ -72,13 +76,6 @@ class Calendar extends React.Component{
         }
       )
     }
-
-    // state = {
-    //     currentMonth: new Date(),
-    //     selectedDate: new Date(),
-    //     monthEvents: {[key:String]:any[]},
-    //     selectedEvents: []
-    // };
 
     state : CalendarComponentState = {
       currentMonth: new Date(),
@@ -177,12 +174,6 @@ class Calendar extends React.Component{
       )
     }
 
-    handleEventClick(){
-      
-    }
-
-    
-
     renderEventList(){
       return(
         <div>
@@ -228,8 +219,15 @@ class Calendar extends React.Component{
                 Event
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                This modal will show the info about the event that is selected
+                Title
               </Typography>
+              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+              <div>
+              <FormGroup>
+                <FormControlLabel control={<Switch defaultChecked />} label="Checked" />
+              </FormGroup>
+
+              </div>
             </Box>
           </Modal>
         </div>
