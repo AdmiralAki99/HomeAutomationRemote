@@ -32,12 +32,12 @@
 # if __name__ == "__main__":
 #     main()
 
-from spotifyManager import SpotifyManager
+# from spotifyManager import SpotifyManager
 
 from flask import Flask, redirect,url_for,request,jsonify
 from flask_sqlalchemy import SQLAlchemy
-# from flask_marshmallow import Marshmallow
 from flask_marshmallow import Marshmallow
+# from flask_marshmallow import Marshmallow
 
 import asyncio
 import schedule
@@ -52,10 +52,13 @@ database_name = './database/lights.sqlite'
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir,"database/database.db")}'
+app.config['SQLALCHEMY_BINDS'] = {
+    'calendar': f'sqlite:///{os.path.join(base_dir,"database/calendar.db")}'
+}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
-sp = SpotifyManager()
+# sp = SpotifyManager()
 
 devices = {'Night Light': "on", 'Desk Light': "off",'Bed Light': "off",'Ceiling Light': "off"}
 
@@ -77,8 +80,57 @@ class SmartLightSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'ip', 'state')
 
+class CalendarEvent(db.Model):
+    __bind_key__ = 'calendar'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    start_date_day = db.Column(db.Integer, nullable=False)
+    start_date_month = db.Column(db.Integer, nullable=False)
+    start_date_year = db.Column(db.Integer, nullable=False)
+    start_time_hour = db.Column(db.Integer, nullable=False)
+    start_time_minute = db.Column(db.Integer, nullable=False)
+    end_date_day = db.Column(db.Integer, nullable=False)
+    end_date_month = db.Column(db.Integer, nullable=False)
+    end_date_year = db.Column(db.Integer, nullable=False)
+    end_time_hour = db.Column(db.Integer, nullable=False)
+    end_time_minute = db.Column(db.Integer, nullable=False)
+    all_day = db.Column(db.Boolean, nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+    calendar = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.Boolean, nullable=False)
+    colour = db.Column(db.String(10), nullable=False)
+     
+    def __init__(self,id,title,start_date_day,start_date_month,start_date_year,end_date_day,end_date_month,end_date_year,start_time_hour,start_time_minute,end_time_hour,end_time_minute,all_day,description,calendar,status,colour) -> None:
+        super().__init__()
+        self.id = id
+        self.title = title
+        self.start_date_day = start_date_day
+        self.start_date_month = start_date_month
+        self.start_date_year = start_date_year
+        self.start_time_hour = start_time_hour
+        self.start_time_minute = start_time_minute
+        self.end_date_day = end_date_day
+        self.end_date_month = end_date_month
+        self.end_date_year = end_date_year
+        self.end_time_hour = end_time_hour
+        self.end_time_minute = end_time_minute
+        self.all_day = all_day
+        self.description = description
+        self.calendar = calendar
+        self.status = status
+        self.colour = colour
+
+    def __repr__(self) -> str:
+        return f'<CalendarEvent {self.title}>'
+    
+class CalendarEventSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'title', 'start_time', 'end_time', 'all_day', 'description', 'calendar', 'status')
+
+
 smart_light_schema = SmartLightSchema()
 smart_lights_schema = SmartLightSchema(many=True)
+calendar_schema = CalendarEventSchema(many=True)
         
 @app.route("/test")
 def hello_world():
@@ -167,32 +219,32 @@ def establish_connection():
 
 """ Spotify Routes """
 
-@app.route("/spotify/get/current",methods=['GET'])
-def get_current_playback():
-  return jsonify(sp.get_current_song())
+# @app.route("/spotify/get/current",methods=['GET'])
+# def get_current_playback():
+#   return jsonify(sp.get_current_song())
 
-@app.route("/spotify/pause",methods=['GET'])
-def pause_playback():
-    sp.pause_song()
-    return jsonify({'message': 'Playback Paused'})
+# @app.route("/spotify/pause",methods=['GET'])
+# def pause_playback():
+#     sp.pause_song()
+#     return jsonify({'message': 'Playback Paused'})
 
-@app.route("/spotify/play",methods=['GET'])
-def play_playback():
-    sp.resume_song()
-    return jsonify({'message': 'Playback Resumed'})
+# @app.route("/spotify/play",methods=['GET'])
+# def play_playback():
+#     sp.resume_song()
+#     return jsonify({'message': 'Playback Resumed'})
 
-@app.route("/spotify/next",methods=['POST'])
-def skip_playback():
-    sp.skip_song()
-    return jsonify({'message': 'Playback Skipped'})
+# @app.route("/spotify/next",methods=['POST'])
+# def skip_playback():
+#     sp.skip_song()
+#     return jsonify({'message': 'Playback Skipped'})
 
-@app.route("/spotify/prev",methods=['POST'])
-def prev_playback():
-    sp.rewind_song()
-    return jsonify({'message': 'Playback Previous'})
+# @app.route("/spotify/prev",methods=['POST'])
+# def prev_playback():
+#     sp.rewind_song()
+#     return jsonify({'message': 'Playback Previous'})
 
-def discover_devices():
-    devices = asyncio.run(Discover.discover())
+# def discover_devices():
+#     devices = asyncio.run(Discover.discover())
 
 """ Calendar Routes """
 
