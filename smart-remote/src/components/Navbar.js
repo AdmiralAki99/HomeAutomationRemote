@@ -294,20 +294,23 @@ const CalendarScreenNavBar = ({navigation,destination}) => {
         >
           <Box sx={style}>
             <div className="calendar-form">
-              <h2>Add Event</h2>
+              <h2 className="flex justify-center">Add Event</h2>
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label>Title</label>
+                  <label>Title </label>
                   <input
                     type="text"
+                    className="border-2 border-black rounded-lg"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
                   />
                 </div>
                 <div className="form-group">
-                  <label>Description</label>
-                  <textarea
+                  <label>Description </label>
+                  <input
+                    type="text"
+                    className="border-2 border-black rounded-lg"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
