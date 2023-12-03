@@ -225,8 +225,11 @@ class Calendar extends React.Component{
               <div>
               <FormGroup>
                 <FormControlLabel control={<Switch defaultChecked />} label="All Day" />
-                
               </FormGroup>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Description
+              </Typography>
+              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
 
               </div>
             </Box>
