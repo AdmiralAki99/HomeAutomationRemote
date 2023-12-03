@@ -386,6 +386,19 @@ class Server:
                     self.db.session.delete(event)
                 self.db.session.commit()
                 return jsonify({'message': 'All Events Deleted Successfully'})
+            
+        @self.app.route("/calendar/delete/month/<month_id>",methods=['POST'])
+        def delete_month_events(month_id):
+            month = month_id.split('-')[0]
+            year_id = month_id.split('-')[1]
+            events = CalendarEvent.query.filter_by(start_date_month = month,start_date_year = year_id).all()
+            if events is None:
+                return jsonify({'message': 'No Events Found'})
+            else:
+                for event in events:
+                    self.db.session.delete(event)
+                self.db.session.commit()
+                return jsonify({'message': 'All Events Deleted Successfully'})
 
             
    
