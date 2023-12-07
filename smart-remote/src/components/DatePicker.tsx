@@ -14,6 +14,10 @@ class DatePicker extends React.Component{
         open: false
     }
 
+    weekdayMap = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    monthMap = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
+
     constructor(props:any){
         super(props)
         this.state = {
@@ -26,7 +30,11 @@ class DatePicker extends React.Component{
     // Create a constructor for the class
 
     createPopup(){
-        console.log(this.state.open)
+        if(this.state.open){
+            this.showDatePicker(false)
+        }else{
+            this.showDatePicker(true)
+        }
     }
 
     showDatePicker(displayStatus: boolean){
@@ -61,7 +69,12 @@ class DatePicker extends React.Component{
                 this.state.open? (
                     <div>
                         <div className="date-picker-container">
-
+                            <div>
+                                Date Header
+                            </div>
+                            <div>
+                                Date Body
+                            </div>
                         </div>
                     </div>
                 ): ''
