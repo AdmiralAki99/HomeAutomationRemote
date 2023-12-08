@@ -33,6 +33,11 @@ import TextField from '@mui/material/TextField';
 import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
+import DatePicker from "./DatePicker";
+
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 interface CalendarComponentState{
     currentMonth: Date,
@@ -221,7 +226,7 @@ class Calendar extends React.Component{
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Title
               </Typography>
-              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+              {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
               <div>
               <FormGroup>
                 <FormControlLabel control={<Switch defaultChecked />} label="All Day" />
@@ -229,8 +234,19 @@ class Calendar extends React.Component{
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Description
               </Typography>
-              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-
+              {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Start Date
+              </Typography>
+              <DatePicker/>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                End Date
+              </Typography>
+              <DatePicker/>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Completed
+              </Typography>
+              <Checkbox {...label} />
               </div>
             </Box>
           </Modal>

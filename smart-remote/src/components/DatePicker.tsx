@@ -65,7 +65,9 @@ class DatePicker extends React.Component{
         const selectedDate = this.state.selectedDate
 
         const mStart = startOfMonth(selectedDate.getMonth()-1)
-        const mEnd = endOfMonth(selectedDate.getMonth()-1)
+        const mEnd = endOfMonth(mStart)
+        
+        console.log(mStart)
 
         const startDate = startOfWeek(mStart)
         const endDate = endOfWeek(mEnd)
