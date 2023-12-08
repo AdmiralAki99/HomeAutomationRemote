@@ -55,3 +55,10 @@ This project was made to understand basics [React Framework](https://react.dev),
     <li> Modernize UI</li>
 </ul>
 
+## TODO List
+
+<ol>
+    <li> Complete Calendar Event Form</li>
+    <li>Virtual Keyboard</li>
+</ol>
+
