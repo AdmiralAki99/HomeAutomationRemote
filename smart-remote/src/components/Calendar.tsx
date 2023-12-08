@@ -211,11 +211,13 @@ class Calendar extends React.Component{
     }
 
     renderEventModal(){
-      return(
+      return (
         <div>
           <Modal
             open={this.state.open}
-            onClose={()=>{this.setState({open:false})}}
+            onClose={() => {
+              this.setState({ open: false });
+            }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -228,30 +230,54 @@ class Calendar extends React.Component{
               </Typography>
               {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
               <div>
-              <FormGroup>
-                <FormControlLabel control={<Switch defaultChecked />} label="All Day" />
-              </FormGroup>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Description
-              </Typography>
-              {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Start Date
-              </Typography>
-              <DatePicker/>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                End Date
-              </Typography>
-              <DatePicker/>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Completed
-              </Typography>
-              <Checkbox {...label} />
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Switch defaultChecked />}
+                    label="All Day"
+                  />
+                </FormGroup>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  Description
+                </Typography>
+                {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  Start Date
+                </Typography>
+                <DatePicker />
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  End Date
+                </Typography>
+                <DatePicker />
+                <div>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  Completed
+                </Typography>
+                <Checkbox {...label} />
+                </div>
+                <div>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  Description
+                </Typography>
+                <TextField
+                  id="standard-multiline-static"
+                  label="Multiline"
+                  multiline
+                  rows={4}
+                  defaultValue="Default Value"
+                  variant="standard"
+                />
+                </div>
+                <div>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  Colour
+                </Typography>
+                </div>
+
               </div>
             </Box>
           </Modal>
         </div>
-      )
+      );
     }
 
     onDateClick = (date:Date) =>{
