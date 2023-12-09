@@ -226,13 +226,22 @@ class Calendar extends React.Component{
           >
             <Box sx={eventStyle}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Event
-                </Typography>
+                <div className="grid grid-cols-2">
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
+                  >
+                    Event
+                  </Typography>
+                  <IconButton edge="end" aria-label="Edit">
+                    <DoneIcon />
+                  </IconButton>
+                </div>
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                   Title
                 </Typography>
-                {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
+                <TextField id="outlined-basic" variant="outlined" />
                 <div>
                   <FormGroup>
                     <FormControlLabel
@@ -240,7 +249,6 @@ class Calendar extends React.Component{
                       label="All Day"
                     />
                   </FormGroup>
-                  {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
                   <div className="grid grid-cols-3 pl-2">
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                       Start Date
