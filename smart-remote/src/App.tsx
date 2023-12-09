@@ -9,6 +9,7 @@ import TestScreen from './screens/TestScreen';
 import CameraScreen from './screens/CameraScreen';
 import MusicPlayerScreen from './screens/MusicPlayerScreen';
 import CalendarScreen from './screens/CalendarScreen';
+import NetworkScreen from './screens/NetworkScreen';
 
 export type ScreenParamList = {
   Light: undefined;
@@ -18,6 +19,7 @@ export type ScreenParamList = {
   Music: undefined;
   Calendar : undefined;
   Weather : undefined;
+  Network : undefined;
 }
 
 export type NavbarMode = {
@@ -38,6 +40,7 @@ function App() {
         <Stack.Screen name="Camera" component={CameraScreen}></Stack.Screen>
         <Stack.Screen name='Music' component={MusicPlayerScreen}></Stack.Screen>
         <Stack.Screen name='Calendar' component={CalendarScreen}></Stack.Screen>
+        <Stack.Screen name='Network' component={NetworkScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
