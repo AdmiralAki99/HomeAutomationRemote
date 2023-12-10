@@ -20,7 +20,8 @@ class Server:
         self.app = Flask(__name__)
         self.app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir,"database/database.db")}'
         self.app.config['SQLALCHEMY_BINDS'] = {
-            'calendar': f'sqlite:///{os.path.join(base_dir,"database/calendar.db")}'
+            'calendar': f'sqlite:///{os.path.join(base_dir,"database/calendar.db")}',
+            'network': f'sqlite:///{os.path.join(base_dir,"database/network.db")}'
         }
         self.app.config['SESSION_TYPE'] = 'filesystem'
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -99,6 +100,27 @@ class Server:
         class CalendarEventSchema(self.ma.Schema):
             class Meta:
                 fields = ('id', 'title', 'start_date_day', 'start_day_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status')
+
+        class NetworkDevice(self.db.Model):
+            __binding_key__ = 'network'
+            id = self.db.Column(self.db.Integer, primary_key=True)
+            name = self.db.Column(self.db.String(100), nullable=False)
+            ip = self.db.Column(self.db.String(100), nullable=False)
+            mac = self.db.Column(self.db.String(100), nullable=False)
+            support = self.db.Column(self.db.Boolean, nullable=False)
+            state = self.db.Column(self.db.String(100), nullable=False)
+
+            def __init__(self, name, ip, mac,support,state):
+                self.name = name
+                self.ip = ip
+                self.mac = mac
+                self.support = support
+                self.state = state
+
+            def __repr__(self) -> str:
+                return f'<NetworkDevice {self.name}>'
+
+        
             
         self.smart_light_schema = SmartLightSchema(many=True)
         self.calendar_event_schema = CalendarEventSchema(many=True)
@@ -399,6 +421,13 @@ class Server:
                     self.db.session.delete(event)
                 self.db.session.commit()
                 return jsonify({'message': 'All Events Deleted Successfully'})
+            
+        """
+        Network Routes
+        
+        """
+
+
 
             
    
