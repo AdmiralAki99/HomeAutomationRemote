@@ -102,7 +102,7 @@ class Server:
                 fields = ('id', 'title', 'start_date_day', 'start_day_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status')
 
         class NetworkDevice(self.db.Model):
-            __binding_key__ = 'network'
+            __bind_key__ = 'network'
             id = self.db.Column(self.db.Integer, primary_key=True)
             name = self.db.Column(self.db.String(100), nullable=False)
             ip = self.db.Column(self.db.String(100), nullable=False)
@@ -426,6 +426,14 @@ class Server:
         Network Routes
         
         """
+        @self.app.route("/network/get/all",methods=['GET'])
+        def get_network_devices():
+            devices = NetworkDevice.query.all()
+            if devices is None:
+                pass
+            else:
+                device_list = [{'name':device.name, 'ip':device.ip, 'mac':device.mac,'support':device.support,'state':device.state,'id':device.id} for device in devices]
+                return jsonify({'devices':device_list})
 
 
 
