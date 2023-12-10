@@ -1,7 +1,7 @@
 import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { ScreenNavbar } from '../components/Navbar';
+import { NetworkScreenNavBar, ScreenNavbar } from '../components/Navbar';
 import { ScreenParamList } from '../App';
 
 import NetworkCard from '../components/NetworkCard'
@@ -13,12 +13,11 @@ function NetworkScreen({route, navigation} : NetworkProps){
 
     return(
         <View>
-            <ScreenNavbar navigation={navigation} destination={"Home"} />
+            <NetworkScreenNavBar navigation={navigation} destination={"Home"} />
             <div className='grid grid-cols-2 justify-between pl-7'>
                 <NetworkCard/>
                 <NetworkCard/>
                 <NetworkCard/>
-
             </div>
         </View>
     )
