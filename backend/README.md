@@ -235,6 +235,10 @@ event = CalendarEvent(
     <li><code>colour</code> field represents the color associated with the event for visual identification.</li>
 </ul>
 
+### Network Scanner
+
+The network scanner scans the connected network for devices connected on the network. This is to use the Wake-On-LAN feature to wake up the my personal computer.
+
 ## Learning Objectives
 
 <ol>
@@ -242,5 +246,6 @@ event = CalendarEvent(
     <li>Understand Endpoint Routes</li>
     <li>Understanding of Postman Tests </li>
     <li>JSON Object Management</li>
+    <li>Network Scanning</li>
 </ol>
 
