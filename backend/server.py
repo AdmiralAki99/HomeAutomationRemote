@@ -434,10 +434,23 @@ class Server:
             else:
                 device_list = [{'name':device.name, 'ip':device.ip, 'mac':device.mac,'support':device.support,'state':device.state,'id':device.id} for device in devices]
                 return jsonify({'devices':device_list})
-
-
-
             
+        @self.app.route("/network/scan",methods=['GET'])
+        def scan_network():
+            ## Need To Implement Network Scanner
+            return jsonify({'message': 'Network Scanned'})
+        
+        @self.app.route("/network/add/",methods=['POST'])
+        def add_device():
+            network_keys = ['name', 'ip', 'mac','support','state']
+            if not all(key in request.json for key in network_keys):
+                return jsonify({'error': 'Some elements are missing'}), 400
+            device = NetworkDevice(request.json['name'],request.json['ip'],request.json['mac'],request.json['support'],request.json['state'])
+            self.db.session.add(device)
+            self.db.session.commit()
+            return jsonify({'message': 'Device Added Successfully'})
+            
+        
    
     def run(self):
         self.app.run()
