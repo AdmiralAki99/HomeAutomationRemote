@@ -374,10 +374,11 @@ const CalendarScreenNavBar = ({navigation,destination}) => {
 };
 
 const NetworkScreenNavBar = ({navigation,destination}) => {
+
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [startScan, setStartScan] = useState(false);
-  const [scanList, setScanList] = useState([]); // [{name: "Light1", model: "model1"},{name: "Light2", model: "model2"}
+  const [scanList, setScanList] = useState([]);
   const menuOpen = Boolean(menuAnchor);
 
   const [title, setTitle] = useState('');
@@ -402,7 +403,7 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
   };
 
   const handleScanList = async () => {
-    fetch("/light/scan", { method: "GET" }).then((response) => {
+    fetch("/network/scan", { method: "GET" }).then((response) => {
       response.json().then((data) => {
         setScanList(data);
       });
@@ -474,65 +475,11 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <div className="grid grid-cols-2">
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Event
-                </Typography>
-                <IconButton edge="end" aria-label="Edit">
-                  <DoneIcon />
-                </IconButton>
-              </div>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Title
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined" />
-              <div>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Switch defaultChecked />}
-                    label="All Day"
-                  />
-                </FormGroup>
-                <div className="grid grid-cols-3 pl-2">
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Start Date
-                  </Typography>
-                  <DatePicker />
-                  <TimePicker />
-                </div>
-                <div className="grid grid-cols-3 pl-2">
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    End Date
-                  </Typography>
-                  <DatePicker />
-                  <TimePicker />
-                </div>
-                <div className="grid grid-cols-2 pl-2">
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Completed
-                  </Typography>
-                  <Checkbox sx={{}} />
-                </div>
-                <div>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Description
-                  </Typography>
-                  <TextField
-                    id="standard-multiline-static"
-                    multiline
-                    rows={4}
-                    defaultValue="Description"
-                    variant="standard"
-                  />
-                </div>
-                <div>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Colour
-                  </Typography>
-                </div>
-              </div>
-            </LocalizationProvider>
+            {/* <DataGrid
+              rows={scanList}
+              columns={columns}
+              checkboxSelection
+            ></DataGrid> */}
           </Box>
         </Modal>
       </div>
