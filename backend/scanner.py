@@ -1,35 +1,38 @@
-import scapy.all as scapy
+from requests import get
+from scapy.all import ARP, Ether, srp
 
-def scan(ip):
-    # Create an ARP request packet
-    arp_request = scapy.ARP(pdst=ip)
-    
-    # Create an Ethernet frame
-    broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
-    
-    # Combine the Ethernet frame and ARP request packet
-    arp_request_broadcast = broadcast/arp_request
-    
-    # Send the packet and receive the response
-    answered_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
-    
-    # List to store the detected devices
-    devices_list = []
-    
-    for element in answered_list:
-        device_dict = {"ip": element[1].psrc, "mac": element[1].hwsrc}
-        devices_list.append(device_dict)
-    
-    return devices_list
+class Network:
+    ip = None
+    scanned_devices = []
 
-# Function call with the target IP range
-target_ip_range = "192.168.1.0/24"  # Change this to your network's IP range
-scan_result = scan(target_ip_range)
+    def __init__(self) -> None:
+        ip = get('https://api.ipify.org').content.decode('utf8')
+        self.ip = ip
 
-# Display the list of detected devices
-print("List of devices connected to the network:")
-print("----------------------------------------")
-print("IP Address\t\tMAC Address")
-print("----------------------------------------")
-for device in scan_result:
-    print(f"{device['ip']}\t\t{device['mac']}")
+    def __init__(self, ip) -> None:
+        self.ip = ip
+
+    def scan(self) -> []:
+        arp = ARP(pdst=self.ip)
+        ether = Ether(dst="ff:ff:ff:ff:ff:ff")
+        packet = ether/arp
+        result = srp(packet, timeout=5, verbose=0)[0]
+        clients = []
+        for sent, received in result:
+            clients.append({'ip': received.psrc, 'mac': received.hwsrc})
+        self.scanned_devices = clients
+
+    def get_scanned_devices(self) -> []:
+        return self.scanned_devices
+    
+    def print_scanned_devices(self) -> None:
+        print("Available devices in the network:")
+        print("IP" + " "*18+"MAC")
+        for client in self.scanned_devices:
+            print("{:16}    {}".format(client['ip'], client['mac']))
+
+if __name__ == '__main__':
+    network = Network(ip='192.168.29.1/24')
+    network.scan()
+    network.print_scanned_devices()
+# Path: backend/scanner.py
