@@ -8,13 +8,14 @@ from flask_marshmallow import Marshmallow
 from datetime import date
 
 from spotifyManager import SpotifyManager
-import spotipy
+from scanner import NetworkScanner
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Server:
 
     spotify_manager = SpotifyManager()
+    network_scanner = NetworkScanner(ip='192.168.29.1/24')
 
     def __init__(self) -> None:
         self.app = Flask(__name__)
@@ -438,7 +439,9 @@ class Server:
         @self.app.route("/network/scan",methods=['GET'])
         def scan_network():
             ## Need To Implement Network Scanner
-            return jsonify({'message': 'Network Scanned'})
+            self.network_scanner.scan()
+            devices = self.network_scanner.get_scanned_devices()
+            
         
         @self.app.route("/network/add/",methods=['POST'])
         def add_device():
