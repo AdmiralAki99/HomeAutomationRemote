@@ -50,6 +50,6 @@ class NetworkScanner:
             return "Unknown"  # Return "Unknown" if the hostname cannot be resolved
 
 if __name__ == '__main__':
-    network = NetworkScanner(ip='192.168.29.1/24')
+    network = NetworkScanner(ip='192.168.29.184')
     network.scan()
     network.print_scanned_devices()
