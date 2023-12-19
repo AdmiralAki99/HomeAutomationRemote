@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from flask import Flask, redirect,url_for,request,jsonify,session
 from flask_session import Session
@@ -15,7 +16,7 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 class Server:
 
     spotify_manager = SpotifyManager()
-    network_scanner = NetworkScanner(ip='192.168.29.1/24')
+    network_scanner = NetworkScanner()
 
     def __init__(self) -> None:
         self.app = Flask(__name__)
@@ -439,8 +440,9 @@ class Server:
         @self.app.route("/network/scan",methods=['GET'])
         def scan_network():
             ## Need To Implement Network Scanner
-            self.network_scanner.scan()
+            self.network_scanner.scan('192.168.29.1/24')
             devices = self.network_scanner.get_scanned_devices()
+            return jsonify({'devices': devices})
             
         
         @self.app.route("/network/add/",methods=['POST'])
@@ -462,4 +464,11 @@ class Server:
 if __name__ == "__main__":
     server = Server()
     server.run()
+    # script_path = os.path.join(os.path.dirname(__file__), "scanner.py") 
+    # command = f"sudo python3 {script_path}" 
+    # print(script_path)
+    # try:
+    #     subprocess.run(command,shell=True,check=True)
+    # except Exception as e:
+    #     print(e)
     
