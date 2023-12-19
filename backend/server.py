@@ -437,9 +437,13 @@ class Server:
                 device_list = [{'name':device.name, 'ip':device.ip, 'mac':device.mac,'support':device.support,'state':device.state,'id':device.id} for device in devices]
                 return jsonify({'devices':device_list})
             
-        @self.app.route("/network/scan",methods=['GET'])
-        def scan_network():
-            ## Need To Implement Network Scanner
+        @self.app.route("/network/scan/<ip_addr>",methods=['GET'])
+        def scan_network(ip_addr):
+            if ip_addr is None or ip_addr == '':
+                self.network_scanner.scan(ip_addr=ip_addr)
+                devices = self.network_scanner.get_scanned_devices()
+                return jsonify({'devices': devices})
+
             self.network_scanner.scan('192.168.29.1/24')
             devices = self.network_scanner.get_scanned_devices()
             return jsonify({'devices': devices})
