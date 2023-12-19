@@ -14,12 +14,9 @@ class NetworkScanner:
         # self.ip = ip
         ...
 
-    def __init__(self, ip) -> None:
-        self.ip = ip
-
-    def scan(self) -> []:
+    def scan(self,ip_addr) -> []:
         self.scanned_devices.clear()
-        arp = ARP(pdst=self.ip)
+        arp = ARP(pdst=ip_addr)
         ether = Ether(dst="ff:ff:ff:ff:ff:ff")
         packet = ether/arp
 
