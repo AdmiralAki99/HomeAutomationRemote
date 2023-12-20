@@ -2,6 +2,8 @@
 
 from scapy.all import ARP, Ether, srp
 import socket
+import sys
+import struct
 
 
 class NetworkScanner:
@@ -45,6 +47,9 @@ class NetworkScanner:
             return hostname
         except socket.herror:
             return "Unknown"  # Return "Unknown" if the hostname cannot be resolved
+        
+    def wake_device(self):
+        ...
 
 if __name__ == '__main__':
     network = NetworkScanner(ip='192.168.29.184')

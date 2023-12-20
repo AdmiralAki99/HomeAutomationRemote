@@ -428,6 +428,7 @@ class Server:
         Network Routes
         
         """
+        
         @self.app.route("/network/get/all",methods=['GET'])
         def get_network_devices():
             devices = NetworkDevice.query.all()
@@ -459,8 +460,14 @@ class Server:
             self.db.session.commit()
             return jsonify({'message': 'Device Added Successfully'})
             
+        @self.app.route("network/wake/<int:device_id>",methods=['POST'])
+        def wake_device(device_id):
+            device = NetworkDevice.query.get(device_id)
+            if device is None:
+                return jsonify({'message': 'Device not found'})
+            else:
+                return jsonify({'message': 'Device Woken Successfully'})
         
-   
     def run(self):
         self.app.run()
 
