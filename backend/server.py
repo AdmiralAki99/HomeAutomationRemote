@@ -467,6 +467,16 @@ class Server:
                 return jsonify({'message': 'Device not found'})
             else:
                 return jsonify({'message': 'Device Woken Successfully'})
+            
+        @self.app.route("/network/delete/<int:device_id>",methods=['POST'])
+        def delete_device(device_id):
+            device = NetworkDevice.query.get(device_id)
+            if device is None:
+                return jsonify({'message': 'Device not found'})
+            else:
+                self.db.session.delete(device)
+                self.db.session.commit()
+                return jsonify({'message': 'Device Deleted Successfully'})
         
     def run(self):
         self.app.run()
