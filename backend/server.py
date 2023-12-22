@@ -477,6 +477,27 @@ class Server:
                 self.db.session.delete(device)
                 self.db.session.commit()
                 return jsonify({'message': 'Device Deleted Successfully'})
+            
+        @self.app.route("/network/delete/all",methods=['POST'])
+        def delete_all_devices():
+            devices = NetworkDevice.query.all()
+            if devices is None:
+                return jsonify({'message': 'No Devices Found'})
+            else:
+                for device in devices:
+                    self.db.session.delete(device)
+                self.db.session.commit()
+                return jsonify({'message': 'All Devices Deleted Successfully'})
+            
+        @self.app.route("/network/change/name/<int:device_id>",methods=['POST'])
+        def change_network_name(device_id):
+            device = NetworkDevice.query.get(device_id)
+            if device is None:
+                return jsonify({'message': 'Device not found'})
+            else:
+                device.name = request.json['name']
+                self.db.session.commit()
+                return jsonify({'message': 'Device Name Changed Successfully'})
         
     def run(self):
         self.app.run()
