@@ -438,15 +438,19 @@ class Server:
                 device_list = [{'name':device.name, 'ip':device.ip, 'mac':device.mac,'support':device.support,'state':device.state,'id':device.id} for device in devices]
                 return jsonify({'devices':device_list})
             
-        @self.app.route("/network/scan/<ip_addr>",methods=['GET'])
-        def scan_network(ip_addr):
+        @self.app.route("/network/scan",methods=['POST'])
+        def scan_network():
+            body = request.get_json()
+            ip_addr = body['ip']
             if ip_addr is None or ip_addr == '':
-                self.network_scanner.scan(ip_addr=ip_addr)
+                self.network_scanner.scan(ip_addr='192.168.29.1/24')
                 devices = self.network_scanner.get_scanned_devices()
+                devices = [{'id': idx + 1, **device} for idx, device in enumerate(devices)]
                 return jsonify({'devices': devices})
 
-            self.network_scanner.scan('192.168.29.1/24')
+            self.network_scanner.scan(ip_addr=ip_addr)
             devices = self.network_scanner.get_scanned_devices()
+            devices = [{'id': idx + 1, **device} for idx, device in enumerate(devices)]
             return jsonify({'devices': devices})
             
         
@@ -460,7 +464,7 @@ class Server:
             self.db.session.commit()
             return jsonify({'message': 'Device Added Successfully'})
             
-        @self.app.route("network/wake/<int:device_id>",methods=['POST'])
+        @self.app.route("/network/wake/<int:device_id>",methods=['POST'])
         def wake_device(device_id):
             device = NetworkDevice.query.get(device_id)
             if device is None:
