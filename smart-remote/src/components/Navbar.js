@@ -10,8 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from "@mui/material/TextField";
-import { DataGrid, GridColDef, GridValueGetterParams, GridApi } from '@mui/x-data-grid';
-import CalendarScreen from "../screens/CalendarScreen";
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -322,6 +321,7 @@ const CalendarScreenNavBar = ({navigation,destination}) => {
                   Title
                 </Typography>
                 <TextField id="outlined-basic" variant="outlined" />
+                <Button variant="contained">Scan</Button>
                 <div>
                   <FormGroup>
                     <FormControlLabel
@@ -381,6 +381,7 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [startScan, setStartScan] = useState(false);
   const [scanList, setScanList] = useState([]);
+  const [ipAddress, setIpAddress] = useState("")
   const menuOpen = Boolean(menuAnchor);
 
   const [title, setTitle] = useState('');
@@ -416,6 +417,18 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
       width: 150,
       editable: false,
     },
+    {
+      field: "action",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params) => {
+        const onClick = (e) => {
+          e.stopPropagation(); // don't select this row after clicking
+        };
+  
+        return <Button onClick={onClick}>Add</Button>;
+      }
+    },
   ]
 
   const handleStartTimeChange = time => {
@@ -437,10 +450,14 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
     })
   }
 
-  const getRowId = (row) => {
-    return row.id;
-  };
-  
+  const scanButtonPushed = () =>{
+    handleScanList(ipAddress)
+  }
+
+  const handleIPChange = (event) => {
+    console.log(ipAddress)
+  }
+
   useEffect(()=>{
   },[])
 
@@ -460,22 +477,6 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
 
   const handleCloseMenu = () => {
     setMenuAnchor(null);
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      title,
-      description,
-      startTime,
-      endTime,
-      calendarType,
-      color,
-      allDay,
-      status
-    });
-    // You can add further logic here, like sending data to an API or performing other actions.
   };
 
   return (
@@ -504,10 +505,21 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Network Devices
+            </Typography>
+            <div>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                IP Address
+              </Typography>
+              <TextField id="outlined-basic" variant="outlined" onChange={handleIPChange} />
+              <Button variant="contained" onClick={scanButtonPushed}>Scan</Button>
+            </div>
             <DataGrid
               rows={scanList}
               columns={networkColumnFormat}
               checkboxSelection
+              sx={{ height: 420, width: '100%' }}
             ></DataGrid>
           </Box>
         </Modal>
