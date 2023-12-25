@@ -25,6 +25,8 @@ import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import axios from "axios";
+
 import './CalendarNavBar.css'
 
 const HomeScreenNavbar = () => {
@@ -390,6 +392,32 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
   const [allDay, setAllDay] = useState(false);
   const [status, setStatus] = useState('');
 
+  const networkColumnFormat = [
+    {
+      field: 'id',
+      headerName: 'ID', 
+      width: 30 
+    },
+    {
+      field: 'hostname',
+      headerName: 'hostname',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'ip',
+      headerName: 'IP',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'mac',
+      headerName: 'Mac',
+      width: 150,
+      editable: false,
+    },
+  ]
+
   const handleStartTimeChange = time => {
     setStartTime(time);
   };
@@ -402,22 +430,23 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
     setColor(event.target.value);
   };
 
-  const handleScanList = async () => {
-    fetch("/network/scan", { method: "GET" }).then((response) => {
-      response.json().then((data) => {
-        setScanList(data);
-      });
-    });
-    console.log(scanList);
+  const handleScanList = async (ip_addr) => {
+    const reqOpt = {ip:ip_addr}
+    axios.post("/network/scan",reqOpt).then((response) => {
+      setScanList(response.data.devices);
+    })
   }
 
+  const getRowId = (row) => {
+    return row.id;
+  };
+  
   useEffect(()=>{
-    handleScanList();
-    console.log("Start Scan")
   },[])
 
   const handleOpenModal = () => {
     setStartScan(true);
+    handleScanList("")
     setModalOpen(true);
   }
 
@@ -475,11 +504,11 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            {/* <DataGrid
+            <DataGrid
               rows={scanList}
-              columns={columns}
+              columns={networkColumnFormat}
               checkboxSelection
-            ></DataGrid> */}
+            ></DataGrid>
           </Box>
         </Modal>
       </div>
