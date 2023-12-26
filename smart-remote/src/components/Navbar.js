@@ -423,7 +423,9 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
       sortable: false,
       renderCell: (params) => {
         const onClick = (e) => {
-          e.stopPropagation(); // don't select this row after clicking
+          e.stopPropagation();
+          const api = params.api;
+          console.log(api)
         };
   
         return <Button onClick={onClick}>Add</Button>;
