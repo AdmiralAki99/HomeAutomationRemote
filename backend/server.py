@@ -456,10 +456,11 @@ class Server:
         
         @self.app.route("/network/add/",methods=['POST'])
         def add_device():
+            body = request.get_json()
             network_keys = ['name', 'ip', 'mac','support','state']
-            if not all(key in request.json for key in network_keys):
+            if not all(key in body for key in network_keys):
                 return jsonify({'error': 'Some elements are missing'}), 400
-            device = NetworkDevice(request.json['name'],request.json['ip'],request.json['mac'],request.json['support'],request.json['state'])
+            device = NetworkDevice(body['name'],body['ip'],body['mac'],body['support'],body['state'])
             self.db.session.add(device)
             self.db.session.commit()
             return jsonify({'message': 'Device Added Successfully'})
