@@ -422,13 +422,11 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
       headerName: "Action",
       sortable: false,
       renderCell: (params) => {
-        const onClick = (e) => {
-          e.stopPropagation();
-          const api = params.api;
-          console.log(api)
-        };
-  
-        return <Button onClick={onClick}>Add</Button>;
+        return(
+          <Button onClick={(e)=>{addNetworkDevice(params.row)}}>
+            Add
+          </Button>
+        )
       }
     },
   ]
@@ -436,6 +434,10 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
   const handleStartTimeChange = time => {
     setStartTime(time);
   };
+
+  const addNetworkDevice = (device) =>{
+    console.log(device)
+  }
 
   const handleEndTimeChange = time => {
     setEndTime(time);
@@ -520,7 +522,6 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
             <DataGrid
               rows={scanList}
               columns={networkColumnFormat}
-              checkboxSelection
               sx={{ height: 420, width: '100%' }}
             ></DataGrid>
           </Box>
