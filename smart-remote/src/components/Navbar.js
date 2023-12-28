@@ -396,12 +396,12 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
   const networkColumnFormat = [
     {
       field: 'id',
-      headerName: 'ID', 
+      headerName: 'No.', 
       width: 30 
     },
     {
       field: 'hostname',
-      headerName: 'hostname',
+      headerName: 'Hostname',
       width: 150,
       editable: true,
     },
@@ -431,17 +431,9 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
     },
   ]
 
-  const handleStartTimeChange = time => {
-    setStartTime(time);
-  };
-
   const addNetworkDevice = (device) =>{
     console.log(device)
   }
-
-  const handleEndTimeChange = time => {
-    setEndTime(time);
-  };
 
   const handleColorChange = event => {
     setColor(event.target.value);
