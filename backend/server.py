@@ -37,7 +37,7 @@ class Server:
 
 
         class SmartLight(self.db.Model):
-            id = self.db.Column(self.db.Integer, primary_key=True)
+            id = self.db.Column(self.db.Integer, primary_key=True,autoincrement=True)
             name = self.db.Column(self.db.String(100), nullable=False)
             ip = self.db.Column(self.db.String(100), nullable=False)
             state = self.db.Column(self.db.String(100), nullable=False)
@@ -56,7 +56,7 @@ class Server:
 
         class CalendarEvent(self.db.Model):
             __bind_key__ = 'calendar'
-            id = self.db.Column(self.db.Integer, primary_key=True)
+            id = self.db.Column(self.db.Integer, primary_key=True,autoincrement=True)
             title = self.db.Column(self.db.String(100), nullable=False)
             start_date_day = self.db.Column(self.db.Integer, nullable=False)
             start_date_month = self.db.Column(self.db.Integer, nullable=False)
@@ -75,9 +75,8 @@ class Server:
             colour = self.db.Column(self.db.String(10), nullable=False)
 
      
-            def __init__(self,id,title,start_date_day,start_date_month,start_date_year,end_date_day,end_date_month,end_date_year,start_time_hour,start_time_minute,end_time_hour,end_time_minute,all_day,description,calendar,status,colour) -> None:
+            def __init__(self,title,start_date_day,start_date_month,start_date_year,end_date_day,end_date_month,end_date_year,start_time_hour,start_time_minute,end_time_hour,end_time_minute,all_day,description,calendar,status,colour) -> None:
                 super().__init__()
-                self.id = id
                 self.title = title
                 self.start_date_day = start_date_day
                 self.start_date_month = start_date_month
@@ -105,7 +104,7 @@ class Server:
 
         class NetworkDevice(self.db.Model):
             __bind_key__ = 'network'
-            id = self.db.Column(self.db.Integer, primary_key=True)
+            id = self.db.Column(self.db.Integer, primary_key=True,autoincrement=True)
             name = self.db.Column(self.db.String(100), nullable=False)
             ip = self.db.Column(self.db.String(100), nullable=False)
             mac = self.db.Column(self.db.String(100), nullable=False)
@@ -340,7 +339,7 @@ class Server:
 
         @self.app.route("/calendar/add/",methods=['POST'])
         def add_event():
-            calendar_keys = ['id', 'title','start_date_day','start_date_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status','colour']
+            calendar_keys = ['title','start_date_day','start_date_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status','colour']
             if not all(key in request.json for key in calendar_keys):
                 return jsonify({'error': 'Some elements are missing'}), 400
             event = CalendarEvent(request.json['id'],request.json['title'],request.json['start_date_day'],request.json['start_date_month'],request.json['start_date_year'],request.json['start_time_hour'],request.json['start_time_minute'],request.json['end_date_day'],request.json['end_date_month'],request.json['end_date_year'],request.json['end_time_hour'],request.json['end_time_minute'],request.json['all_day'],request.json['description'],request.json['calendar'],request.json['status'],request.json['colour'])
