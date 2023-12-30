@@ -502,6 +502,21 @@ class Server:
                 device.name = request.json['name']
                 self.db.session.commit()
                 return jsonify({'message': 'Device Name Changed Successfully'})
+            
+        
+        @self.app.route("/network/ping/",methods=['POST'])
+        def ping_device():
+            body = request.get_json()
+            ip = body['ip']
+            if ip is None or ip == '':
+                return jsonify({'message': 'IP Address not found'})
+            else:
+                if self.network_scanner.ping_device(ip):
+                    return jsonify({'power': True})
+                else:
+                    return jsonify({'power': False})
+            
+        """ Camera Routes """
         
     def run(self):
         self.app.run()

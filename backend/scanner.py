@@ -52,7 +52,8 @@ class NetworkScanner:
     def wake_device(self):
         ...
 
-    def ping_device(self,ip_addr):
+    # Need To Find A Approx Interval, So That The Device Doesn't Get Overloaded
+    def ping_device(self,ip_addr) -> bool:
         try:
             result = subprocess.run(['ping', '-c', '1', ip_addr], capture_output=True, text=True, timeout=5)
             if result.returncode == 0:
