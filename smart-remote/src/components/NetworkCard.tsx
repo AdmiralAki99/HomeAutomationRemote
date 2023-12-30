@@ -4,6 +4,9 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import BedtimeOffOutlinedIcon from '@mui/icons-material/BedtimeOffOutlined';
 import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
+import CellTowerIcon from '@mui/icons-material/CellTower';
+
+import axios from 'axios';
 
 interface NetworkCardStateProps{
     deviceName: string;
@@ -38,6 +41,8 @@ class NetworkCard extends React.Component<NetworkCardProps>{
             wakeStatus: this.props.wakeStatus
         }
         this.wakeButtonClicked = this.wakeButtonClicked.bind(this)
+        this.powerButtonClicked = this.powerButtonClicked.bind(this)
+        this.pingButtonClicked = this.pingButtonClicked.bind(this)
         
     }
 
@@ -59,6 +64,17 @@ class NetworkCard extends React.Component<NetworkCardProps>{
         })
     }
 
+    powerButtonClicked(){
+      
+    }
+
+    pingButtonClicked(){
+      const reqOpt = {ip: "192.168.29.184"}
+      // axios.post("/network/ping",reqOpt).then((response)=>{
+      //   console.log(response)
+      // })
+    }
+
     renderDeviceInfo(){
         return (
           <div className="row row-start-1 row-end-3 text-white justify-center">
@@ -69,10 +85,11 @@ class NetworkCard extends React.Component<NetworkCardProps>{
 
     renderDeviceInteractionButtons(){
         return(
-            <div className='grid grid-cols-3'>
-               <button onClick={this.wakeButtonClicked}>{this.state.wakeStatus? <BedtimeIcon sx={{color:'white'}}></BedtimeIcon>:<BedtimeOffOutlinedIcon sx={{color:'white'}}></BedtimeOffOutlinedIcon>}</button>
-               <button><PowerSettingsNewIcon sx={{color:'white'}}></PowerSettingsNewIcon></button>
+            <div className='grid grid-cols-4'>
+                <button onClick={this.wakeButtonClicked}>{this.state.wakeStatus? <BedtimeIcon sx={{color:'white'}}></BedtimeIcon>:<BedtimeOffOutlinedIcon sx={{color:'white'}}></BedtimeOffOutlinedIcon>}</button>
+                <button><PowerSettingsNewIcon sx={{color:'white'}}></PowerSettingsNewIcon></button>
                 <button><RestartAltOutlinedIcon sx={{color:'white'}}></RestartAltOutlinedIcon></button>
+                <button onClick={this.pingButtonClicked}><CellTowerIcon sx={{color:'white'}}></CellTowerIcon></button>
             </div>
         )
     }
