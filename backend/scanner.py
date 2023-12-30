@@ -4,6 +4,7 @@ from scapy.all import ARP, Ether, srp
 import socket
 import sys
 import struct
+import subprocess
 
 
 class NetworkScanner:
@@ -50,6 +51,16 @@ class NetworkScanner:
         
     def wake_device(self):
         ...
+
+    def ping_device(self,ip_addr):
+        try:
+            result = subprocess.run(['ping', '-c', '1', ip_addr], capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                return True 
+            else:
+                return False
+        except subprocess.TimeoutExpired:
+            return False
 
 if __name__ == '__main__':
     network = NetworkScanner(ip='192.168.29.184')
