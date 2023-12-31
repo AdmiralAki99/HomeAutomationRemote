@@ -23,7 +23,8 @@ class Server:
         self.app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir,"database/database.db")}'
         self.app.config['SQLALCHEMY_BINDS'] = {
             'calendar': f'sqlite:///{os.path.join(base_dir,"database/calendar.db")}',
-            'network': f'sqlite:///{os.path.join(base_dir,"database/network.db")}'
+            'network': f'sqlite:///{os.path.join(base_dir,"database/network.db")}',
+            'camera': f'sqlite:///{os.path.join(base_dir,"database/camera.db")}'
         }
         self.app.config['SESSION_TYPE'] = 'filesystem'
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -125,6 +126,23 @@ class Server:
             
         self.smart_light_schema = SmartLightSchema(many=True)
         self.calendar_event_schema = CalendarEventSchema(many=True)
+
+        class CameraDevice(self.db.model):
+            __bind_key__ = 'camera'
+            id = self.db.Column(self.db.Integer, primary_key=True,autoincrement=True)
+            name = self.db.Column(self.db.String(100), nullable=False)
+            ip = self.db.Column(self.db.String(100), nullable=False)
+            mac = self.db.Column(self.db.String(100), nullable=False)
+            active = self.db.Column(self.db.Boolean, nullable=False)
+
+            def __init__(self, name, ip, mac,active):
+                self.name = name
+                self.ip = ip
+                self.mac = mac
+                self.active = active
+
+            def __repr__(self) -> str:
+                return f'<CameraDevice {self.name}>'
 
         @self.app.route("/test")
         def hello_world():
