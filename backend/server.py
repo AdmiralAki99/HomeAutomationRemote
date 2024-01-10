@@ -127,7 +127,7 @@ class Server:
         self.smart_light_schema = SmartLightSchema(many=True)
         self.calendar_event_schema = CalendarEventSchema(many=True)
 
-        class CameraDevice(self.db.model):
+        class CameraDevice(self.db.Model):
             __bind_key__ = 'camera'
             id = self.db.Column(self.db.Integer, primary_key=True,autoincrement=True)
             name = self.db.Column(self.db.String(100), nullable=False)
@@ -460,7 +460,7 @@ class Server:
             body = request.get_json()
             ip_addr = body['ip']
             if ip_addr is None or ip_addr == '':
-                self.network_scanner.scan(ip_addr='192.168.29.1/24')
+                self.network_scanner.scan(ip_addr='10.0.0.1/24')
                 devices = self.network_scanner.get_scanned_devices()
                 devices = [{'id': idx + 1, **device} for idx, device in enumerate(devices)]
                 return jsonify({'devices': devices})

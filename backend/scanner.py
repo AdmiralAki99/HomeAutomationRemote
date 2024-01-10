@@ -64,6 +64,6 @@ class NetworkScanner:
             return False
 
 if __name__ == '__main__':
-    network = NetworkScanner(ip='192.168.29.184')
-    network.scan()
+    network = NetworkScanner()
+    network.scan(ip_addr="10.0.0.1/24")
     network.print_scanned_devices()
