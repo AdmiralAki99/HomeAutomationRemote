@@ -535,6 +535,28 @@ class Server:
                     return jsonify({'power': False})
             
         """ Camera Routes """
+
+        @self.app.route("/camera/add")
+        def add_camera():
+            body = request.get_json()
+            camera_keys = ['name','ip','mac','active']
+            if not all(key in body for key in camera_keys):
+                jsonify({"Message":"Missing Variables"})
+            else:
+                camera = CameraDevice(name=body['name'],ip=body['ip'],mac=body['mac'],active=body['active'])
+                self.db.session.add(camera)
+                self.db.session.commit()
+                return jsonify({"Message":"Camera Added Successfully"})
+            
+        @self.app.route("/camera/delete/<int:camera_id>")
+        def delete_camera(camera_id):
+            camera = CameraDevice.query.get(camera_id)
+            if camera is None:
+                return jsonify({"Message":"Camera Not Found"})
+            else:
+                self.db.session.delete(camera)
+                self.db.session.commit()
+                return jsonify({"Message":"Camera Deleted Successfully"})
         
     def run(self):
         self.app.run()
