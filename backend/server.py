@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from flask import Flask, redirect,url_for,request,jsonify,session
+from flask import Flask, redirect,url_for,request,jsonify,session,Response
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -10,6 +10,7 @@ from datetime import date
 
 from spotifyManager import SpotifyManager
 from scanner import NetworkScanner
+from camera import Camera
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,6 +18,7 @@ class Server:
 
     spotify_manager = SpotifyManager()
     network_scanner = NetworkScanner()
+    camera_manager = Camera()
 
     def __init__(self) -> None:
         self.app = Flask(__name__)
@@ -557,6 +559,10 @@ class Server:
                 self.db.session.delete(camera)
                 self.db.session.commit()
                 return jsonify({"Message":"Camera Deleted Successfully"})
+            
+        self.app.route("/camera/get/feed")
+        def get_camera_feed():
+            return Response(self.camera_manager.get_camera_feed(),mimetype='multipart/x-mixed-replace; boundary=frame')
         
     def run(self):
         self.app.run()
