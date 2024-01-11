@@ -31,7 +31,7 @@ function NetworkScreen({route, navigation} : NetworkProps){
     return(
         <View>
             <NetworkScreenNavBar navigation={navigation} destination={"Home"} />
-            <div className='grid grid-cols-2 justify-between pl-7 pt-4 bg-red-400 w-screen max-w-screen-md h-screen max-h-screen'>
+            <div className='grid grid-cols-2 justify-between pl-7 pt-4 bg-noir w-screen max-w-screen-md h-screen max-h-screen'>
                 {isEmpty(networkDevices) ? <div></div> : networkDevices.map((device: any) => {
                     return <NetworkCard deviceName={device.name} ipAddress={device.ip} macAddress={device.mac} wakeStatus={device.status}/>
                 })}
