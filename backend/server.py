@@ -560,7 +560,7 @@ class Server:
                 self.db.session.commit()
                 return jsonify({"Message":"Camera Deleted Successfully"})
             
-        self.app.route("/camera/get/feed")
+        @self.app.route("/camera/get/feed")
         def get_camera_feed():
             return Response(self.camera_manager.get_camera_feed(),mimetype='multipart/x-mixed-replace; boundary=frame')
         
