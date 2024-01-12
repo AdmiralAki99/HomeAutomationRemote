@@ -21,18 +21,12 @@ function CameraScreen({route, navigation} : CameraProps){
         }
     }
 
-    useEffect(() => {
-      console.log("Getting Video Feed")
-      getVideoFeed()
-    },[])
-
     return (
       <View>
         <ScreenNavbar navigation={navigation} destination={"Home"} />
         <div>
           <div className='p-6'>
-            <video ref={videoRef} width="640" height="480"></video>
-            {/* <img ref={videoRef} alt="Webcam Frame" width="640" height="640" /> */}
+            <img src='/camera/get/feed' />
           </div>
         </div>
       </View>
