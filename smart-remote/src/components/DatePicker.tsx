@@ -27,7 +27,7 @@ class DatePicker extends React.Component{
     weekdayMap = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
     monthMap = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
-
+    // Change the Properties To A Interface and remove ambiguous data types
     constructor(props:any){
         super(props)
         this.state = {

@@ -8,7 +8,7 @@ interface CameraFeedPlayerProps{
     url : string
 }
 
-class CameraFeedPlayer extends React.Component{
+class CameraFeedPlayer extends React.Component<CameraFeedPlayerState>{
 
     state : CameraFeedPlayerState = {
         url : ''

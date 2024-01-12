@@ -11,10 +11,6 @@ type CameraProps = NativeStackScreenProps<ScreenParamList, 'Camera'>;
 function CameraScreen({route, navigation} : CameraProps){
     navigation.navigate('Camera')
 
-    const cameraProps = {
-      url : '/camera/get/feed'
-    }
-
     const videoRef = useRef<HTMLVideoElement>(null)
 
     const getVideoFeed = async () => {
@@ -32,7 +28,7 @@ function CameraScreen({route, navigation} : CameraProps){
         <div>
           <div className='p-6'>
             {/* <img src='/camera/get/feed' /> */}
-            <CameraFeedPlayer {...cameraProps} />
+            <CameraFeedPlayer url='/camera/get/feed' />
           </div>
         </div>
       </View>

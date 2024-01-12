@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import LightSlider from './LightSlider';
 import Checkbox from './LightCheckbox';
 
+//TODO: Convert To React Component Style
+
 const LightCard = ({min,value,label,onChange,isChecked,onCheck}) => {
 
     const [minVal, setVal] = useState(value);
