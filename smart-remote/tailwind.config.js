@@ -19,7 +19,8 @@ module.exports = withMT({
     colors:{
       home: '#181818',
       bubblegum: '#DA3B5E',
-      noir: '#1C1C1D'
+      noir: '#1C1C1D',
+      greyCard: "#2F2F2F"
     },
     extend: {
       colors: {

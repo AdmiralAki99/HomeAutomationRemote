@@ -9,8 +9,8 @@ let backendServerChildProcess;
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 720,
-    height: 720,
+    width: 600,
+    height: 1024,
     webPreferences: {
       nodeIntegration: true
     }
