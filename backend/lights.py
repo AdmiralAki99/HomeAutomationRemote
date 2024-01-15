@@ -46,6 +46,18 @@ class Light:
             return True
         else:
             return False
+        
+
+
+    class Device:
+        lights = []
+
+        def __init__(self):
+            ...
+
+        def scan(self):
+            discovery = asyncio.run(Discover.discover())
+            return discovery
     
 
 
