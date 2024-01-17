@@ -209,6 +209,18 @@ class Server:
             lights = [Light(keys).get_json_data() for keys in discovery.keys()]
                 
             return jsonify({'lights': lights})
+        
+        @self.app.route("/light/add",methods=['POST'])
+        def add_light():
+            body = request.get_json()
+            light_keys = ['name', 'ip', 'state']
+            if not all(key in body for key in light_keys):
+                return jsonify({'error': 'Some elements are missing'}), 400
+            
+            light = SmartLight(body['name'],body['ip'],body['state'])
+            self.db.session.add(light)
+            self.db.session.commit()
+            return jsonify({'message': 'Light Added Successfully'})
                 
             """ Spotify Routes """
 
