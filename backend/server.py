@@ -11,6 +11,9 @@ from datetime import date
 from spotifyManager import SpotifyManager
 from scanner import NetworkScanner
 from camera import Camera
+from lights import Light
+from kasa import Discover
+import asyncio
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -199,6 +202,13 @@ class Server:
                     self.db.session.delete(light)
                     self.db.session.commit()
                     return jsonify({'message': 'Light Deleted Successfully'})
+                
+        @self.app.route("/light/scan",methods=['POST'])
+        def scan_lights():
+            discovery = asyncio.run(Discover.discover())
+            lights = [Light(keys).get_json_data() for keys in discovery.keys()]
+                
+            return jsonify({'lights': lights})
                 
             """ Spotify Routes """
 

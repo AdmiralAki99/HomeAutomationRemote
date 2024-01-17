@@ -13,6 +13,7 @@ class Light:
     def __init__(self, ip):
         self.ip = ip
         self.bulb = SmartBulb(ip)
+        asyncio.run(self.bulb.update())
         self.brightness = self.bulb.brightness
         self.name = self.bulb.alias
 
@@ -77,6 +78,9 @@ class Light:
         asyncio.run(self.bulb.set_alias(name))
         self.name = name
 
+    def get_json_data(self):
+        return {"ip": self.ip, "name": self.name, "state": self.get_state()}
+
 
     class Device:
         lights = []
@@ -93,6 +97,11 @@ class Light:
 
         def get_lights(self):
             return {"lights": self.lights}
+        
+
+"""
+{'10.0.0.167': <DeviceType.Bulb model KL125(US) at 10.0.0.167 (Desk Lamp), is_on: True - dev specific: {'Brightness': 9, 'Is dimmable': True, 'Color temperature': 4150, 'Valid temperature range': ColorTempRange(min=2500, max=6500), 'HSV': HSV(hue=0, saturation=0, value=9), 'Presets': [SmartBulbPreset(index=0, brightness=50, hue=0, saturation=0, color_temp=2700, custom=None, id=None, mode=None), SmartBulbPreset(index=1, brightness=100, hue=0, saturation=100, color_temp=0, custom=None, id=None, mode=None), SmartBulbPreset(index=2, brightness=100, hue=120, saturation=100, color_temp=0, custom=None, id=None, mode=None), SmartBulbPreset(index=3, brightness=100, hue=240, saturation=100, color_temp=0, custom=None, id=None, mode=None)]}>}
+"""
 
 
 
