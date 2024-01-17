@@ -2,7 +2,7 @@ import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { ScreenNavbar } from '../components/Navbar';
-import CameraFeedPlayer from '../components/CameraFeedPlayer';
+import CameraCard from '../components/CameraCard';
 import { ScreenParamList } from '../App';
 import { useEffect, useRef} from 'react';
 
@@ -22,13 +22,18 @@ function CameraScreen({route, navigation} : CameraProps){
         }
     }
 
+    useEffect(() =>{
+    })
+
     return (
       <View>
         <ScreenNavbar navigation={navigation} destination={"Home"} />
         <div>
-          <div className='p-6'>
-            {/* <img src='/camera/get/feed' /> */}
-            <CameraFeedPlayer url='/camera/get/feed' />
+          <div className='grid grid-cols-2 justify-between pl-2 pt-4 w-screen max-w-screen-md h-screen max-h-screen'>
+            <CameraCard cameraName='Camera 1' cameraUrl='link' />
+            <CameraCard cameraName='Camera 2' cameraUrl='link' />
+            <CameraCard cameraName='Camera 3' cameraUrl='link' />
+            <CameraCard cameraName='Camera 4' cameraUrl='link' />
           </div>
         </div>
       </View>
