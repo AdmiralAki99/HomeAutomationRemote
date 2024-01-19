@@ -53,12 +53,11 @@ class CameraCard extends React.Component<CameraCardProps>{
     render(){
         return (
           <div>
-            <a className="block max-w-lg w-60 h-40 p-6 bg-greyCard bordershadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70 rounded-3xl">
-              <div className="grid grid-rows-3 grid-cols-2 gap-20">
+            <a className="block max-w-lg w-60 h-40 p-6 bg-black border border-white shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70 rounded-3xl">
+              <div className="grid grid-rows-1 grid-cols-2 gap-4">
                 {this.renderTitle()}
                 <div>{this.renderActionButtons()}</div>
               </div>
-              
             </a>
           </div>
         );
