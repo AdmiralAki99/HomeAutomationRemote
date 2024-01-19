@@ -27,13 +27,17 @@ function CameraScreen({route, navigation} : CameraProps){
 
     return (
       <View>
-        <ScreenNavbar navigation={navigation} destination={"Home"} />
-        <div>
-          <div className='grid grid-cols-2 justify-between pl-2 pt-4 w-screen max-w-screen-md h-screen max-h-screen'>
-            <CameraCard cameraName='Camera 1' cameraUrl='link' />
-            <CameraCard cameraName='Camera 2' cameraUrl='link' />
-            <CameraCard cameraName='Camera 3' cameraUrl='link' />
-            <CameraCard cameraName='Camera 4' cameraUrl='link' />
+        <div className="bg-red-800">
+          <ScreenNavbar navigation={navigation} destination={"Home"} />
+          <div className='bg-noir h-screen flex w-screen'>
+            <div className="grid grid-cols-2 grid-flow-row pl-2 pt-20 w-screen h-screen max-w-screen bg-transparent border-white">
+              <CameraCard cameraName="Camera 1" cameraUrl="link" />
+              <CameraCard cameraName="Camera 2" cameraUrl="link" />
+              <CameraCard cameraName="Camera 3" cameraUrl="link" />
+              <CameraCard cameraName="Camera 4" cameraUrl="link" />
+              <CameraCard cameraName="Camera 5" cameraUrl="link" />
+              <CameraCard cameraName="Camera 6" cameraUrl="link" />
+            </div>
           </div>
         </div>
       </View>
