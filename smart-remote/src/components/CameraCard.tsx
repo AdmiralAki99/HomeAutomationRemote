@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import CameraIcon from '@mui/icons-material/Camera';
 import InfoIcon from '@mui/icons-material/Info';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import CloseIcon from '@mui/icons-material/Close';
 
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { Button } from "@mui/material";
@@ -21,28 +21,29 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 600,
+    width: 500,
     height: 600,
-    bgcolor: 'background.paper',
+    bgcolor: '#1C1C1D',
     boxShadow: 24,
     p: 4,
   };
 
 class CameraCard extends React.Component<CameraCardProps>{
 
-    state : CameraCardProps = {
+    state = {
         cameraName: '',
         cameraUrl: '',
+        modalOpen: false
     }
-
-    modalOpen = false
 
     constructor(props:CameraCardProps){
         super(props)
         this.state = {
             cameraName: this.props.cameraName,
-            cameraUrl: this.props.cameraUrl
+            cameraUrl: this.props.cameraUrl,
+            modalOpen: false
         }
+
         this.handleOpenModal = this.handleOpenModal.bind(this)
         this.handleCloseModal = this.handleCloseModal.bind(this)
         this.renderCameraFeed = this.renderCameraFeed.bind(this)
@@ -52,21 +53,12 @@ class CameraCard extends React.Component<CameraCardProps>{
         
     }
 
-    componentDidUpdate(prevProps: Readonly<CameraCardProps>, prevState: Readonly<{}>, snapshot?: any): void {
-        console.log(this.modalOpen)
-    }
-
     handleCloseModal = () => {
-        console.log("Closing Modal")
-        console.log(this.modalOpen)
-        this.modalOpen = false
-        console.log(this.modalOpen)
+      this.setState({modalOpen:false})
     }
 
     handleOpenModal(){
-        console.log("Opening Modal")
-        this.modalOpen = true
-        console.log(this.modalOpen)
+      this.setState({modalOpen:true})
     }
 
     renderTitle(){
@@ -79,18 +71,9 @@ class CameraCard extends React.Component<CameraCardProps>{
 
     renderCameraFeed(){
         return(
-            <Modal
-            open={this.modalOpen}
-            onClose={this.handleCloseModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <div className="flex justify-end items-end">
-                <Button onClick={this.handleCloseModal}>Close</Button>
-              </div>
-            </Box>
-          </Modal>
+            <div>
+                <CameraFeedPlayer url={this.state.cameraUrl} />
+            </div>
         )
     }
 
@@ -121,7 +104,20 @@ class CameraCard extends React.Component<CameraCardProps>{
                 <div>{this.renderActionButtons()}</div>
               </div>
             </a>
-            {(this.modalOpen)?<CameraFeedPlayer url="/link"></CameraFeedPlayer>:null}
+            <Modal
+            open={this.state.modalOpen}
+            onClose={this.handleCloseModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            className="block rounded-full">
+            <Box sx={style}>
+              <div className="flex justify-end items-end pb-6">
+                <Button onClick={this.handleCloseModal}><CloseIcon sx={{color:'white'}}></CloseIcon></Button>
+              </div>
+              <div>{this.renderCameraFeed()}</div>
+            </Box>
+          </Modal>
+
           </div>
         );
     }
