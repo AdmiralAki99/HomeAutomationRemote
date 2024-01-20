@@ -173,6 +173,13 @@ const LightScreenNavBar = ({navigation,destination}) => {
         return(
           <Button onClick={(e)=>{
             console.log(params.row)
+            axios.post("/light/add",{
+              ip: params.row.ip,
+              name: params.row.name,
+              state: params.row.state,
+            }).then((response) => {
+              console.log(response)
+            })
           }}>
             Add
           </Button>

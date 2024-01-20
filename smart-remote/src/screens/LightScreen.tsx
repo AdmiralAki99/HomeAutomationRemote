@@ -59,7 +59,7 @@ function LightScreen({route,navigation}: LightProps){
           <div>
             <div>
               <div className="flex items-center justify-center w-screen">
-                <div className="grid grid-cols-2 items-center bg-home justify-center gap-6 p-8">
+                <div className="grid grid-cols-2 items-center bg-home w-screen h-screen max-h-screen justify-center gap-6 p-8">
                   <div className="grid grid-cols-1 items-center justify-center gap-4 p-6">
                     {lights ? (
                       lights.map((light:any, index:any) => (
