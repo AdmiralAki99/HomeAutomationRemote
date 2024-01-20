@@ -12,9 +12,11 @@ from spotifyManager import SpotifyManager
 from scanner import NetworkScanner
 from camera import Camera
 from lights import Light
-from kasa import Discover
+from kasa import Discover,Credentials
 import asyncio
+from dotenv import load_dotenv
 
+load_dotenv()
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Server:
@@ -156,6 +158,7 @@ class Server:
             return jsonify(light_list)
         
         """ Smart Light Routes """
+
         @self.app.route("/light/all",methods=['GET'])
         def get_all_lights():
             lights = SmartLight.query.all()
@@ -203,11 +206,10 @@ class Server:
                     self.db.session.commit()
                     return jsonify({'message': 'Light Deleted Successfully'})
                 
-        @self.app.route("/light/scan",methods=['POST'])
+        @self.app.route("/light/scan",methods=['GET'])
         def scan_lights():
-            discovery = asyncio.run(Discover.discover())
-            lights = [Light(keys).get_json_data() for keys in discovery.keys()]
-                
+            lights = asyncio.run(self.discover_smart_lights())
+            lights = [{'id': idx + 1, **device} for idx, device in enumerate(lights)]
             return jsonify({'lights': lights})
         
         @self.app.route("/light/add",methods=['POST'])
@@ -586,6 +588,24 @@ class Server:
         def get_camera_feed():
             return Response(self.camera_manager.get_camera_feed(),mimetype='multipart/x-mixed-replace; boundary=frame')
         
+        @self.app.route("/camera/scan",methods=['POST'])
+        def scan_cameras():
+            return jsonify({"Message":"Camera Scan"})
+        
+    async def discover_smart_lights(self):
+        devices = await Discover.discover(
+            credentials= Credentials(f'{os.getenv("KASA_USERNAME")}', f'{os.getenv("KASA_PASSWORD")}'),
+            timeout=20,
+        )
+
+        lights= []
+    
+        for ip,device in devices.items():
+            await device.update()
+            lights.append({"ip": ip, "name": device.alias, "state": device.is_on})
+
+        return lights
+
     def run(self):
         self.app.run()
 
