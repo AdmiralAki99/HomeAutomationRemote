@@ -124,16 +124,11 @@ const LightScreenNavBar = ({navigation,destination}) => {
   const handleScanList = async () => {
     fetch("/light/scan", { method: "GET" }).then((response) => {
       response.json().then((data) => {
-        setScanList(data);
+        setScanList(data.lights);
+        console.log(data)
       });
     });
-    console.log(scanList);
   }
-
-  useEffect(()=>{
-    handleScanList();
-    console.log("Start Scan")
-  },[])
 
   const handleOpenModal = () => {
     setStartScan(true);
@@ -151,6 +146,40 @@ const LightScreenNavBar = ({navigation,destination}) => {
   const handleCloseMenu = () => {
     setMenuAnchor(null);
   };
+
+  const lightColumnFormat = [
+    {
+      field: 'id',
+      headerName: 'No.', 
+      width: 30 
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'ip',
+      headerName: 'IP',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params) => {
+        return(
+          <Button onClick={(e)=>{
+            console.log(params.row)
+          }}>
+            Add
+          </Button>
+        )
+      }
+    },
+  ]
 
   return (
     <div className="flex bg-home w-screen h-9 justify-between items-center ">
@@ -194,7 +223,7 @@ const LightScreenNavBar = ({navigation,destination}) => {
               <Button onClick={handleScanList}>Scan</Button>
               <Button>Connect</Button>
             </div>
-            <DataGrid rows={scanList} columns={columns} checkboxSelection ></DataGrid>
+            <DataGrid rows={scanList} columns={lightColumnFormat} ></DataGrid>
           </Box>
         </Modal>
 
@@ -528,7 +557,8 @@ const CameraScreenNavbar = ({navigation,destination}) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [startScan, setStartScan] = useState(false);
-  const [scanList, setScanList] = useState([]); // [{name: "Light1", model: "model1"},{name: "Light2", model: "model2"}
+  const [scanList, setScanList] = useState([]);
+  const [ipAddress, setIpAddress] = useState("")
   const menuOpen = Boolean(menuAnchor);
 
   const [title, setTitle] = useState('');
@@ -540,34 +570,73 @@ const CameraScreenNavbar = ({navigation,destination}) => {
   const [allDay, setAllDay] = useState(false);
   const [status, setStatus] = useState('');
 
-  const handleStartTimeChange = time => {
-    setStartTime(time);
-  };
+  const networkColumnFormat = [
+    {
+      field: 'id',
+      headerName: 'No.', 
+      width: 30 
+    },
+    {
+      field: 'hostname',
+      headerName: 'Hostname',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'ip',
+      headerName: 'IP',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'mac',
+      headerName: 'Mac',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params) => {
+        return(
+          <Button onClick={(e)=>{addNetworkDevice(params.row)}}>
+            Add
+          </Button>
+        )
+      }
+    },
+  ]
 
-  const handleEndTimeChange = time => {
-    setEndTime(time);
-  };
+  const addNetworkDevice = (device) =>{
+    console.log(device)
+  }
 
   const handleColorChange = event => {
     setColor(event.target.value);
   };
 
-  const handleScanList = async () => {
-    fetch("/light/scan", { method: "GET" }).then((response) => {
-      response.json().then((data) => {
-        setScanList(data);
-      });
-    });
-    console.log(scanList);
+  const handleScanList = async (ip_addr) => {
+    const reqOpt = {ip:ip_addr}
+    axios.post("/network/scan",reqOpt).then((response) => {
+      setScanList(response.data.devices);
+    })
+  }
+
+  const scanButtonPushed = () =>{
+    handleScanList(ipAddress)
+  }
+
+  const handleIPChange = (event) => {
+    console.log(ipAddress)
   }
 
   useEffect(()=>{
-    handleScanList();
-    console.log("Start Scan")
   },[])
 
   const handleOpenModal = () => {
     setStartScan(true);
+    handleScanList("")
     setModalOpen(true);
   }
 
@@ -581,22 +650,6 @@ const CameraScreenNavbar = ({navigation,destination}) => {
 
   const handleCloseMenu = () => {
     setMenuAnchor(null);
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      title,
-      description,
-      startTime,
-      endTime,
-      calendarType,
-      color,
-      allDay,
-      status
-    });
-    // You can add further logic here, like sending data to an API or performing other actions.
   };
 
   return (
@@ -625,70 +678,21 @@ const CameraScreenNavbar = ({navigation,destination}) => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <div className="grid grid-cols-2">
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h6"
-                    component="h2"
-                  >
-                    Event
-                  </Typography>
-                  <IconButton edge="end" aria-label="Edit">
-                    <DoneIcon />
-                  </IconButton>
-                </div>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  Title
-                </Typography>
-                <TextField id="outlined-basic" variant="outlined" />
-                <Button variant="contained">Scan</Button>
-                <div>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Switch defaultChecked />}
-                      label="All Day"
-                    />
-                  </FormGroup>
-                  <div className="grid grid-cols-3 pl-2">
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Start Date
-                    </Typography>
-                    <DatePicker />
-                    <TimePicker />
-                  </div>
-                  <div className="grid grid-cols-3 pl-2">
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      End Date
-                    </Typography>
-                    <DatePicker />
-                    <TimePicker />
-                  </div>
-                  <div className="grid grid-cols-2 pl-2">
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Completed
-                    </Typography>
-                    <Checkbox sx={{}} />
-                  </div>
-                  <div>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Description
-                    </Typography>
-                    <TextField
-                      id="standard-multiline-static"
-                      multiline
-                      rows={4}
-                      defaultValue="Description"
-                      variant="standard"
-                    />
-                  </div>
-                  <div>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Colour
-                    </Typography>
-                  </div>
-                </div>
-              </LocalizationProvider>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Network Devices
+            </Typography>
+            <div>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                IP Address
+              </Typography>
+              <TextField id="outlined-basic" variant="outlined" onChange={handleIPChange} />
+              <Button variant="contained" onClick={scanButtonPushed}>Scan</Button>
+            </div>
+            <DataGrid
+              rows={scanList}
+              columns={networkColumnFormat}
+              sx={{ height: 420, width: '100%' }}
+            ></DataGrid>
           </Box>
         </Modal>
       </div>
