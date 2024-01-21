@@ -468,7 +468,7 @@ const NetworkScreenNavBar = ({navigation,destination}) => {
   ]
 
   const addNetworkDevice = (device) =>{
-    console.log(device)
+    // Add Network Device to Database
   }
 
   const handleColorChange = event => {
@@ -607,7 +607,7 @@ const CameraScreenNavbar = ({navigation,destination}) => {
       sortable: false,
       renderCell: (params) => {
         return(
-          <Button onClick={(e)=>{addNetworkDevice(params.row)}}>
+          <Button onClick={(e)=>{addCameraDevice(params.row)}}>
             Add
           </Button>
         )
@@ -615,8 +615,8 @@ const CameraScreenNavbar = ({navigation,destination}) => {
     },
   ]
 
-  const addNetworkDevice = (device) =>{
-    console.log(device)
+  const addCameraDevice = (device) =>{
+    // Add Camera Device to Database
   }
 
   const handleColorChange = event => {
@@ -625,7 +625,7 @@ const CameraScreenNavbar = ({navigation,destination}) => {
 
   const handleScanList = async (ip_addr) => {
     const reqOpt = {ip:ip_addr}
-    axios.post("/network/scan",reqOpt).then((response) => {
+    axios.post("/camera/scan",reqOpt).then((response) => {
       setScanList(response.data.devices);
     })
   }
