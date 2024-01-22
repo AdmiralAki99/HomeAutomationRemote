@@ -12,7 +12,7 @@ from spotifyManager import SpotifyManager
 from scanner import NetworkScanner
 from camera import Camera
 from lights import Light
-from kasa import Discover,Credentials
+from kasa import Discover,Credentials,SmartBulb
 import asyncio
 from dotenv import load_dotenv
 
@@ -211,7 +211,20 @@ class Server:
             lights = asyncio.run(self.discover_smart_lights())
             lights = [{'id': idx + 1, **device} for idx, device in enumerate(lights)]
             return jsonify({'lights': lights})
-        
+
+        @self.app.route("/light/switch",methods=['POST'])
+        def switch_light():
+            body = request.get_json()
+            id = body['id']
+            light = SmartLight.query.get(id)
+            if light is None:
+                return jsonify({'message': 'Light not found'})
+            else:
+               light.state = asyncio.run(self.switch_state(light.ip))
+               
+               self.db.session.commit()
+               return(jsonify({'message': 'Light Switched State Successfully'}))
+
         @self.app.route("/light/add",methods=['POST'])
         def add_light():
             body = request.get_json()
@@ -605,6 +618,24 @@ class Server:
             lights.append({"ip": ip, "name": device.alias, "state": device.is_on})
 
         return lights
+    
+    async def switch_state(self,ip):
+        bulb = SmartBulb(ip)
+        await bulb.update()
+        if bulb.is_on:
+            await bulb.turn_off()
+            await bulb.update()
+            return 'off'
+        else:
+            await bulb.turn_on()
+            await bulb.update()
+            return 'on'
+        
+    async def change_brightness(self,ip,brightness):
+        bulb = SmartBulb(ip)
+        await bulb.update()
+        await bulb.set_brightness(brightness)
+        await bulb.update()
 
     def run(self):
         self.app.run()
