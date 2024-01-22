@@ -224,6 +224,20 @@ class Server:
                
                self.db.session.commit()
                return(jsonify({'message': 'Light Switched State Successfully'}))
+            
+        @self.app.route("/light/change/brightness",methods=['POST'])
+        def set_brightness():
+            body = request.get_json()
+            id = body['id']
+            brightness = body['brightness']
+
+            light = SmartLight.query.get(id)
+            if light is None:
+                return jsonify({'message': 'Light not found'})
+            elif light is not None and light.state == 'on':
+                asyncio.run(self.change_brightness(light.ip,brightness))
+                self.db.session.commit()
+                return jsonify({'message': 'Light Brightness Changed Successfully'})
 
         @self.app.route("/light/add",methods=['POST'])
         def add_light():
