@@ -239,6 +239,20 @@ class Server:
                 self.db.session.commit()
                 return jsonify({'message': 'Light Brightness Changed Successfully'})
 
+        @self.app.route("/light/change/name",methods=['POST'])  
+        def change_name():
+            body = request.get_json()
+            id = body['id']
+            name = body['name']
+
+            light = SmartLight.query.get(id)
+            if light is None:
+                return jsonify({'message': 'Light not found'})
+            else:
+                light.name = name
+                self.db.session.commit()
+                return jsonify({'message': 'Light Name Changed Successfully'})
+
         @self.app.route("/light/add",methods=['POST'])
         def add_light():
             body = request.get_json()
