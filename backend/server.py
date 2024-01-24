@@ -615,9 +615,10 @@ class Server:
                 self.db.session.commit()
                 return jsonify({"Message":"Camera Added Successfully"})
             
-        @self.app.route("/camera/delete/<int:camera_id>")
+        @self.app.route("/camera/delete")
         def delete_camera(camera_id):
-            camera = CameraDevice.query.get(camera_id)
+            body = request.get_json()
+            camera = CameraDevice.query.get(body[id])
             if camera is None:
                 return jsonify({"Message":"Camera Not Found"})
             else:
@@ -632,6 +633,17 @@ class Server:
         @self.app.route("/camera/scan",methods=['POST'])
         def scan_cameras():
             return jsonify({"Message":"Camera Scan"})
+        
+        @self.app.route("/camera/change/name",methods=['POST'])
+        def edit_camera_name():
+            body = request.get_json()
+            camera = CameraDevice.query.get(body[id])
+            if camera is None:
+                return jsonify({"Message":"Camera Not Found"})
+            else:
+                camera.name = body['name']
+                self.db.session.commit()
+                return jsonify({"Message":"Camera Name Changed Successfully"})
         
     async def discover_smart_lights(self):
         devices = await Discover.discover(
