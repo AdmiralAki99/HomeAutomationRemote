@@ -1,7 +1,6 @@
 import os
-import subprocess
 
-from flask import Flask, redirect,url_for,request,jsonify,session,Response
+from flask import Flask,request,jsonify,session,Response
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -264,6 +263,17 @@ class Server:
             self.db.session.add(light)
             self.db.session.commit()
             return jsonify({'message': 'Light Added Successfully'})
+        
+        @self.app.route("/light/get/details",methods=['GET'])
+        def get_light_details():
+            body = request.get_json()
+            id = body['id']
+            light = SmartLight.query.get(id)
+            if light is None:
+                return jsonify({'message': 'Light not found'})
+            else:
+                return jsonify({'name': light.name, 'ip': light.ip, 'state': light.state})
+            
                 
             """ Spotify Routes """
 
