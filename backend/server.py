@@ -616,7 +616,7 @@ class Server:
                 return jsonify({"Message":"Camera Added Successfully"})
             
         @self.app.route("/camera/delete")
-        def delete_camera(camera_id):
+        def delete_camera():
             body = request.get_json()
             camera = CameraDevice.query.get(body[id])
             if camera is None:
