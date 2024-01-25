@@ -117,6 +117,7 @@ const columns = [
 const LightScreenNavBar = ({navigation,destination}) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [manageModalOpen, setManageModalOpen] = useState(false);
   const [startScan, setStartScan] = useState(false);
   const [scanList, setScanList] = useState([]); // [{name: "Light1", model: "model1"},{name: "Light2", model: "model2"}
   const menuOpen = Boolean(menuAnchor);
@@ -133,10 +134,20 @@ const LightScreenNavBar = ({navigation,destination}) => {
   const handleOpenModal = () => {
     setStartScan(true);
     setModalOpen(true);
+    handleCloseMenu();
   }
 
   const handleCloseModal = () => {
     setModalOpen(false);
+  }
+
+  const handleOpenManageModal = () => {
+    setManageModalOpen(true);
+    handleCloseMenu();
+  }
+
+  const handleCloseManageModal = () => {
+    setManageModalOpen(false);
   }
 
   const handleOpenMenu = (event) => {
@@ -203,20 +214,10 @@ const LightScreenNavBar = ({navigation,destination}) => {
           aria-controls={menuOpen ? "light-menu" : undefined}
           aria-haspopup="true"
           aria-expanded={menuOpen ? "true" : undefined}
-          onClick={handleOpenMenu}
+          onClick={handleOpenModal}
         >
           <Add sx={{ color: "white" }} fontSize="medium" />
         </Button>
-        <Menu
-          id="light-menu"
-          anchorEl={menuAnchor}
-          open={menuOpen}
-          onClose={handleCloseMenu}
-          MenuListProps={{ "aria-labelledby": "add-button" }}
-        >
-          <MenuItem onClick={handleOpenModal}>Add Lights</MenuItem>
-          <MenuItem onClick={handleCloseMenu}>Manage Lights</MenuItem>
-        </Menu>
 
         <Modal
           open={modalOpen}
@@ -230,10 +231,30 @@ const LightScreenNavBar = ({navigation,destination}) => {
               <Button onClick={handleScanList}>Scan</Button>
               <Button>Connect</Button>
             </div>
-            <DataGrid rows={scanList} columns={lightColumnFormat} ></DataGrid>
+            <DataGrid rows={scanList} columns={lightColumnFormat}></DataGrid>
           </Box>
         </Modal>
 
+        {/* <Modal
+          open={manageModalOpen}
+          onClose={handleCloseManageModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <div className="flex justify-end items-end">
+              <Button onClick={handleCloseManageModal}>Close</Button>
+              <Button onClick={handleScanList}>Scan</Button>
+              <Button>Connect</Button>
+            </div>
+            <div>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Light Name
+              </Typography>
+              <TextField id="outlined-basic" variant="outlined" />
+            </div>
+          </Box>
+        </Modal> */}
       </div>
     </div>
   );
