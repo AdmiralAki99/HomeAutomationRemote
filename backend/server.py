@@ -264,7 +264,7 @@ class Server:
             self.db.session.commit()
             return jsonify({'message': 'Light Added Successfully'})
         
-        @self.app.route("/light/get/details",methods=['GET'])
+        @self.app.route("/light/get/details",methods=['POST'])
         def get_light_details():
             body = request.get_json()
             id = body['id']
@@ -273,7 +273,8 @@ class Server:
                 return jsonify({'message': 'Light not found'})
             else:
                 return jsonify({'name': light.name, 'ip': light.ip, 'state': light.state})
-            
+
+        @self.app.route("/light/update/details",methods=['POST'])  
         def update_details():
             body = request.get_json()
             light = SmartLight.query.get(body['id'])
