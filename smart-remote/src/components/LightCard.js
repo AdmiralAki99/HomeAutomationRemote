@@ -4,17 +4,40 @@ import { useEffect, useState } from 'react';
 import LightSlider from './LightSlider';
 import Checkbox from './LightCheckbox';
 
+import { Modal, Box, Typography, Button, TextField } from "@mui/material";
+
+import axios from 'axios';
+
 //TODO: Convert To React Component Style
 
-const LightCard = ({min,value,label,onChange,isChecked,onCheck}) => {
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  height: 600,
+  bgcolor: '#1C1C1D',
+  boxShadow: 24,
+  p: 4,
+};
+
+const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID}) => {
 
     const [minVal, setVal] = useState(value);
     const [labelName,setLabel] = useState(label);
+    const [manageModalOpen, setManageModalOpen] = useState(false);
+    const [lightDetails, setLightDetails] = useState({});
 
     // useEffect(() => {
     //   setVal(value);
     // });
 
+    const handleOpenManageModal = () => setManageModalOpen(true);
+    const handleCloseManageModal = () => setManageModalOpen(false);
+
+   
 
     return (
       <>
@@ -37,7 +60,7 @@ const LightCard = ({min,value,label,onChange,isChecked,onCheck}) => {
           </div>
         </a>
 
-        {/* <Modal
+        <Modal
           open={manageModalOpen}
           onClose={handleCloseManageModal}
           aria-labelledby="modal-modal-title"
@@ -53,10 +76,10 @@ const LightCard = ({min,value,label,onChange,isChecked,onCheck}) => {
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Light Name
               </Typography>
-              <TextField id="outlined-basic" variant="outlined" />
+              <TextField id="outlined-basic" variant="outlined" placeholder={lightDetails.name} />
             </div>
           </Box>
-        </Modal> */}
+        </Modal>
       </>
     );
 
@@ -69,6 +92,7 @@ LightCard.propTypes = {
     onChange: PropTypes.func.isRequired,
     isChecked: PropTypes.bool.isRequired,
     onCheck: PropTypes.func.isRequired,
+    lightID: PropTypes.string.isRequired,
 }
 
 export default LightCard;
