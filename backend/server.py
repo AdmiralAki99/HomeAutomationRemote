@@ -274,6 +274,17 @@ class Server:
             else:
                 return jsonify({'name': light.name, 'ip': light.ip, 'state': light.state})
             
+        def update_details():
+            body = request.get_json()
+            light = SmartLight.query.get(body['id'])
+            if light is None:
+                return jsonify({'message': 'Light not found'})
+            
+            light.name = body['name']
+            light.state = body['state']
+            self.db.session.commit()
+            return jsonify({'message': 'Light Updated Successfully'})
+            
                 
             """ Spotify Routes """
 
