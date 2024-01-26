@@ -37,7 +37,14 @@ const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID}) => {
     const handleOpenManageModal = () => setManageModalOpen(true);
     const handleCloseManageModal = () => setManageModalOpen(false);
 
-   
+    const getLightInfo = () =>{
+      axios.get('/light/get/details',{
+        id: lightID
+      }).then((repsonse)=>{
+        setLightDetails(repsonse.data);
+      })
+    }
+
 
     return (
       <>
