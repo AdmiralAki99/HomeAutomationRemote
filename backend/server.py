@@ -224,6 +224,36 @@ class Server:
                self.db.session.commit()
                return(jsonify({'message': 'Light Switched State Successfully'}))
             
+        @self.app.route("/light/turn/on",methods=['POST'])
+        def turn_on_light():
+            body = request.get_json()
+            id = body['id']
+            light = SmartLight.query.get(id)
+            if light is None:
+                return jsonify({'message': 'Light not found'})
+            else:
+                if asyncio.run(self.__turn_on_light__(light.ip)):
+                    light.state = 'on'
+                    self.db.session.commit()
+                    return(jsonify({'message': 'Light Switched On Successfully'}))
+                else:
+                    return(jsonify({'message': 'Light Switched On Failed'}))
+                
+        @self.app.route("/light/turn/off",methods=['POST'])
+        def turn_off_light():
+            body = request.get_json()
+            id = body['id']
+            light = SmartLight.query.get(id)
+            if light is None:
+                return jsonify({'message': 'Light not found'})
+            else:
+                if asyncio.run(self.__turn_off_light__(light.ip)):
+                    light.state = 'off'
+                    self.db.session.commit()
+                    return(jsonify({'message': 'Light Switched On Successfully'}))
+                else:
+                    return(jsonify({'message': 'Light Switched On Failed'}))
+            
         @self.app.route("/light/change/brightness",methods=['POST'])
         def set_brightness():
             body = request.get_json()
@@ -692,6 +722,20 @@ class Server:
             await bulb.turn_on()
             await bulb.update()
             return 'on'
+        
+    async def __turn_off_light__(self,ip):
+        bulb = SmartBulb(ip)
+        await bulb.update()
+        await bulb.turn_off()
+        await bulb.update()
+        return True
+    
+    async def __turn_on_light__(self,ip):
+        bulb = SmartBulb(ip)
+        await bulb.update()
+        await bulb.turn_on()
+        await bulb.update()
+        return True
         
     async def change_brightness(self,ip,brightness):
         bulb = SmartBulb(ip)
