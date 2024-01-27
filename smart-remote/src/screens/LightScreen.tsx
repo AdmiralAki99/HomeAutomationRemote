@@ -63,21 +63,20 @@ function LightScreen({route,navigation}: LightProps){
                   <div className="grid grid-cols-1 items-center justify-center gap-4 p-6">
                     {lights ? (
                       lights.map((light:any, index:any) => (
-                        // <div className="flex items-center mb-4 gap-10" key={index}>
-                        //   <LightCard
-                        //     min={0}
-                        //     value={masterLightIntensity}
-                        //     label={light["name"]}
-                        //     isChecked={false}
-                        //     onChange={({ min }: { min: number }) => {}}
-                        //     onCheck={() => {
-                        //       setElementInSelectedLightArray(index);
-                        //       console.log('Selected Lights: '+selectedLights)
-                        //     }}
-                        //     lightID=''
-                        //   />
-                        // </div>
-                        console.log(light)
+                        <div className="flex items-center mb-4 gap-10" key={index}>
+                          <LightCard
+                            min={0}
+                            value={masterLightIntensity}
+                            label={light["name"]}
+                            isChecked={false}
+                            onChange={({ min }: { min: number }) => {}}
+                            onCheck={() => {
+                              setElementInSelectedLightArray(index);
+                              console.log('Selected Lights: '+selectedLights)
+                            }}
+                            lightID={light.id}
+                          />
+                        </div>
                       ))
                     ) : (
                       <h1 className="text-white">Loading...</h1>
