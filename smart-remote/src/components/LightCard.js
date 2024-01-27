@@ -7,6 +7,8 @@ import Checkbox from './LightCheckbox';
 import { Modal, Box, Typography, Button, TextField } from "@mui/material";
 
 import axios from 'axios';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 
 //TODO: Convert To React Component Style
 
@@ -23,12 +25,13 @@ const style = {
   p: 4,
 };
 
-const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID}) => {
+const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID,state}) => {
 
     const [minVal, setVal] = useState(value);
     const [labelName,setLabel] = useState(label);
     const [manageModalOpen, setManageModalOpen] = useState(false);
     const [lightDetails, setLightDetails] = useState({});
+    const [powerState, setPowerState] = useState(state);
 
     // useEffect(() => {
     //   setVal(value);
@@ -50,6 +53,8 @@ const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID}) => {
       getLightInfo()
     }
 
+    
+
 
     return (
       <>
@@ -59,10 +64,32 @@ const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID}) => {
           id={"checkbox-1"}
           onChange={onCheck}
         />
-        <a className="block max-w-lg w-80 h-40 p-6 bg-black border border-gray-200 rounded-md shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70" onClick={handleCardClick}>
-          <div className="grid grid-rows-3 grid-cols-2 gap-4">
-            <div className="row row-start-1 row-end-3 text-white">{label}</div>
-            <div className="flex row-start-2 row-end-4 items-center justify-center h-full w-full object-fill pt-6 pl-6">
+        <a
+          className="block max-w-lg w-80 h-40 p-6 bg-black border border-gray-200 rounded-md shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70"
+        >
+          <div className="grid grid-rows-4 grid-cols-2 gap-4">
+            <div className="row row-start-1 row-end-3 text-white" onClick={handleCardClick}>{label}</div>
+            <div className="row row-start-3 row-end-4 text-white">
+              <div className="grid grid-rows-1 grid-cols-2 gap-10">
+                <div>
+                  <button>
+                    {(powerState == true)? <PowerSettingsNewIcon
+                      sx={{ color: "white", fontSize: "large" }}
+                    /> : <PowerSettingsNewIcon
+                    sx={{ color: "gray", fontSize: "large" }}
+                  />}
+                  </button>
+                </div>
+                <div>
+                  <button>
+                    <ColorLensIcon
+                      sx={{ color: "white", fontSize: "large" }}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="flex row-start-2 row-end-5 items-center justify-center h-full w-full object-fill pt-6 pl-6">
               <LightSlider
                 min={0}
                 value={value}
@@ -86,15 +113,31 @@ const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID}) => {
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Light Name
               </Typography>
-              <TextField id="outlined-basic" variant="outlined" defaultValue={lightDetails.name} />
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                defaultValue={lightDetails.name}
+              />
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 IP Address
               </Typography>
-              <TextField disabled id="filled-disabled" variant="outlined" defaultValue={lightDetails.ip} sx={{'color':'white'}} />
+              <TextField
+                disabled
+                id="filled-disabled"
+                variant="outlined"
+                defaultValue={lightDetails.ip}
+                sx={{ color: "white" }}
+              />
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 State
               </Typography>
-              <TextField disabled id="filled-disabled" variant="outlined" defaultValue={(lightDetails.state == "on")? "On" : "Off"} sx={{'color':'white'}} />
+              <TextField
+                disabled
+                id="filled-disabled"
+                variant="outlined"
+                defaultValue={lightDetails.state == "on" ? "On" : "Off"}
+                sx={{ color: "white" }}
+              />
             </div>
           </Box>
         </Modal>
@@ -111,6 +154,7 @@ LightCard.propTypes = {
     isChecked: PropTypes.bool.isRequired,
     onCheck: PropTypes.func.isRequired,
     lightID: PropTypes.string.isRequired,
+    state: PropTypes.bool.isRequired
 }
 
 export default LightCard;
