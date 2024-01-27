@@ -48,12 +48,27 @@ const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID,state}) =
       })
     }
 
+    const updateLight = () =>{
+      if (powerState == true){
+        axios.post('/light/turn/off',{
+          id: lightID
+        })
+      }else{
+        axios.post('/light/turn/on',{
+          id: lightID
+        })
+      }
+    }
+
     const handleCardClick = () =>{
       handleOpenManageModal()
       getLightInfo()
     }
 
-    
+    const handlePowerClick = () =>{
+      setPowerState(!powerState)
+      updateLight()
+    }
 
 
     return (
@@ -72,7 +87,7 @@ const LightCard = ({min,value,label,onChange,isChecked,onCheck,lightID,state}) =
             <div className="row row-start-3 row-end-4 text-white">
               <div className="grid grid-rows-1 grid-cols-2 gap-10">
                 <div>
-                  <button>
+                  <button onClick={handlePowerClick} >
                     {(powerState == true)? <PowerSettingsNewIcon
                       sx={{ color: "white", fontSize: "large" }}
                     /> : <PowerSettingsNewIcon
