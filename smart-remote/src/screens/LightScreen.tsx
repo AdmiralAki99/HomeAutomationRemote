@@ -9,6 +9,7 @@ import LightCard from '../components/LightCard';
 import { LightScreenNavBar } from '../components/Navbar';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
+import axios from 'axios';
 
 type LightProps = NativeStackScreenProps<ScreenParamList, 'Light'>;
 
@@ -41,6 +42,13 @@ function LightScreen({route,navigation}: LightProps){
       });
   };
 
+  const updateLightBrightness = async() => {
+    axios.post('/light/change/brightness', {
+      id : 1,
+      brightness: masterLightIntensity
+    }).then((res) => { console.log(res) })
+  }
+
   const handleMasterLightIntensity = (intensity:number) => {
     setLightIntensity(intensity);
   }
@@ -51,7 +59,7 @@ function LightScreen({route,navigation}: LightProps){
 
     return (
       <View style={{ alignItems: "center" }}>
-        <div className="bg-home w-screen">
+        <div className="bg-home w-screen max-w-screen">
           <LightScreenNavBar
             navigation={navigation}
             destination={"Home"}
@@ -75,6 +83,7 @@ function LightScreen({route,navigation}: LightProps){
                               console.log('Selected Lights: '+selectedLights)
                             }}
                             lightID={light.id}
+                            state={(light.state == "on")? true:false}
                           />
                         </div>
                       ))
