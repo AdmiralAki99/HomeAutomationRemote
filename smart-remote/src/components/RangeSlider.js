@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import classnames from "classnames";
 import './RangeSlider.css'
 
+//TODO: Need To Refactor This Component (IMPORTANT)
 
 const RangeSlider = ({ min, onChange }) => {
   const [minVal, setVal] = useState(min);
@@ -49,9 +50,8 @@ const RangeSlider = ({ min, onChange }) => {
       </div>
 
       <div className="slider">
-        <div ref={rangeRef} className="slider__track" />
+        <div ref={rangeRef} className="slider__track rounded-2xl" />
         <div className="slider__range" ref={rangeRef}  />
-        <div className="slider__left-value">{minVal}</div>
       </div>
     </div>
   );

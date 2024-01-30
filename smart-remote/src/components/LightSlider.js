@@ -62,40 +62,4 @@ LightSlider.propTypes = {
   id: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
-
-// class Slider extends React.Component{
-  
-//   render(){
-//     return(
-//       <div className="container">
-//       <div>
-//         <input
-//           type="range"
-//           min={this.props.min}
-//           max="100"
-//           value={this.props.minVal}
-//           ref={this.props.valRef}
-//           onChange={(event) => {
-//             // const value = Math.min(+event.target.value, 100);
-//             // setVal(value);
-//           }}
-//           className={classnames("light-thumb light-thumb--zindex-3")}
-//         />
-//       </div>
-
-//       <div className="light-slider">
-//         <div ref={rangeRef} className="light-slider__track" />
-//         <div className="light-slider__range" ref={rangeRef}  />
-//       </div>
-//     </div>
-//     )
-//   }
-// }
-
-LightSlider.propTypes = {
-  min: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
-
 export default LightSlider;

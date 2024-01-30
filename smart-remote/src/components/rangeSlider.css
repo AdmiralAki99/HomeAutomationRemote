@@ -1,14 +1,12 @@
 .container{
   padding: 0%;
   margin: 0%;
-
 }
 .slider {
     position: relative;
     width: 600px;
     height: 300px;
     rotate: -90deg;
-    padding: 0%;
   }
   
   .slider__track,
