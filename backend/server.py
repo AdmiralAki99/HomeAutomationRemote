@@ -210,19 +210,6 @@ class Server:
             lights = asyncio.run(self.discover_smart_lights())
             lights = [{'id': idx + 1, **device} for idx, device in enumerate(lights)]
             return jsonify({'lights': lights})
-
-        @self.app.route("/light/switch",methods=['POST'])
-        def switch_light():
-            body = request.get_json()
-            id = body['id']
-            light = SmartLight.query.get(id)
-            if light is None:
-                return jsonify({'message': 'Light not found'})
-            else:
-               light.state = asyncio.run(self.switch_state(light.ip))
-               
-               self.db.session.commit()
-               return(jsonify({'message': 'Light Switched State Successfully'}))
             
         @self.app.route("/light/turn/on",methods=['POST'])
         def turn_on_light():
