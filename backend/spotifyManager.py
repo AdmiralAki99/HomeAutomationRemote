@@ -164,3 +164,86 @@ class SpotifyManager:
     #   self.auth.refresh_access_token(self.token_dict['refresh_token'])
     #   self.token_dict = self.auth.get_access_token()
     #   self.access_token = self.token_dict['access_token']
+
+
+import requests
+import base64
+
+class SpotifyAPI:
+
+    client_id = None
+    client_secret_id = None
+    redirect_uri = None
+    access_token = None
+    expiry_time = None
+    __url__ = {
+        'token_url': 'https://accounts.spotify.com/api/token',
+        'base_url': 'https://api.spotify.com/v1/',
+        'auth_url': 'https://accounts.spotify.com/authorize?'
+    }
+    __scopes__ = {
+        'scope': "user-read-playback-state user-modify-playback-state user-read-playback-state user-read-private"
+    }
+
+    def __init__(self):
+        super(SpotifyAPI).__init__()
+        load_dotenv()
+        # Loading enviornment variables for Spotify Manager
+        self.client_id = os.getenv('SPOTIFY_CLIENT_ID')
+        self.client_secret_id = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
+        self.redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
+
+    def get_access_token(self):
+
+        client_credentials_auth = self.client_id + ':' + self.client_secret_id
+        client_credentials_auth = client_credentials_auth.encode('utf-8')
+        client_credentials_auth = base64.b64encode(client_credentials_auth)
+        client_credentials_auth = str(client_credentials_auth,'utf-8')
+
+        response = requests.post(self.__url__['token_url'],data={
+            'grant_type': 'client_credentials',
+        },headers={
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': f'Basic {client_credentials_auth}',
+        })
+
+        if response.status_code == 200:
+            self.access_token = response.json()['access_token']
+            self.expiry_time = time.time() + response.json()['expires_in']
+            return self.access_token
+        else:
+            return None
+        
+    def __get_auth_header__(self,token):
+        return {
+            'Authorization': f'Bearer {token}'
+        }
+    
+    def __add_scopes__(self):
+        query = {
+            'client_id': self.client_id,
+            'response_type': 'code',
+            'redirect_uri': self.redirect_uri,
+            'scope': self.__scopes__['scope']
+        }
+        req_url = self.__url__['auth_url'] + '&'.join([f'{key}={value}' for key,value in query.items()])
+        response = requests.get(req_url)
+
+    def get_current_playback(self):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player'
+
+        response = requests.get(player_url,headers=header)
+
+        print(response.json())
+
+
+if __name__ == "__main__":
+    # SPOTIFY API TESTS
+    spotify = SpotifyAPI()
+    spotify.get_access_token()
+    spotify.__add_scopes__()
+    spotify.get_current_playback()
+
+        
+
