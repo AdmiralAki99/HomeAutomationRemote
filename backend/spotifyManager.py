@@ -237,13 +237,38 @@ class SpotifyAPI:
 
         print(response.json())
 
+    def play_song(self, song_uri):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player/play'
+
+        response = requests.put(player_url,headers=header,json={
+            'uris': [song_uri]
+        })
+
+        print(response.json())
+
+    def pause_song(self):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player/pause'
+
+        response = requests.put(player_url,headers=header)
+
+        print(response.json())
+
+    def skip_to_next(self):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player/next'
+
+        response = requests.post(player_url,headers=header)
+
+        print(response.json())
+
 
 if __name__ == "__main__":
     # SPOTIFY API TESTS
     spotify = SpotifyAPI()
     spotify.get_access_token()
     spotify.__add_scopes__()
-    spotify.get_current_playback()
 
         
 
