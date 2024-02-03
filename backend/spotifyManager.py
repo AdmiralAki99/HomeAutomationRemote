@@ -263,12 +263,28 @@ class SpotifyAPI:
 
         print(response.json())
 
+    def refresh_token(self):
+
+        client_credentials_auth = self.client_id + ':' + self.client_secret_id
+        client_credentials_auth = client_credentials_auth.encode('utf-8')
+        client_credentials_auth = base64.b64encode(client_credentials_auth)
+        client_credentials_auth = str(client_credentials_auth,'utf-8')
+
+        response = requests.post(self.__url__['token_url'],data={
+            'grant_type': 'refresh_token',
+            'refresh_token': self.access_token
+        },headers={
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': f'Basic {client_credentials_auth}',
+        })
+
+        print(response.json())
 
 if __name__ == "__main__":
     # SPOTIFY API TESTS
     spotify = SpotifyAPI()
     spotify.get_access_token()
-    spotify.__add_scopes__()
+    spotify.refresh_token()
 
         
 
