@@ -3,6 +3,7 @@ from spotipy import SpotifyOAuth
 import json
 import time
 from dotenv import load_dotenv
+import urllib.parse
 import os
 
 class SpotifyManager:
@@ -179,10 +180,10 @@ class SpotifyAPI:
     __url__ = {
         'token_url': 'https://accounts.spotify.com/api/token',
         'base_url': 'https://api.spotify.com/v1/',
-        'auth_url': 'https://accounts.spotify.com/authorize?'
+        'auth_url': 'https://accounts.spotify.com/authorize'
     }
     __scopes__ = {
-        'scope': "user-read-playback-state%20user-modify-playback-state%20user-read-playback-state%20user-read-private"
+        'scope': "user-read-playback-state"
     }
 
     def __init__(self):
@@ -193,18 +194,19 @@ class SpotifyAPI:
         self.client_secret_id = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
         self.redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
 
-    def get_access_token(self):
+    def get_login_link(self):
 
-        auth_query = f'client_id={self.client_id}&response_type=code&redirect_uri={self.redirect_uri}&scope={self.__scopes__["scope"]}'
-        response = requests.get('https://accounts.spotify.com/authorize?'+auth_query)
-        if response.status_code != 204 and response.headers["content-type"].strip().startswith("application/json"):
-            try:
-                response = response.json()
-                print(response)
-            except:
-                print("No Response")
-        else:
-            print("No Response")
+        query = {
+            'client_id': self.client_id,
+            'response_type': 'code',
+            'redirect_uri': self.redirect_uri,
+            'scope': self.__scopes__['scope'],
+            'show_dialog': True
+        }
+
+        auth_request= f'{self.__url__["auth_url"]}?{urllib.parse.urlencode(query)}'
+
+        return auth_request
 
     def __get_auth_header__(self,token):
         return {

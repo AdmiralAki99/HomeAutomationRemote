@@ -1,13 +1,13 @@
 import os
 
-from flask import Flask,request,jsonify,session,Response
+from flask import Flask,request,jsonify,session,Response,redirect
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 from datetime import date
 
-from spotifyManager import SpotifyManager
+from spotifyManager import SpotifyManager,SpotifyAPI
 from scanner import NetworkScanner
 from camera import Camera
 from lights import Light
@@ -23,9 +23,11 @@ class Server:
     spotify_manager = SpotifyManager()
     network_scanner = NetworkScanner()
     camera_manager = Camera()
+    sp_manager = SpotifyAPI()
 
     def __init__(self) -> None:
         self.app = Flask(__name__)
+        self.app.secret_key = os.getenv('SECRET_KEY')
         self.app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir,"database/database.db")}'
         self.app.config['SQLALCHEMY_BINDS'] = {
             'calendar': f'sqlite:///{os.path.join(base_dir,"database/calendar.db")}',
@@ -329,6 +331,20 @@ class Server:
         def prev_playback():
             self.spotify_manager.rewind_song()
             return jsonify({'message': 'Playback Previous'})
+        
+        @self.app.route("/spotify/login",methods=['GET'])
+        def login():
+            auth_url = self.sp_manager.get_login_link()
+            return redirect(auth_url)
+        
+        self.app.route("/spotify/redirect")
+        def callback():
+            if 'error' in request.args:
+                return jsonify({'error': request.args['error']})
+            else:
+                print(request.args)
+            return jsonify({'message': 'Callback Received'})
+        
         
         """ Calendar Routes """
 
@@ -731,7 +747,7 @@ class Server:
         await bulb.update()
 
     def run(self):
-        self.app.run()
+        self.app.run(debug=True)
 
 
 if __name__ == "__main__":
