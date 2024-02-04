@@ -182,7 +182,7 @@ class SpotifyAPI:
         'auth_url': 'https://accounts.spotify.com/authorize?'
     }
     __scopes__ = {
-        'scope': "user-read-playback-state user-modify-playback-state user-read-playback-state user-read-private"
+        'scope': "user-read-playback-state%20user-modify-playback-state%20user-read-playback-state%20user-read-private"
     }
 
     def __init__(self):
@@ -195,25 +195,17 @@ class SpotifyAPI:
 
     def get_access_token(self):
 
-        client_credentials_auth = self.client_id + ':' + self.client_secret_id
-        client_credentials_auth = client_credentials_auth.encode('utf-8')
-        client_credentials_auth = base64.b64encode(client_credentials_auth)
-        client_credentials_auth = str(client_credentials_auth,'utf-8')
-
-        response = requests.post(self.__url__['token_url'],data={
-            'grant_type': 'client_credentials',
-        },headers={
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': f'Basic {client_credentials_auth}',
-        })
-
-        if response.status_code == 200:
-            self.access_token = response.json()['access_token']
-            self.expiry_time = time.time() + response.json()['expires_in']
-            return self.access_token
+        auth_query = f'client_id={self.client_id}&response_type=code&redirect_uri={self.redirect_uri}&scope={self.__scopes__["scope"]}'
+        response = requests.get('https://accounts.spotify.com/authorize?'+auth_query)
+        if response.status_code != 204 and response.headers["content-type"].strip().startswith("application/json"):
+            try:
+                response = response.json()
+                print(response)
+            except:
+                print("No Response")
         else:
-            return None
-        
+            print("No Response")
+
     def __get_auth_header__(self,token):
         return {
             'Authorization': f'Bearer {token}'
@@ -284,7 +276,6 @@ if __name__ == "__main__":
     # SPOTIFY API TESTS
     spotify = SpotifyAPI()
     spotify.get_access_token()
-    spotify.refresh_token()
 
         
 
