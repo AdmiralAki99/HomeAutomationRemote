@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask,request,jsonify,session,Response,redirect
+from flask import Flask,request,jsonify,session,Response,redirect,make_response
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -12,6 +12,7 @@ from scanner import NetworkScanner
 from camera import Camera
 from lights import Light
 from kasa import Discover,Credentials,SmartBulb
+import requests
 import asyncio
 from dotenv import load_dotenv
 
@@ -332,19 +333,31 @@ class Server:
             self.spotify_manager.rewind_song()
             return jsonify({'message': 'Playback Previous'})
         
-        @self.app.route("/spotify/login",methods=['GET'])
+        @self.app.route("/spotify/login")
         def login():
             auth_url = self.sp_manager.get_login_link()
             return redirect(auth_url)
         
-        self.app.route("/spotify/redirect")
+        self.app.route("/callback")
         def callback():
             if 'error' in request.args:
                 return jsonify({'error': request.args['error']})
-            else:
-                print(request.args)
-            return jsonify({'message': 'Callback Received'})
-        
+            
+            if 'code' in request.args:
+                body = {
+                    'code': request.args['code'],
+                    'redirect_uri': self.sp_manager.redirect_uri,
+                    'grant_type': 'authorization_code',
+                    'client_id': self.sp_manager.client_id,
+                    'client_secret': self.sp_manager.client_secret
+                }
+
+                resp = requests.post(self.sp_manager.__url__['token_url'],data=body)
+                data = resp.json()
+                print(data)
+
+
+            
         
         """ Calendar Routes """
 
