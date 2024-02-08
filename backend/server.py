@@ -340,7 +340,12 @@ class Server:
         
         @self.app.route("/spotify/callback/")
         def callback():
-            print("Query: "+request.args.get('code'))
+        
+            if 'code' not in request.args:
+                return {'message': 'No Code Found'}
+            
+            self.sp_manager.set_auth_code(request.args['code'])
+            self.sp_manager.login()
             return {'message': 'Success'}
         
         """ Calendar Routes """

@@ -1,6 +1,7 @@
 import spotipy
 from spotipy import SpotifyOAuth
 import requests
+import datetime
 # import json
 # import time
 from dotenv import load_dotenv
@@ -177,6 +178,7 @@ class SpotifyAPI:
     access_token = None
     expiry_time = None
     refresh_token = None
+    auth_code = None
 
     __url__ = {
         'token_url': 'https://accounts.spotify.com/api/token',
@@ -195,14 +197,6 @@ class SpotifyAPI:
 
     def get_auth_url(self):
 
-        # query = {
-        #     'client_id': self.client_id,
-        #     'response_type': 'code',
-        #     'redirect_uri': self.redirect_uri,
-        #     'scope': self.__scopes__,
-        #     'show_dialog': True
-        # }
-
         scopes = '%20'.join(self.__scopes__)
 
         auth_request= f'{self.__url__["auth_url"]}?client_id={self.client_id}&redirect_uri={self.redirect_uri}&response_type=code&scope={scopes}&show_dialog=true'
@@ -213,6 +207,42 @@ class SpotifyAPI:
         return {
             'Authorization': f'Bearer {token}'
         }
+    
+    def __get_login_header__(self):
+        client_credentials_auth = self.client_id + ':' + self.client_secret_id
+        client_credentials_auth = client_credentials_auth.encode('utf-8')
+        client_credentials_auth = base64.b64encode(client_credentials_auth)
+        client_credentials_auth = str(client_credentials_auth,'utf-8')
+
+        return {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': f'Basic {client_credentials_auth}'
+        }
+    
+    def login(self):
+        # Auth Code is already is set
+        if self.auth_code is None:
+            return {'message': 'No Auth Code Set'}
+        
+        # Get Access Token
+        query = {
+            'code' :self.auth_code,
+            'redirect_uri': self.redirect_uri,
+            'grant_type': 'authorization_code',
+        }
+
+        header = self.__get_login_header__()
+
+        resp = requests.post(self.__url__['token_url'],data=query,headers=header)
+
+        # Save Token Info and Expiry time
+
+        self.access_token = resp.json()['access_token']
+        self.expiry_time = datetime.datetime.now().timestamp() + resp.json()['expires_in']
+        self.refresh_token = resp.json()['refresh_token']
+
+    def set_auth_code(self,auth_code):
+        self.auth_code = auth_code
     
     # def __add_scopes__(self):
     #     query = {
@@ -292,37 +322,37 @@ if __name__ == "__main__":
 
 
 
-from flask import Flask, redirect, request
-import dotenv
-import os
+# from flask import Flask, redirect, request
+# import dotenv
+# import os
 
-dotenv.load_dotenv()
+# dotenv.load_dotenv()
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
-# Spotify API credentials
-CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
-REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI')
-SPOTIFY_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
-SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
+# # Spotify API credentials
+# CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+# CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
+# REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI')
+# SPOTIFY_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
+# SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
 
-@app.route('/')
-def login():
-    # Redirect the user to Spotify's authorization page
-    authorize_url = f'{SPOTIFY_AUTHORIZE_URL}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=user-read-private%20user-read-email%20user-read-playback-state%20user-modify-playback-state&show_dialog=true'
-    return redirect(authorize_url)
+# @app.route('/')
+# def login():
+#     # Redirect the user to Spotify's authorization page
+#     authorize_url = f'{SPOTIFY_AUTHORIZE_URL}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=user-read-private%20user-read-email%20user-read-playback-state%20user-modify-playback-state&show_dialog=true'
+#     return redirect(authorize_url)
 
-@app.route("/spotify/callback/")
-def callback():
+# @app.route("/spotify/callback/")
+# def callback():
 
-    print("Query: "+request.args.get('code'))
+#     print("Query: "+request.args.get('code'))
 
-    return {'message': 'Success'}
+#     return {'message': 'Success'}
 
 
-if __name__ == '__main__':
-    app.run(port=5000,debug=True)
+# if __name__ == '__main__':
+#     app.run(port=5000,debug=True)
 
 
         
