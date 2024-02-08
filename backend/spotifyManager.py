@@ -1,9 +1,12 @@
 import spotipy
 from spotipy import SpotifyOAuth
-import json
-import time
+import requests
+# import json
+# import time
 from dotenv import load_dotenv
 import urllib.parse
+import base64
+# import webbrowser
 import os
 
 class SpotifyManager:
@@ -166,10 +169,6 @@ class SpotifyManager:
     #   self.token_dict = self.auth.get_access_token()
     #   self.access_token = self.token_dict['access_token']
 
-
-import requests
-import base64
-
 class SpotifyAPI:
 
     client_id = None
@@ -177,14 +176,14 @@ class SpotifyAPI:
     redirect_uri = None
     access_token = None
     expiry_time = None
+    refresh_token = None
+
     __url__ = {
         'token_url': 'https://accounts.spotify.com/api/token',
         'base_url': 'https://api.spotify.com/v1/',
         'auth_url': 'https://accounts.spotify.com/authorize'
     }
-    __scopes__ = {
-        'scope': "user-read-playback-state"
-    }
+    __scopes__ = ['user-read-playback-state','user-modify-playback-state','user-read-private','user-read-email','user-top-read']
 
     def __init__(self):
         super(SpotifyAPI).__init__()
@@ -194,17 +193,19 @@ class SpotifyAPI:
         self.client_secret_id = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
         self.redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
 
-    def get_login_link(self):
+    def get_auth_url(self):
 
-        query = {
-            'client_id': self.client_id,
-            'response_type': 'code',
-            'redirect_uri': self.redirect_uri,
-            'scope': self.__scopes__['scope'],
-            'show_dialog': True
-        }
+        # query = {
+        #     'client_id': self.client_id,
+        #     'response_type': 'code',
+        #     'redirect_uri': self.redirect_uri,
+        #     'scope': self.__scopes__,
+        #     'show_dialog': True
+        # }
 
-        auth_request= f'{self.__url__["auth_url"]}?{urllib.parse.urlencode(query)}'
+        scopes = '%20'.join(self.__scopes__)
+
+        auth_request= f'{self.__url__["auth_url"]}?client_id={self.client_id}&redirect_uri={self.redirect_uri}&response_type=code&scope={scopes}&show_dialog=true'
 
         return auth_request
 
@@ -213,15 +214,13 @@ class SpotifyAPI:
             'Authorization': f'Bearer {token}'
         }
     
-    def __add_scopes__(self):
-        query = {
-            'client_id': self.client_id,
-            'response_type': 'code',
-            'redirect_uri': self.redirect_uri,
-            'scope': self.__scopes__['scope']
-        }
-        req_url = self.__url__['auth_url'] + '&'.join([f'{key}={value}' for key,value in query.items()])
-        response = requests.get(req_url)
+    # def __add_scopes__(self):
+    #     query = {
+    #         'client_id': self.client_id,
+    #         'response_type': 'code',
+    #         'redirect_uri': self.redirect_uri,
+    #         'scope': self.__scopes__['scope']
+    #     }
 
     def get_current_playback(self):
         header = self.__get_auth_header__(token=self.access_token)
@@ -277,7 +276,54 @@ class SpotifyAPI:
 if __name__ == "__main__":
     # SPOTIFY API TESTS
     spotify = SpotifyAPI()
-    spotify.get_access_token()
+    print(spotify.get_auth_url())
+
+#     from flask import Flask, request
+
+#     app = Flask(__name__)
+
+#     @app.route('/callback')
+#     def callback():
+#         authorization_code = request.args.get('code')
+#         # Handle the authorization code as needed
+#         return f'Authorization Code: {authorization_code}'
+
+#     app.run(port=5000)
+
+
+
+from flask import Flask, redirect, request
+import dotenv
+import os
+
+dotenv.load_dotenv()
+
+app = Flask(__name__)
+
+# Spotify API credentials
+CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET_ID')
+REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI')
+SPOTIFY_AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
+SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
+
+@app.route('/')
+def login():
+    # Redirect the user to Spotify's authorization page
+    authorize_url = f'{SPOTIFY_AUTHORIZE_URL}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=user-read-private%20user-read-email%20user-read-playback-state%20user-modify-playback-state&show_dialog=true'
+    return redirect(authorize_url)
+
+@app.route("/spotify/callback/")
+def callback():
+
+    print("Query: "+request.args.get('code'))
+
+    return {'message': 'Success'}
+
+
+if __name__ == '__main__':
+    app.run(port=5000,debug=True)
+
 
         
 
