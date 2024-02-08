@@ -335,29 +335,13 @@ class Server:
         
         @self.app.route("/spotify/login")
         def login():
-            auth_url = self.sp_manager.get_login_link()
+            auth_url = self.sp_manager.get_auth_url()
             return redirect(auth_url)
         
-        self.app.route("/callback")
+        @self.app.route("/spotify/callback/")
         def callback():
-            if 'error' in request.args:
-                return jsonify({'error': request.args['error']})
-            
-            if 'code' in request.args:
-                body = {
-                    'code': request.args['code'],
-                    'redirect_uri': self.sp_manager.redirect_uri,
-                    'grant_type': 'authorization_code',
-                    'client_id': self.sp_manager.client_id,
-                    'client_secret': self.sp_manager.client_secret
-                }
-
-                resp = requests.post(self.sp_manager.__url__['token_url'],data=body)
-                data = resp.json()
-                print(data)
-
-
-            
+            print("Query: "+request.args.get('code'))
+            return {'message': 'Success'}
         
         """ Calendar Routes """
 
