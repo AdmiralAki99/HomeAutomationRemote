@@ -252,7 +252,16 @@ class SpotifyAPI:
 
         response = requests.get(player_url,headers=header)
 
-        return response.json()
+        info = {
+            "id": response.json()['device']['id'],
+            "is_active": response.json()['device']['is_active'],
+            "name": response.json()['device']['name'],
+            "type": response.json()['device']['type'],
+            "volume_percent": response.json()['device']['volume_percent'],
+            "supports_volume": response.json()['device']['supports_volume']
+        }
+
+        return info
 
     def get_current_playback(self):
         header = self.__get_auth_header__(token=self.access_token)
@@ -275,13 +284,7 @@ class SpotifyAPI:
             "external_urls": playback['item']['artists'][0]['external_urls'],
             "name": playback['item']['artists'][0]['name'],
         },
-        "device":{
-            "id": playback['device']['id'],
-            "is_playing": playback['is_active'],
-            "name": playback['device']['name'],
-            'type': playback['device']['type'],
-            "volume_percent": playback['device']['volume_percent'],
-        },
+        "device": self.get_current_playback_device(),
         "duration_ms": playback['item']['duration_ms'],
         "explicit": playback['item']['explicit'],
         "external_urls": playback['item']['external_urls'],
@@ -289,6 +292,17 @@ class SpotifyAPI:
         }
 
         return details
+    
+    def set_seek_position(self,position_ms):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player/seek'
+
+        response = requests.put(player_url,headers=header,params={'position_ms': position_ms})
+
+        if response.status_code == 204:
+            return {'message': 'Success'}
+        else:
+            return {'message': 'Failed'}
 
     def is_user_logged_in(self):
         return self.__is_logged_in__

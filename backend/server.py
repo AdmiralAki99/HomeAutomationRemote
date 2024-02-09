@@ -45,7 +45,6 @@ class Server:
         # self.cache_handler = spotipy.FlaskSessionCacheHandler(session)
         # self.spotify_manager = SpotifyManager(self.cache_handler)
 
-
         class SmartLight(self.db.Model):
             id = self.db.Column(self.db.Integer, primary_key=True,autoincrement=True)
             name = self.db.Column(self.db.String(100), nullable=False)
@@ -312,8 +311,8 @@ class Server:
         @self.app.route("/spotify/get/current",methods=['GET'])
         def get_current_playback():
             if self.sp_manager.is_user_logged_in():
-                return jsonify(self.spotify_manager.get_current_song())
-            # return jsonify(self.spotify_manager.get_current_song())
+                return jsonify(self.sp_manager.get_current_playback())
+            
             return jsonify({'message': 'Not Logged In'})
             
         @self.app.route("/spotify/pause",methods=['GET'])
