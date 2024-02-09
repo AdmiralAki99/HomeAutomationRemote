@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
 from datetime import date
+import datetime
 
 from spotifyManager import SpotifyManager,SpotifyAPI
 from scanner import NetworkScanner
@@ -152,6 +153,9 @@ class Server:
             def __repr__(self) -> str:
                 return f'<CameraDevice {self.name}>'
 
+        
+       
+        
         @self.app.route("/test")
         def hello_world():
             lights = SmartLight.query.all()
@@ -310,44 +314,61 @@ class Server:
 
         @self.app.route("/spotify/get/current",methods=['GET'])
         def get_current_playback():
-            if self.sp_manager.is_user_logged_in():
+            if self.sp_manager.is_user_logged_in() == True:
+                if datetime.datetime.now().timestamp() > self.sp_manager.get_expiry_time_stamp():
+                    self.sp_manager.token_refresh()
                 return jsonify(self.sp_manager.get_current_playback())
-            
-            return jsonify({'message': 'Not Logged In'})
+            else:
+                redirect('/spotify/login')
             
         @self.app.route("/spotify/pause",methods=['GET'])
         def pause_playback():
             if self.sp_manager.is_user_logged_in():
+                if datetime.datetime.now().timestamp() > self.sp_manager.get_expiry_time_stamp():
+                    self.sp_manager.token_refresh()
                 self.sp_manager.pause_song()
                 return jsonify({'message': 'Playback Paused'})
-            
-            return jsonify({'message': 'Not Logged In'})
+            else:
+                redirect('/spotify/login')
             
         @self.app.route("/spotify/play",methods=['GET'])
         def play_playback():
             if self.sp_manager.is_user_logged_in():
+                if datetime.datetime.now().timestamp() > self.sp_manager.get_expiry_time_stamp():
+                    self.sp_manager.token_refresh()
                 self.sp_manager.play_song()
                 return jsonify({'message': 'Playback Started'})
-            return jsonify({'message': 'Not Logged In'})
+            else:
+                redirect('/spotify/login')
 
         @self.app.route("/spotify/next",methods=['POST'])
         def skip_playback():
             if self.sp_manager.is_user_logged_in():
+                if datetime.datetime.now().timestamp() > self.sp_manager.get_expiry_time_stamp():
+                    self.sp_manager.token_refresh()
                 self.sp_manager.skip_to_next()
                 return jsonify({'message': 'Playback Skipped'})
-            return jsonify({'message': 'Not Logged In'})
+            else:
+                redirect('/spotify/login')
 
         @self.app.route("/spotify/prev",methods=['POST'])
         def prev_playback():
             if self.sp_manager.is_user_logged_in():
+                if datetime.datetime.now().timestamp() > self.sp_manager.get_expiry_time_stamp():
+                    self.sp_manager.refresh_token()
                 self.sp_manager.skip_to_previous()
                 return jsonify({'message': 'Playback Skipped'})
-            return jsonify({'message': 'Not Logged In'})
-        
+            else:
+                redirect('/spotify/login')
+
         @self.app.route("/spotify/login")
         def login():
             auth_url = self.sp_manager.get_auth_url()
             return redirect(auth_url)
+        
+        @self.app.route("/spotify/force/refresh",methods=['POST'])
+        def refresh_token():
+            return self.sp_manager.token_refresh()
         
         @self.app.route("/spotify/callback/")
         def callback():

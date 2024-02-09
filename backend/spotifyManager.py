@@ -243,8 +243,27 @@ class SpotifyAPI:
         self.refresh_token = resp.json()['refresh_token']
         self.__is_logged_in__ = True
 
+    def token_refresh(self):
+        header = self.__get_login_header__()
+        
+        body = {
+            'grant_type': 'refresh_token',
+            'refresh_token': self.refresh_token,
+            'client_id': self.client_id
+        }
+
+        response = requests.post(self.__url__['token_url'],data=body,headers=header)
+
+        if response.status_code == 200:
+            self.access_token = response.json()['access_token']
+            self.expiry_time = datetime.datetime.now().timestamp() + response.json()['expires_in']
+            return {'message': 'Success'}
+
     def set_auth_code(self,auth_code):
         self.auth_code = auth_code
+
+    def get_expiry_time_stamp(self):
+        return self.expiry_time
         
     def get_current_playback_device(self):
         header = self.__get_auth_header__(token=self.access_token)
@@ -270,6 +289,9 @@ class SpotifyAPI:
         response = requests.get(player_url,headers=header)
 
         playback = response.json()
+
+        if playback is None:
+            return {'message': 'No Song Playing'}
 
         details = {"album":{
             "album_type": playback['item']['album']['album_type'],
@@ -351,22 +373,6 @@ class SpotifyAPI:
         else:
             return {'message': 'Failed'}
 
-    def refresh_token(self):
-
-        client_credentials_auth = self.client_id + ':' + self.client_secret_id
-        client_credentials_auth = client_credentials_auth.encode('utf-8')
-        client_credentials_auth = base64.b64encode(client_credentials_auth)
-        client_credentials_auth = str(client_credentials_auth,'utf-8')
-
-        response = requests.post(self.__url__['token_url'],data={
-            'grant_type': 'refresh_token',
-            'refresh_token': self.access_token
-        },headers={
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': f'Basic {client_credentials_auth}',
-        })
-
-        print(response.json())
 
 if __name__ == "__main__":
     # SPOTIFY API TESTS
