@@ -245,14 +245,6 @@ class SpotifyAPI:
 
     def set_auth_code(self,auth_code):
         self.auth_code = auth_code
-    
-    # def __add_scopes__(self):
-    #     query = {
-    #         'client_id': self.client_id,
-    #         'response_type': 'code',
-    #         'redirect_uri': self.redirect_uri,
-    #         'scope': self.__scopes__['scope']
-    #     }
         
     def get_current_playback_device(self):
         header = self.__get_auth_header__(token=self.access_token)
@@ -301,15 +293,16 @@ class SpotifyAPI:
     def is_user_logged_in(self):
         return self.__is_logged_in__
 
-    def play_song(self, song_uri):
+    def play_song(self):
         header = self.__get_auth_header__(token=self.access_token)
         player_url = self.__url__['base_url'] + 'me/player/play'
 
-        response = requests.put(player_url,headers=header,json={
-            'uris': [song_uri]
-        })
+        response = requests.put(player_url,headers=header)
 
-        print(response.json())
+        if response.status_code == 204:
+            return {'message': 'Success'}
+        else:
+            return {'message': 'Failed'}
 
     def pause_song(self):
         header = self.__get_auth_header__(token=self.access_token)
@@ -317,7 +310,10 @@ class SpotifyAPI:
 
         response = requests.put(player_url,headers=header)
 
-        print(response.json())
+        if response.status_code == 204:
+            return {'message': 'Success'}
+        else:
+            return {'message': 'Failed'}
 
     def skip_to_next(self):
         header = self.__get_auth_header__(token=self.access_token)
@@ -325,7 +321,21 @@ class SpotifyAPI:
 
         response = requests.post(player_url,headers=header)
 
-        print(response.json())
+        if response.status_code == 204:
+            return {'message': 'Success'}
+        else:
+            return {'message': 'Failed'}
+        
+    def skip_to_previous(self):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player/previous'
+
+        response = requests.post(player_url,headers=header)
+
+        if response.status_code == 204:
+            return {'message': 'Success'}
+        else:
+            return {'message': 'Failed'}
 
     def refresh_token(self):
 

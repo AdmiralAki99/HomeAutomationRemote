@@ -311,27 +311,39 @@ class Server:
 
         @self.app.route("/spotify/get/current",methods=['GET'])
         def get_current_playback():
-            return jsonify(self.spotify_manager.get_current_song())
+            if self.sp_manager.is_user_logged_in():
+                return jsonify(self.spotify_manager.get_current_song())
+            # return jsonify(self.spotify_manager.get_current_song())
+            return jsonify({'message': 'Not Logged In'})
             
         @self.app.route("/spotify/pause",methods=['GET'])
         def pause_playback():
-            self.spotify_manager.pause_song()
-            return jsonify({'message': 'Playback Paused'})
+            if self.sp_manager.is_user_logged_in():
+                self.sp_manager.pause_song()
+                return jsonify({'message': 'Playback Paused'})
+            
+            return jsonify({'message': 'Not Logged In'})
             
         @self.app.route("/spotify/play",methods=['GET'])
         def play_playback():
-            self.spotify_manager.resume_song()
-            return jsonify({'message': 'Playback Resumed'})
+            if self.sp_manager.is_user_logged_in():
+                self.sp_manager.play_song()
+                return jsonify({'message': 'Playback Started'})
+            return jsonify({'message': 'Not Logged In'})
 
         @self.app.route("/spotify/next",methods=['POST'])
         def skip_playback():
-            self.spotify_manager.skip_song()
-            return jsonify({'message': 'Playback Skipped'})
+            if self.sp_manager.is_user_logged_in():
+                self.sp_manager.skip_to_next()
+                return jsonify({'message': 'Playback Skipped'})
+            return jsonify({'message': 'Not Logged In'})
 
         @self.app.route("/spotify/prev",methods=['POST'])
         def prev_playback():
-            self.spotify_manager.rewind_song()
-            return jsonify({'message': 'Playback Previous'})
+            if self.sp_manager.is_user_logged_in():
+                self.sp_manager.skip_to_previous()
+                return jsonify({'message': 'Playback Skipped'})
+            return jsonify({'message': 'Not Logged In'})
         
         @self.app.route("/spotify/login")
         def login():
