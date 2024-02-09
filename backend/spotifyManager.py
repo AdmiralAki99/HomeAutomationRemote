@@ -179,6 +179,7 @@ class SpotifyAPI:
     expiry_time = None
     refresh_token = None
     auth_code = None
+    __is_logged_in__ = False
 
     __url__ = {
         'token_url': 'https://accounts.spotify.com/api/token',
@@ -199,7 +200,7 @@ class SpotifyAPI:
 
         scopes = '%20'.join(self.__scopes__)
 
-        auth_request= f'{self.__url__["auth_url"]}?client_id={self.client_id}&redirect_uri={self.redirect_uri}&response_type=code&scope={scopes}&show_dialog=true'
+        auth_request= f'{self.__url__["auth_url"]}?client_id={self.client_id}&redirect_uri={self.redirect_uri}&response_type=code&scope={scopes}'
 
         return auth_request
 
@@ -240,6 +241,7 @@ class SpotifyAPI:
         self.access_token = resp.json()['access_token']
         self.expiry_time = datetime.datetime.now().timestamp() + resp.json()['expires_in']
         self.refresh_token = resp.json()['refresh_token']
+        self.__is_logged_in__ = True
 
     def set_auth_code(self,auth_code):
         self.auth_code = auth_code
@@ -251,14 +253,53 @@ class SpotifyAPI:
     #         'redirect_uri': self.redirect_uri,
     #         'scope': self.__scopes__['scope']
     #     }
-
-    def get_current_playback(self):
+        
+    def get_current_playback_device(self):
         header = self.__get_auth_header__(token=self.access_token)
         player_url = self.__url__['base_url'] + 'me/player'
 
         response = requests.get(player_url,headers=header)
 
-        print(response.json())
+        return response.json()
+
+    def get_current_playback(self):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player/currently-playing'
+
+        response = requests.get(player_url,headers=header)
+
+        playback = response.json()
+
+        details = {"album":{
+            "album_type": playback['item']['album']['album_type'],
+            "artists": playback['item']['album']['artists'],
+            "external_urls": playback['item']['album']['external_urls'],
+            "href": playback['item']['album']['href'],
+            "id": playback['item']['album']['id'],
+            "images": playback['item']['album']['images'],
+            "name": playback['item']['album']['name'],
+        },
+        "artists":{
+            "external_urls": playback['item']['artists'][0]['external_urls'],
+            "name": playback['item']['artists'][0]['name'],
+        },
+        "device":{
+            "id": playback['device']['id'],
+            "is_playing": playback['is_active'],
+            "name": playback['device']['name'],
+            'type': playback['device']['type'],
+            "volume_percent": playback['device']['volume_percent'],
+        },
+        "duration_ms": playback['item']['duration_ms'],
+        "explicit": playback['item']['explicit'],
+        "external_urls": playback['item']['external_urls'],
+        "name": playback['item']['name'],
+        }
+
+        return details
+
+    def is_user_logged_in(self):
+        return self.__is_logged_in__
 
     def play_song(self, song_uri):
         header = self.__get_auth_header__(token=self.access_token)
