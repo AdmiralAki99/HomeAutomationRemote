@@ -299,6 +299,32 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                   </div>
                 </div>
               </a>
+              <a className="block max-w-lg w-80 h-30 bg-noir rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70 relative">
+                <div className="grid grid-rows-3 max-h-40 grid-flow-col gap-4">
+                  <div className="row row-start-1 row-end-4 flex justify-center items-center bg-noir border-r border-r-white">
+                    <button>
+                      <ChevronRight sx={{ color: "white" }} />
+                    </button>
+                  </div>
+                  <div className="row row-start-1 items-center bg-noir mb-auto">
+                    <div className="flex flex-col-2">
+                      <h5 className="text-8xl font-bold tracking-tight text-white pt-4">
+                        72
+                      </h5>
+                      <span className="text-white row-start-2 pt-5 text-lg font-bold">
+                        &#8457;
+                      </span>
+                    </div>
+
+                    <p className="text-gray-50 text-">Card Content</p>
+                  </div>
+                  <div className="row row-start-1 row-end-4 flex justify-center items-center bg-bubblegum">
+                    <button onClick={()=>navigation.navigate('Epub')}>
+                      <ChevronRight sx={{ color: "white" }} />
+                    </button>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
