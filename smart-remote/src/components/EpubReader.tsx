@@ -2,23 +2,30 @@ import React from "react";
 
 import { ReactReader } from 'react-reader'
 
+interface EpubReaderProps{
+    bookLocation : string;
+}
 
-
-class EpubReader extends React.Component {
+class EpubReader extends React.Component<EpubReaderProps> {
 
     state = {
-        location: "0"
+        location: "0",
+        bookLocation: ''
     }
 
-    constructor(props: any) {
+    constructor(props: EpubReaderProps) {
         super(props);
+        this.state = {
+            location: "0",
+            bookLocation:this.props.bookLocation
+        }
     }
 
     renderReader() {
         return (
             <div style={{ height: "95vh"}}>
             <ReactReader
-              url="https://react-reader.metabits.no/files/alice.epub"
+              url={this.state.bookLocation}
               location={this.state.location}
               locationChanged={(epubcfi: string) => this.setState({location: epubcfi})}
             />
