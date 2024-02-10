@@ -10,6 +10,7 @@ import CameraScreen from './screens/CameraScreen';
 import MusicPlayerScreen from './screens/MusicPlayerScreen';
 import CalendarScreen from './screens/CalendarScreen';
 import NetworkScreen from './screens/NetworkScreen';
+import EpubScreen from './screens/EpubScreen';
 
 export type ScreenParamList = {
   Light: undefined;
@@ -20,6 +21,7 @@ export type ScreenParamList = {
   Calendar : undefined;
   Weather : undefined;
   Network : undefined;
+  Epub : undefined;
 }
 
 export type NavbarMode = {
@@ -33,7 +35,7 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home'>
+      <Stack.Navigator initialRouteName='Light'>
         <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="Test" component={TestScreen}></Stack.Screen>
         <Stack.Screen name="Light" component={LightScreen}></Stack.Screen>
@@ -41,6 +43,7 @@ function App() {
         <Stack.Screen name='Music' component={MusicPlayerScreen}></Stack.Screen>
         <Stack.Screen name='Calendar' component={CalendarScreen}></Stack.Screen>
         <Stack.Screen name='Network' component={NetworkScreen}></Stack.Screen>
+        <Stack.Screen name='Epub' component={EpubScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
