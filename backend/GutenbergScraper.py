@@ -1,6 +1,17 @@
 from bs4 import BeautifulSoup
 import requests
 from urllib.request import urlretrieve
+import json
+
+class Book:
+    def __init__(self, title: str, author: str, id: int, cover: str) -> None:
+        self.title = title
+        self.author = author
+        self.id = id
+        self.cover = cover
+
+    def __str__(self) -> str:
+        return f"Title: {self.title}\nAuthor: {self.author}\nID: {self.id}\nCover: {self.cover}"
 
 class GutenbergAPI:
 
@@ -22,8 +33,13 @@ class GutenbergAPI:
         if resp.status_code == 200:
             soup = BeautifulSoup(resp.content, "html.parser")
             for tags in soup.find_all("li",class_="booklink"):
+                print(f"ID: {tags.find('a').get('href').split('/')[-1]}")
                 print(f"Title: {tags.find('span',class_='title').text}")
-                print("Image: ",tags.find('img',class_='cover-thumb'))
+                if tags.find('span',class_='subtitle') is not None:
+                    print(f"Author: {tags.find('span',class_='subtitle').text}")
+                
+                print(tags.find('img'))
+                
 
     def get_searched_book_metadata(self, book_title: str) -> str:
         pass
