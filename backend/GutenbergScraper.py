@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from urllib.request import urlretrieve
 import json
+import os
 
 class Book:
     def __init__(self, title: str, author: str, id: int, cover: str) -> None:
@@ -21,6 +22,8 @@ class GutenbergAPI:
         'base_download': 'https://www.gutenberg.org/ebooks/',
         'image_url': 'https://www.gutenberg.org/',
     }
+
+    download_src = './ebooks/'
 
 
 
@@ -58,8 +61,8 @@ class GutenbergAPI:
     def get_searched_book_metadata(self, book_title: str) -> str:
         pass
 
-    def download_ebook(self, book_id: int) -> str:
-        pass
+    def download_ebook(self, book_id: int,book_name) -> str:
+        return urlretrieve(f"{self.__url__['base_download']}{book_id}.epub3.images",f"{os.path.join(r'./backend/epub/',f'{book_name}.epub')}")
 
     def get_book(self, book_id: int) -> str:
         pass
@@ -67,4 +70,4 @@ class GutenbergAPI:
 
 if __name__ == "__main__":
     g = GutenbergAPI()
-    print(g.search_book('art of war'))
+    g.download_ebook(145,'Middlemarch')
