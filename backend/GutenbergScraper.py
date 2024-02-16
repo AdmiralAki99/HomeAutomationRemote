@@ -19,7 +19,7 @@ class GutenbergAPI:
         'base_ebooks': 'https://www.gutenberg.org/ebooks/',
         'base_search': 'https://www.gutenberg.org/ebooks/search/?query=',
         'base_download': 'https://www.gutenberg.org/ebooks/',
-        'image': 'https://www.gutenberg.org/',
+        'image_url': 'https://www.gutenberg.org/',
     }
 
 
@@ -29,23 +29,37 @@ class GutenbergAPI:
 
     def search_book(self, book_title: str) -> str:
         resp = requests.get(f"{self.__url__['base_search']}{book_title}")
-
+        books = []
         if resp.status_code == 200:
             soup = BeautifulSoup(resp.content, "html.parser")
             for tags in soup.find_all("li",class_="booklink"):
-                print(f"ID: {tags.find('a').get('href').split('/')[-1]}")
-                print(f"Title: {tags.find('span',class_='title').text}")
                 if tags.find('span',class_='subtitle') is not None:
-                    print(f"Author: {tags.find('span',class_='subtitle').text}")
+                    author = {tags.find('span',class_='subtitle').text}
+                else:
+                    continue
                 
-                print(tags.find('img'))
+                if tags.find('img') is not None:
+                    cover = f'{self.__url__["image_url"]}{(tags.find("img"))["src"]}'
+                else:
+                    continue
+
+                id = tags.find('a').get('href').split('/')[-1]
+                title = tags.find('span',class_='title').text
+                books.append({
+                    'title':title,
+                    'author':author,
+                    'id':id,
+                    'cover':cover
+                })
+            return books
+
                 
 
     def get_searched_book_metadata(self, book_title: str) -> str:
         pass
 
     def download_ebook(self, book_id: int) -> str:
-       pass
+        pass
 
     def get_book(self, book_id: int) -> str:
         pass
@@ -53,5 +67,4 @@ class GutenbergAPI:
 
 if __name__ == "__main__":
     g = GutenbergAPI()
-    g.search_book("art of war")
-
+    print(g.search_book('art of war'))
