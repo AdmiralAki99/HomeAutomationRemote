@@ -9,6 +9,7 @@ from datetime import date
 import datetime
 
 from spotifyManager import SpotifyManager,SpotifyAPI
+from GutenbergScraper import GutenbergAPI
 from scanner import NetworkScanner
 from camera import Camera
 from lights import Light
@@ -26,6 +27,7 @@ class Server:
     network_scanner = NetworkScanner()
     camera_manager = Camera()
     sp_manager = SpotifyAPI()
+    ebook_manager = GutenbergAPI()
 
     def __init__(self) -> None:
         self.app = Flask(__name__)
@@ -733,6 +735,23 @@ class Server:
                 camera.name = body['name']
                 self.db.session.commit()
                 return jsonify({"Message":"Camera Name Changed Successfully"})
+            
+        """ Gutenberg Scraper Routes"""
+
+        @self.app.route("/gutenberg/search",methods=['POST'])
+        def search_book(self):
+            body = request.get_json()
+            book_title = body['title']
+            return jsonify(self.ebook_manager.search_book(book_title))
+        
+        @self.app.route("/gutenberg/download",methods=['POST'])
+        def download_ebook(self):
+            request = request.get_json()
+            book_id = request['id']
+            book_name = request['name']
+            
+            self.ebook_manager.download_ebook(book_id,book_name)
+            return {'message': 'Ebook Downloaded Successfully'}
         
     async def discover_smart_lights(self):
         devices = await Discover.discover(
