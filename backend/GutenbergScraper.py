@@ -54,18 +54,12 @@ class GutenbergAPI:
                     'id':id,
                     'cover':cover
                 })
-            return books
+            return {'books':books}
 
-                
-
-    def get_searched_book_metadata(self, book_title: str) -> str:
-        pass
 
     def download_ebook(self, book_id: int,book_name) -> str:
-        return urlretrieve(f"{self.__url__['base_download']}{book_id}.epub3.images",f"{os.path.join(r'./backend/epub/',f'{book_name}.epub')}")
-
-    def get_book(self, book_id: int) -> str:
-        pass
+        urlretrieve(f"{self.__url__['base_download']}{book_id}.epub3.images",f"{os.path.join(r'./backend/epub/',f'{book_name}.epub')}")
+        return True
 
 
 if __name__ == "__main__":
