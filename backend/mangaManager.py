@@ -73,9 +73,9 @@ class MangaManager:
             self.refresh_token = resp.json()['refresh_token']
             self.expires_in = datetime.now().timestamp() + resp.json()['expires_in']
             self.refresh_expires_in = resp.json()['refresh_expires_in']
-            return "Authenticated"
+            return {"Message":"Authenticated"}
         else:
-            return resp.text
+            return {"Error":resp.text}
         
 
     def token_refresh(self) -> str:
@@ -95,9 +95,9 @@ class MangaManager:
             self.refresh_token = resp.json()['refresh_token']
             self.expires_in = datetime.now().timestamp() + resp.json()['expires_in']
             self.refresh_expires_in = resp.json()['refresh_expires_in']
-            return "Token Refreshed"
+            return {"Message":"Token Refreshed"}
         else:
-            return resp.text
+            return {"Error":resp.text}
         
     def search(self,title:str):
         if self.verify_token() == False:
@@ -163,6 +163,7 @@ class MangaManager:
         return chapters
     
     def download_chapter(self,chapter_id):
+
         if self.verify_token() == False:
             self.authenticate()
 
