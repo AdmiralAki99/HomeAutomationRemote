@@ -2,6 +2,7 @@ import requests
 import dotenv
 import os
 from datetime import datetime
+from urllib.request import urlretrieve
 import json
 
 class Manga:
@@ -106,17 +107,86 @@ class MangaManager:
         query = {
             'title':title
         }
-
+        manga_list = []
         resp = requests.get(f'{self.__url__["base_url"]}/manga',params=query,headers=headers)
 
-        # if resp.status_code == 200:
-        #     for values in resp.json()['data']:
-        #        # Check if all keys exist in manga_keys
-               
+        try:
+            for manga in resp.json()['data']:
+                manga_list.append({
+                    'id': manga['id'],
+                    'title': manga['attributes']['title']['en'],
+                    'altTitles': manga['attributes']['altTitles'],
+                    'description': manga['attributes']['description'] if 'en' in manga['attributes']['description'].keys() else 'None',
+                    'publicationDemographic': manga['attributes']['publicationDemographic'],
+                    'status': manga['attributes']['status'],
+                    'tags': manga['attributes']['tags'],
+                    'coverArt': manga['relationships'][2]['id'],
+                    'artist': manga['relationships'][1]['id'],
+                    'author': manga['relationships'][0]['id'],
+                })
+            return manga_list
+        except NameError as e:
+            print("NameError: ",e)
+            return {"error":f"NameError: {e}"}
+    
+    def get_manga_chapters(self,manga_id):
+
+        if self.verify_token() == False:
+            self.authenticate()
+
+        chapters = []
+
+        headers = self.get_headers()
+
+        query = {
+            'translatedLanguage[]':['en']
+        }
+
+        resp = requests.get(f'{self.__url__["base_url"]}/manga/{manga_id}/feed',headers=headers,params=query)
+
+        for chapter in resp.json()['data']:
+            chapters.append({
+                'id': chapter['id'],
+                'volume': chapter['attributes']['volume'],
+                'chapter': chapter['attributes']['chapter'],
+                'title': chapter['attributes']['title'],
+                'translatedLanguage': chapter['attributes']['translatedLanguage'],
+                'externalUrl': chapter['attributes']['externalUrl'] if chapter['attributes']['externalUrl'] != None else 'None',
+                'publishAt': chapter['attributes']['publishAt'],
+                'readableAt': chapter['attributes']['readableAt'],
+                'createdAt': chapter['attributes']['createdAt'],
+                'updatedAt': chapter['attributes']['updatedAt'],
+                'pages': chapter['attributes']['pages'],
+                'version': chapter['attributes']['version']
+            })
+
+        return chapters
+    
+    def download_chapter(self,chapter_id):
+        if self.verify_token() == False:
+            self.authenticate()
+
+        headers = self.get_headers()
+
+        resp = requests.get(f'{self.__url__["base_url"]}/at-home/server/{chapter_id}',headers=headers)
+
+        chapter_info = {
+            'host': resp.json()['baseUrl'],
+            'hash': resp.json()['chapter']['hash'],
+            'data': resp.json()['chapter']['data']
+        }
+
+        data = chapter_info['data']
+
+        for i in range(len(data)):
+            urlretrieve(f"{chapter_info['host']}/data/{chapter_info['hash']}/{chapter_info['data'][i]}",f"{os.path.join(r'./backend/mangadex/',f'page{i}.png')}")
+            
 
         
 
 if __name__ == "__main__":
     m = MangaManager()
     print(m.authenticate())
-    print(m.search("one piece"))
+    # print(m.search("Campfire"))
+    print(m.get_manga_chapters("8352a9ca-22e0-4a1c-bf1f-89f23d95262a"))
+    print(m.download_chapter("2e0180cc-b4d7-426b-b473-c242fca65f24"))
