@@ -10,6 +10,7 @@ import datetime
 
 from spotifyManager import SpotifyManager,SpotifyAPI
 from GutenbergScraper import GutenbergAPI
+from mangaManager import MangaManager
 from scanner import NetworkScanner
 from camera import Camera
 from lights import Light
@@ -28,6 +29,7 @@ class Server:
     camera_manager = Camera()
     sp_manager = SpotifyAPI()
     ebook_manager = GutenbergAPI()
+    manga_manager = MangaManager()
 
     def __init__(self) -> None:
         self.app = Flask(__name__)
@@ -752,6 +754,33 @@ class Server:
             
             self.ebook_manager.download_ebook(book_id,book_name)
             return {'message': 'Ebook Downloaded Successfully'}
+        
+        """ Manga Routes"""
+        @self.app.route("/manga/authenticate",methods=['POST'])
+        def authenticate_manga_manager(self):
+            return self.manga_manager.authenticate()
+
+        @self.app.route("/manga/search",methods=['POST'])
+        def get_manga(self):
+            body = request.get_json()
+            manga_title = body['title']
+            return jsonify(self.manga_manager.search(manga_title))
+
+        @self.app.route("/manga/get/chapters",methods=['GET'])
+        def get_manga_chapters(self):
+            body = request.get_json()
+            manga_id = body['id']
+            return jsonify(self.manga_manager.get_manga_chapters(manga_id))
+
+        @self.app.route("/manga/get/download",methods=['GET'])
+        def download_manga_chapter(self):
+            body = request.get_json()
+            chapter_id = body['id']
+            return jsonify(self.manga_manager.download_chapter(chapter_id))
+
+        @self.app.route("/manga/get/cover",methods=['GET'])
+        def refresh_token(self):
+            return self.manga_manager.token_refresh()
         
     async def discover_smart_lights(self):
         devices = await Discover.discover(
