@@ -3,7 +3,6 @@ import dotenv
 import os
 from datetime import datetime
 from urllib.request import urlretrieve
-import json
 
 class Manga:
 
