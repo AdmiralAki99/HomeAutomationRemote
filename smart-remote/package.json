@@ -36,6 +36,7 @@
     "dayjs": "^1.11.10",
     "electron-is-dev": "^2.0.0",
     "expo-screen-orientation": "^6.2.0",
+    "fast-xml-parser": "^4.3.4",
     "react": "^18.2.0",
     "react-calendar": "^4.6.1",
     "react-datepicker": "^4.21.0",
