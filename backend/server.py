@@ -778,8 +778,8 @@ class Server:
             chapter_id = body['id']
             return jsonify(self.manga_manager.download_chapter(chapter_id))
 
-        @self.app.route("/manga/get/cover",methods=['GET'])
-        def refresh_token(self):
+        @self.app.route("/manga/get/refresh",methods=['GET'])
+        def manga_refresh_token(self):
             return self.manga_manager.token_refresh()
         
     async def discover_smart_lights(self):
