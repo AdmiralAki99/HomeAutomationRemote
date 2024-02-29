@@ -27,6 +27,20 @@ This project was made to understand basics [React Framework](https://react.dev),
     <li>Display upcoming events, add new events, and modify existing ones through the interface.</li>
 </ul>
 
+### Manga Reader API
+<ul>
+    <li> Get Chapters</li>
+    <li> Search Chapters</li>
+    <li> Store Chapters</li>
+</ul>
+
+### Gutenberg Scraper
+<ul>
+    <li> Search Books On Project Gutenberg</li>
+    <li> Get Ebook Metadata</li>
+    <li> Download & Store EPUB Books</li>
+</ul>
+
 ## Technologies Used
 
 <ol>
@@ -42,7 +56,7 @@ This project was made to understand basics [React Framework](https://react.dev),
     <li> Understand React Framework Basics</li>
     <li> Get Familiar With Typescript</li>
     <li> Understand Server Hosting On Local Device</li>
-    <li> Get Used To Postman API For Testing</li>
+    <li> Get Used To Postman For Testing</li>
     <li> Understanding React Components</li>
 </ul>
 
@@ -50,15 +64,16 @@ This project was made to understand basics [React Framework](https://react.dev),
 
 <ul>
     <li> Backup Procedure</li>
-    <li> Spotify API Overhaul</li>
-    <li> Weather API</li>
+    <li> MBTA API</li>
     <li> Modernize UI</li>
+    <li> Manga Screen</li>
 </ul>
 
 ## TODO List
 
 <ol>
     <li> Complete Calendar Event Form</li>
-    <li>Virtual Keyboard</li>
+    <li> Virtual Keyboard</li>
+    <li> Create Global UI Components To Use Everywhere</li>
 </ol>
 

@@ -9,7 +9,7 @@ Created a basic backend server to hold the data and models and route them on the
 <ol>
     <li>Python</li>
     <li>Flask API</li>
-    <li> Spotipy (Going to Overhaul to Custom API)</li>
+    <li> React</li>
 </ol>
 
 ## API End Points
