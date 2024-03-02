@@ -36,6 +36,7 @@ class MangaManager:
     __url__ = {
         'base_url':'https://api.mangadex.org',
         'auth_url':'https://auth.mangadex.org/realms/mangadex/protocol/openid-connect/token',
+        'cover_url':'https://uploads.mangadex.org/'
 
     }
 
@@ -98,13 +99,14 @@ class MangaManager:
         else:
             return {"Error":resp.text}
         
-    def search(self,title:str):
+    def search(self,title:str,limit:int = 10):
         if self.verify_token() == False:
             self.authenticate()
         headers = self.get_headers()
 
         query = {
-            'title':title
+            'title':title,
+            'limit':limit,
         }
         manga_list = []
         resp = requests.get(f'{self.__url__["base_url"]}/manga',params=query,headers=headers)
@@ -119,10 +121,11 @@ class MangaManager:
                     'publicationDemographic': manga['attributes']['publicationDemographic'],
                     'status': manga['attributes']['status'],
                     'tags': manga['attributes']['tags'],
-                    'coverArt': manga['relationships'][2]['id'],
+                    'coverArt': f"{self.__url__['cover_url']}covers/{manga['id']}/{self.get_cover_art(manga['relationships'][2]['id'])}",
                     'artist': manga['relationships'][1]['id'],
                     'author': manga['relationships'][0]['id'],
                 })
+                # self.get_cover_art(manga['relationships'][2]['id'])
             return manga_list
         except NameError as e:
             print("NameError: ",e)
@@ -160,6 +163,27 @@ class MangaManager:
             })
 
         return chapters
+
+    def get_cover_art(self,cover_art_id):
+
+        if self.verify_token() == False:
+            self.authenticate()
+
+        headers = self.get_headers()
+
+        resp = requests.get(f'{self.__url__["base_url"]}/cover/{cover_art_id}',headers=headers)
+        print(resp.json())
+        if resp.status_code == 200:
+            if 'data' in resp.json().keys():
+                if 'attributes' in resp.json()['data'].keys():
+                    if 'fileName' in resp.json()['data']['attributes'].keys():
+                        return resp.json()['data']['attributes']['fileName']
+                    else:
+                        print(resp.json()['data']['attributes'])
+                else:
+                    print(resp.json()['data'])
+            else:
+                print(resp.json())
     
     def download_chapter(self,chapter_id):
 
@@ -188,5 +212,7 @@ if __name__ == "__main__":
     m = MangaManager()
     print(m.authenticate())
     # print(m.search("Campfire"))
-    print(m.get_manga_chapters("8352a9ca-22e0-4a1c-bf1f-89f23d95262a"))
-    print(m.download_chapter("2e0180cc-b4d7-426b-b473-c242fca65f24"))
+    # print(m.get_manga_chapters("8352a9ca-22e0-4a1c-bf1f-89f23d95262a"))
+    # print(m.download_chapter("2e0180cc-b4d7-426b-b473-c242fca65f24"))
+    # print(m.get_cover_art("ca70ba28-8493-4c4b-bcbe-ea8e0ffc0833"))
+    print(m.search("Tempest Tyrant")[0]['coverArt'])
