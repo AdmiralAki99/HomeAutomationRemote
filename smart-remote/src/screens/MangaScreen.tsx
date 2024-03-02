@@ -1,4 +1,5 @@
 import React ,{useState, useEffect} from 'react';
+import axios from 'axios';
 
 import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -15,26 +16,44 @@ import MangaReader from '../components/MangaReader';
 type mangaProps = NativeStackScreenProps<ScreenParamList, 'Manga'>;
 
 function MangaScreen({route, navigation} : mangaProps){
-  const [location, setLocation] = useState<string | number>(0);
 
+  const [mangaFeed, setMangaFeed] = useState<any>([]);
+
+  const getMangaFeed = async () => {
+    try{
+      const resp = await axios.post('/manga/search',{'title':''})
+      setMangaFeed(resp.data);
+    }
+    catch(e){
+      console.log('Error fetching manga feed')
+    }
+  }
   
 
   return (
     <View>
       <ScreenNavbar navigation={navigation} destination={"Home"} />
       <div>
-        <div className='flex flex-col bg-noir m-auto pt-10'>
+        <div className='flex flex-row bg-noir m-auto pt-10'>
           <div className='flex overflow-x-scroll pb-10 hide-scroll-bar'>
               <div className='flex flex-nowrap lg:ml-40 md:ml-20 ml-10'>
-                <div className='inline-block px-3'>
-                    <div className='w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white'>
-
-                    </div>
-                </div>
+                 {
+                    mangaFeed.map((manga:any)=>{
+                      return (
+                        <div className="inline-block px-3">
+                          <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
+                            <img src={manga.coverArt} className='w-40 h-60'></img>
+                          </div>
+                        </div>
+                      );
+                    })
+                  }
+                
+                
               </div>
           </div>
         </div>
-        <MangaReader volumeLocation=''/>
+        <button onClick={getMangaFeed}>Fetch</button>
       </div>
     </View>
   );
