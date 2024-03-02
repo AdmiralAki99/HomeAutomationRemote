@@ -3,6 +3,7 @@ import dotenv
 import os
 from datetime import datetime
 from urllib.request import urlretrieve
+import random
 
 class Manga:
 
@@ -125,7 +126,39 @@ class MangaManager:
                     'artist': manga['relationships'][1]['id'],
                     'author': manga['relationships'][0]['id'],
                 })
-                # self.get_cover_art(manga['relationships'][2]['id'])
+            return manga_list
+        except NameError as e:
+            print("NameError: ",e)
+            return {"error":f"NameError: {e}"}
+        
+    def search(self,included:list,excluded:list,limit:int = 10):
+        if self.verify_token() == False:
+            self.authenticate()
+        headers = self.get_headers()
+
+        query = {
+            'includedTags[]':included,
+            'excludedTags[]':excluded,
+            'limit':limit,
+        }
+
+        manga_list = []
+        resp = requests.get(f'{self.__url__["base_url"]}/manga',params=query,headers=headers)
+
+        try:
+            for manga in resp.json()['data']:
+                manga_list.append({
+                    'id': manga['id'],
+                    'title': manga['attributes']['title']['en'],
+                    'altTitles': manga['attributes']['altTitles'],
+                    'description': manga['attributes']['description'] if 'en' in manga['attributes']['description'].keys() else 'None',
+                    'publicationDemographic': manga['attributes']['publicationDemographic'],
+                    'status': manga['attributes']['status'],
+                    'tags': manga['attributes']['tags'],
+                    'coverArt': f"{self.__url__['cover_url']}covers/{manga['id']}/{self.get_cover_art(manga['relationships'][2]['id'])}",
+                    'artist': manga['relationships'][1]['id'],
+                    'author': manga['relationships'][0]['id'],
+                })
             return manga_list
         except NameError as e:
             print("NameError: ",e)
@@ -163,6 +196,24 @@ class MangaManager:
             })
 
         return chapters
+    
+    def get_tag_ids(self,categories:list):
+
+        if self.verify_token() == False:
+            self.authenticate()
+
+        headers = self.get_headers()
+
+        resp = requests.get(f'{self.__url__["base_url"]}/manga/tag',headers=headers)
+
+        if categories == None:
+            return random.sample([tag['id'] for tag in resp.json()['data']],random.randint(1,2))
+        
+        tag_ids = []
+        for tag in resp.json()['data']:
+            if tag['attributes']['name']['en'] in categories:
+                tag_ids.append(tag['id'])
+        return tag_ids
 
     def get_cover_art(self,cover_art_id):
 
@@ -215,4 +266,6 @@ if __name__ == "__main__":
     # print(m.get_manga_chapters("8352a9ca-22e0-4a1c-bf1f-89f23d95262a"))
     # print(m.download_chapter("2e0180cc-b4d7-426b-b473-c242fca65f24"))
     # print(m.get_cover_art("ca70ba28-8493-4c4b-bcbe-ea8e0ffc0833"))
-    print(m.search("Tempest Tyrant")[0]['coverArt'])
+    # print(m.search("Tempest Tyrant")[0]['coverArt'])
+    print(m.search(included=['391b0423-d847-456f-aff0-8b0cfc03066b', 'b9af3a63-f058-46de-a9a0-e0c13906197a'],excluded=[]))
+
