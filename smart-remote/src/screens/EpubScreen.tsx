@@ -7,7 +7,7 @@ import {ScreenNavbar } from '../components/Navbar';
 
 import { ReactReader } from 'react-reader'
 
-import EpubReader from '../components/EpubReader';
+// import EpubReader from '../components/EpubReader';
 
 
 
@@ -19,7 +19,7 @@ function EpubScreen({route, navigation} : epubProps){
   return (
     <View>
       <ScreenNavbar navigation={navigation} destination={"Home"} />
-      <EpubReader bookLocation='https://react-reader.metabits.no/files/alice.epub'/>
+      {/* <EpubReader bookLocation='https://react-reader.metabits.no/files/alice.epub'/> */}
     </View>
   );
 }

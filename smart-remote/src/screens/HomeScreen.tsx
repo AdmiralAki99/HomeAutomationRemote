@@ -319,7 +319,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     <p className="text-gray-50 text-">Card Content</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-bubblegum">
-                    <button onClick={()=>navigation.navigate('Epub')}>
+                    <button onClick={()=>navigation.navigate('Manga')}>
                       <ChevronRight sx={{ color: "white" }} />
                     </button>
                   </div>

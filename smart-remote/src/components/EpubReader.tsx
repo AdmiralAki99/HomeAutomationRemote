@@ -1,6 +1,5 @@
 import React from "react";
 import {XMLParser} from 'fast-xml-parser';
-import fs from 'fs';
 
 import { ReactReader } from 'react-reader'
 
@@ -25,9 +24,9 @@ class EpubReader extends React.Component<EpubReaderProps> {
 
     parseEpub = async () => {
       try{
-        const xmlInfo = fs.readFileSync(this.state.bookLocation, 'utf8');
-        console.log(xmlInfo);
-        return xmlInfo;
+        // const xmlInfo = fs.readFileSync(this.state.bookLocation, 'utf8');
+        // console.log(xmlInfo);
+        // return xmlInfo;
       }catch(e){
         console.log(e);
       }
