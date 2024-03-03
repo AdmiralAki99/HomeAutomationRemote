@@ -756,30 +756,42 @@ class Server:
             return {'message': 'Ebook Downloaded Successfully'}
         
         """ Manga Routes"""
-        @self.app.route("/manga/authenticate",methods=['POST'])
-        def authenticate_manga_manager(self):
+        @self.app.route("/manga/authenticate",methods=['GET'])
+        def authenticate_manga_manager():
             return self.manga_manager.authenticate()
 
         @self.app.route("/manga/search",methods=['POST'])
-        def get_manga(self):
+        def get_manga():
             body = request.get_json()
             manga_title = body['title']
-            return jsonify(self.manga_manager.search(manga_title))
+            return jsonify(self.manga_manager.search(title=manga_title))
+
+        @self.app.route("/manga/get/random",methods=['GET'])
+        def get_random_manga():
+            random_tags = self.manga_manager.get_random_tags()
+            genres = [x[0] for x in random_tags]
+            random_tags = [x[1] for x in random_tags]
+            included_tags = self.manga_manager.get_tag_ids(categories=random_tags)
+            return jsonify({
+                'genres':genres[0],
+                'tags':random_tags,
+                'manga':self.manga_manager.search_with_tags(included=included_tags,excluded=[])
+                })
 
         @self.app.route("/manga/get/chapters",methods=['GET'])
-        def get_manga_chapters(self):
+        def get_manga_chapters():
             body = request.get_json()
             manga_id = body['id']
             return jsonify(self.manga_manager.get_manga_chapters(manga_id))
 
         @self.app.route("/manga/get/download",methods=['GET'])
-        def download_manga_chapter(self):
+        def download_manga_chapter():
             body = request.get_json()
             chapter_id = body['id']
             return jsonify(self.manga_manager.download_chapter(chapter_id))
 
         @self.app.route("/manga/get/refresh",methods=['GET'])
-        def manga_refresh_token(self):
+        def manga_refresh_token():
             return self.manga_manager.token_refresh()
         
     async def discover_smart_lights(self):
