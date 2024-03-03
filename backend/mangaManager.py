@@ -43,6 +43,7 @@ class MangaManager:
 
     def __init__(self) -> None:
         dotenv.load_dotenv()
+        self.authenticate()
 
     def get_headers(self) -> dict:
         return {
@@ -114,7 +115,10 @@ class MangaManager:
 
         try:
             for manga in resp.json()['data']:
-                manga_list.append({
+                if 'en' not in manga['attributes']['title'].keys():
+                    continue
+                else:
+                     manga_list.append({
                     'id': manga['id'],
                     'title': manga['attributes']['title']['en'],
                     'altTitles': manga['attributes']['altTitles'],
@@ -131,7 +135,7 @@ class MangaManager:
             print("NameError: ",e)
             return {"error":f"NameError: {e}"}
         
-    def search(self,included:list,excluded:list,limit:int = 10):
+    def search_with_tags(self,included:list,excluded:list,limit:int = 10):
         if self.verify_token() == False:
             self.authenticate()
         headers = self.get_headers()
@@ -147,7 +151,10 @@ class MangaManager:
 
         try:
             for manga in resp.json()['data']:
-                manga_list.append({
+                if 'en' not in manga['attributes']['title'].keys():
+                    continue
+                else:
+                    manga_list.append({
                     'id': manga['id'],
                     'title': manga['attributes']['title']['en'],
                     'altTitles': manga['attributes']['altTitles'],
@@ -205,15 +212,24 @@ class MangaManager:
         headers = self.get_headers()
 
         resp = requests.get(f'{self.__url__["base_url"]}/manga/tag',headers=headers)
-
-        if categories == None:
-            return random.sample([tag['id'] for tag in resp.json()['data']],random.randint(1,2))
-        
+            
         tag_ids = []
         for tag in resp.json()['data']:
             if tag['attributes']['name']['en'] in categories:
                 tag_ids.append(tag['id'])
         return tag_ids
+    
+    def get_random_tags(self):
+        if self.verify_token() == False:
+            self.authenticate()
+
+        headers = self.get_headers()
+
+        resp = requests.get(f'{self.__url__["base_url"]}/manga/tag',headers=headers)
+
+        return random.sample([(tag['attributes']['name']['en'],tag['id']) for tag in resp.json()['data']],random.randint(1,2))
+
+
 
     def get_cover_art(self,cover_art_id):
 
