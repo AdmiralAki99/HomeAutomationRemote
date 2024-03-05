@@ -11,6 +11,7 @@ import MusicPlayerScreen from './screens/MusicPlayerScreen';
 import CalendarScreen from './screens/CalendarScreen';
 import NetworkScreen from './screens/NetworkScreen';
 import EpubScreen from './screens/EpubScreen';
+import MangaScreen from './screens/MangaScreen';
 
 export type ScreenParamList = {
   Light: undefined;
@@ -22,6 +23,7 @@ export type ScreenParamList = {
   Weather : undefined;
   Network : undefined;
   Epub : undefined;
+  Manga: undefined;
 }
 
 export type NavbarMode = {
@@ -44,6 +46,7 @@ function App() {
         <Stack.Screen name='Calendar' component={CalendarScreen}></Stack.Screen>
         <Stack.Screen name='Network' component={NetworkScreen}></Stack.Screen>
         <Stack.Screen name='Epub' component={EpubScreen}></Stack.Screen>
+        <Stack.Screen name='Manga' component={MangaScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
