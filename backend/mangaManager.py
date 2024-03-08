@@ -239,18 +239,17 @@ class MangaManager:
         headers = self.get_headers()
 
         resp = requests.get(f'{self.__url__["base_url"]}/cover/{cover_art_id}',headers=headers)
-        print(resp.json())
         if resp.status_code == 200:
             if 'data' in resp.json().keys():
                 if 'attributes' in resp.json()['data'].keys():
                     if 'fileName' in resp.json()['data']['attributes'].keys():
                         return resp.json()['data']['attributes']['fileName']
                     else:
-                        print(resp.json()['data']['attributes'])
+                       ...
                 else:
-                    print(resp.json()['data'])
+                   ...
             else:
-                print(resp.json())
+                ...
     
     def download_chapter(self,chapter_id):
 
