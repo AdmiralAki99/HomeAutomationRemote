@@ -96,11 +96,11 @@ class MangaScreen extends React.Component<mangaProps> {
   }
 
   mangaChapterPopUp = () => {
-    this.state.handleOpen = true
+    this.setState({handleOpen: true})
   }
 
   closeModal = () => {
-    this.state.handleOpen = false
+    this.setState({handleOpen: false})
   }
 
 
@@ -141,12 +141,15 @@ class MangaScreen extends React.Component<mangaProps> {
                     {genre.manga.map((manga: any) => {
                       return (
                         <div className="inline-block px-3">
-                          <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
-                            <img
-                              src={manga.coverArt}
-                              className="w-40 h-60"
-                            ></img>
-                          </div>
+                          <button onClick={this.mangaChapterPopUp}>
+                            <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
+                              <img
+                                src={manga.coverArt}
+                                className="w-40 h-60"
+                              ></img>
+                            </div>
+                          </button>
+                          <p className="text-white">{manga.title}</p>
                         </div>
                       );
                     })}
