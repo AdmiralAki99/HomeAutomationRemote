@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const withMT = require("@material-tailwind/react/utils/withMT");
+plugin = require("tailwindcss/plugin");
+
 module.exports = withMT({
   darkMode: ["class"],
   content: [
@@ -79,5 +81,9 @@ module.exports = withMT({
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),
+      plugin(({ addUtilities }) => {
+        addUtilities({'.no-scrollbar': {'-ms-overflow-style': 'none', 'scrollbar-width': 'none', '&::-webkit-scrollbar': {display: 'none'}}}, {variants: ['responsive', 'dark']})
+      })
+    ],
 })
