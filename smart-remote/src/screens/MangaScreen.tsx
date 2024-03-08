@@ -34,37 +34,46 @@ class MangaScreen extends React.Component<mangaProps> {
   }
 
   componentDidMount(): void {
-    this.getMangaFeed();
-    this.getRandomGenre();
+    this.getMangaFeed().then((data)=>{
+      this.setState({mangaFeed: data})
+    })
+    this.getRandomGenreInParallel().then((data)=>{
+      this.setState({randomGenres: data})
+    })
+    console.log(this.state.randomGenres)
+  }
+
+  useEffect = () => {
+    
   }
 
   constructor(props: any){
     super(props);
     this.getMangaFeed = this.getMangaFeed.bind(this);
-    this.getRandomGenre = this.getRandomGenre.bind(this);
+    this.getRandomGenreInParallel = this.getRandomGenreInParallel.bind(this);
   }
 
   getMangaFeed = async () => {
     try{
       const resp = await axios.post('/manga/search',{'title':''})
-      this.setState({mangaFeed: resp.data});
+      return resp.data
     }
     catch(e){
       console.log('Error fetching manga feed')
     }
   }
 
-  getRandomGenre = async () => {
-    try{
-        await fetch('/manga/get/random',{method:'GET'}).then((resp)=>resp.json()).then((data)=>{
-          this.setState({randomGenres: data.manga})
-           }
-        );
+  getRandomGenreInParallel = async () => {
+      try{
+         const resp = await Promise.all([
+          await fetch('/manga/get/random',{method:'GET'}).then((resp)=>resp.json()).then((data)=>{return data}),
+          await fetch('/manga/get/random',{method:'GET'}).then((resp)=>resp.json()).then((data)=>{return data}),
+         ])
+        
+         return resp
+      }catch(e){
+        console.log('Error fetching random genre in Parallel')
       }
-    catch(e){
-      console.log('Error fetching random genre')
-    }
-  
   }
 
 
@@ -72,7 +81,7 @@ class MangaScreen extends React.Component<mangaProps> {
     return (
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
-        <div>
+        <div className='bg-noir'>
         <div className='flex flex-row bg-noir m-auto pt-10'>
           <div className='flex overflow-x-scroll pb-10 hide-scroll-bar'>
               <div className='flex flex-nowrap lg:ml-40 md:ml-20 ml-10'>
@@ -90,29 +99,42 @@ class MangaScreen extends React.Component<mangaProps> {
               </div>
           </div>
         </div>
-        <div className='flex flex-row bg-noir m-auto pt-10'>
-          <div className='flex overflow-x-scroll pb-10 hide-scroll-bar'>
-              <div className='flex flex-nowrap lg:ml-40 md:ml-20 ml-10'>
-                 {
-                    this.state.randomGenres.map((manga:any)=>{
-                      return (
-                        <div className="inline-block px-3">
-                          <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
-                            <img src={manga.coverArt} className='w-40 h-60'></img>
+        {
+          this.state.randomGenres.map((genre:any)=>{
+            return (
+              <div className='flex flex-col bg-noir'>
+                <div className='flex flex-row justify-between'>
+                  <h1 className='text-2xl text-black ml-10'>{genre.genre}</h1>
+                </div>
+                <div className='flex overflow-x-scroll pb-10 hide-scroll-bar'>
+                  <div className='flex flex-nowrap lg:ml-40 md:ml-20 ml-10'>
+                    <div ></div>
+                    {
+                      genre.manga.map((manga:any)=>{
+                        return (
+                          <div className="inline-block px-3">
+                            <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
+                              <img src={manga.coverArt} className='w-40 h-60'></img>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })
-                  }
+                        );
+                      })
+                    }
+                  </div>
+                </div>
               </div>
-          </div>
-        </div>
+            );
+          })
+        }
+       
         {/* <button onClick={this.getRandomGenre}>Fetch</button> */}
       </div>
       </View>
     );
   }
 }
+
+
 
 
 
