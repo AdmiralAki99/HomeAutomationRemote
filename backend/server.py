@@ -778,11 +778,12 @@ class Server:
                 'manga':self.manga_manager.search_with_tags(included=included_tags,excluded=[])
                 })
 
-        @self.app.route("/manga/get/chapters",methods=['GET'])
+        @self.app.route("/manga/get/chapters",methods=['POST'])
         def get_manga_chapters():
-            body = request.get_json()
-            manga_id = body['id']
-            return jsonify(self.manga_manager.get_manga_chapters(manga_id))
+            # body = request.get_json()
+            # manga_id = body['id']
+            # return jsonify(self.manga_manager.get_manga_chapters(manga_id))
+            return jsonify(self.manga_manager.get_manga_chapters(request.get_json()['id']))
 
         @self.app.route("/manga/get/download",methods=['GET'])
         def download_manga_chapter():
