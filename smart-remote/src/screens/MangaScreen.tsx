@@ -10,6 +10,7 @@ import { ReactReader } from 'react-reader'
 
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import { get } from 'http';
 
 const style = {
   position: 'absolute',
@@ -38,6 +39,8 @@ interface MangaScreenStateType {
   randomGenres: any[];
   handleOpen: boolean;
   handleClose : boolean;
+  selectedManga: any;
+  chapterList: any[];
 }
 
 class MangaScreen extends React.Component<mangaProps> {
@@ -46,17 +49,17 @@ class MangaScreen extends React.Component<mangaProps> {
     randomGenres: [],
     genre: [],
     handleOpen: false,
-    handleClose: false
+    handleClose: false,
+    selectedManga: {},
+    chapterList: []
   }
 
   componentDidMount(): void {
-    this.getMangaFeed().then((data)=>{
-      this.setState({mangaFeed: data})
+    let mangaFeed = this.getMangaFeed();
+    let randomGenres = this.getRandomGenreInParallel();
+    Promise.all([mangaFeed, randomGenres]).then((values) => {
+      this.setState({mangaFeed: values[0], randomGenres: values[1]})
     })
-    this.getRandomGenreInParallel().then((data)=>{
-      this.setState({randomGenres: data})
-    })
-    console.log(this.state.randomGenres)
   }
 
   useEffect = () => {
@@ -69,6 +72,7 @@ class MangaScreen extends React.Component<mangaProps> {
     this.getRandomGenreInParallel = this.getRandomGenreInParallel.bind(this);
     this.mangaChapterPopUp = this.mangaChapterPopUp.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.getMangaChapterList = this.getMangaChapterList.bind(this);
   }
 
   getMangaFeed = async () => {
@@ -95,6 +99,15 @@ class MangaScreen extends React.Component<mangaProps> {
       }
   }
 
+  getMangaChapterList = async ()=>{
+    try{
+      let resp = await axios.post('/manga/get/chapters',{id:this.state.selectedManga.id})
+      console.log(resp.data)
+    }catch(e){
+      console.log('Error fetching manga chapter list')
+    }
+  }
+
   mangaChapterPopUp = () => {
     this.setState({handleOpen: true})
   }
@@ -116,7 +129,11 @@ class MangaScreen extends React.Component<mangaProps> {
                 {this.state.mangaFeed.map((manga: any) => {
                   return (
                     <div className="inline-block px-3">
-                      <button onClick={this.mangaChapterPopUp}>
+                      <button onClick={()=>{
+                        this.setState({selectedManga: manga})
+                        this.mangaChapterPopUp()
+                        this.getMangaChapterList()
+                      }}>
                         <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
                           <img src={manga.coverArt} className="w-40 h-60"></img>
                         </div>
@@ -165,7 +182,32 @@ class MangaScreen extends React.Component<mangaProps> {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={style}></Box>
+            <Box sx={style}>
+              {this.state.selectedManga.title}
+              {this.state.selectedManga.id}
+              <table className='table-auto overflow-scroll'>
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Chapter</th>
+                    <th>Volume</th>
+                    <th>Page Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.chapterList.map((chapter: any) => {
+                    return (
+                      <tr>
+                        <td>{chapter.title}</td>
+                        {/* <td>{chapter.chapter}</td>
+                        <td>{chapter.volume}</td>
+                        <td>{chapter.pageCount}</td> */}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </Box>
           </Modal>
 
           {/* <button onClick={this.getRandomGenre}>Fetch</button> */}
