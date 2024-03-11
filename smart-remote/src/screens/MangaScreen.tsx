@@ -103,6 +103,9 @@ class MangaScreen extends React.Component<mangaProps> {
     try{
       let resp = await axios.post('/manga/get/chapters',{id:this.state.selectedManga.id})
       console.log(resp.data)
+      this.setState({chapterList: resp.data})
+      // this.setState({chapterList: resp.data})
+      return resp.data
     }catch(e){
       console.log('Error fetching manga chapter list')
     }
@@ -130,9 +133,9 @@ class MangaScreen extends React.Component<mangaProps> {
                   return (
                     <div className="inline-block px-3">
                       <button onClick={()=>{
-                        this.setState({selectedManga: manga})
-                        this.mangaChapterPopUp()
+                        this.state.selectedManga = manga
                         this.getMangaChapterList()
+                        this.mangaChapterPopUp()
                       }}>
                         <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
                           <img src={manga.coverArt} className="w-40 h-60"></img>
@@ -199,9 +202,9 @@ class MangaScreen extends React.Component<mangaProps> {
                     return (
                       <tr>
                         <td>{chapter.title}</td>
-                        {/* <td>{chapter.chapter}</td>
+                        <td>{chapter.chapter}</td>
                         <td>{chapter.volume}</td>
-                        <td>{chapter.pageCount}</td> */}
+                        <td>{chapter.pageCount}</td>
                       </tr>
                     );
                   })}
