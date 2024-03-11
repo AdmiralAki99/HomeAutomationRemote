@@ -74,6 +74,7 @@ class MangaScreen extends React.Component<mangaProps> {
     this.mangaChapterPopUp = this.mangaChapterPopUp.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.getMangaChapterList = this.getMangaChapterList.bind(this);
+    this.downloadChapter = this.downloadChapter.bind(this)
   }
 
   getMangaFeed = async () => {
@@ -118,6 +119,15 @@ class MangaScreen extends React.Component<mangaProps> {
 
   closeModal = () => {
     this.setState({handleOpen: false})
+  }
+
+  downloadChapter = async (chapterID:string) => {
+    try{
+      let resp = await fetch('/manga/get/download',{method: 'GET'})
+
+    }catch(e){
+      console.log('Error downloading chapter')
+    }
   }
 
 
