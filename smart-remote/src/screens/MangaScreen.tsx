@@ -22,6 +22,7 @@ const style = {
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
+  overflow: 'scroll'
 };
 
 
@@ -132,11 +133,13 @@ class MangaScreen extends React.Component<mangaProps> {
                 {this.state.mangaFeed.map((manga: any) => {
                   return (
                     <div className="inline-block px-3">
-                      <button onClick={()=>{
-                        this.state.selectedManga = manga
-                        this.getMangaChapterList()
-                        this.mangaChapterPopUp()
-                      }}>
+                      <button
+                        onClick={() => {
+                          this.state.selectedManga = manga;
+                          this.getMangaChapterList();
+                          this.mangaChapterPopUp();
+                        }}
+                      >
                         <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
                           <img src={manga.coverArt} className="w-40 h-60"></img>
                         </div>
@@ -185,32 +188,50 @@ class MangaScreen extends React.Component<mangaProps> {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={style}>
-              {this.state.selectedManga.title}
-              {this.state.selectedManga.id}
-              <table className='table-auto overflow-scroll'>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Chapter</th>
-                    <th>Volume</th>
-                    <th>Page Count</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.chapterList.map((chapter: any) => {
-                    return (
+            <div className='flex overflow-x-scroll overflow-y-scroll no-scrollbar'>
+              <Box sx={style}>
+                {this.state.selectedManga.title}
+                {this.state.selectedManga.id}
+                <div className="overflow-y-auto">
+                  <table className="table-auto overflow-y-auto h-600">
+                    <thead>
                       <tr>
-                        <td>{chapter.title}</td>
-                        <td>{chapter.chapter}</td>
-                        <td>{chapter.volume}</td>
-                        <td>{chapter.pageCount}</td>
+                        <th>Title</th>
+                        <th>Chapter</th>
+                        <th>Volume</th>
+                        <th>Page Count</th>
+                        <th>Actions</th>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Box>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                      {this.state.chapterList.map((chapter: any) => {
+                        return (
+                          <tr>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                              {chapter.title}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                              {chapter.chapter}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                              {chapter.volume}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                              {chapter.pages}
+                            </td>
+                            <td>
+                              <button className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600">
+                                Read
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </Box>
+            </div>
           </Modal>
 
           {/* <button onClick={this.getRandomGenre}>Fetch</button> */}
