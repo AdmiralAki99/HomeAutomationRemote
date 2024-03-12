@@ -275,10 +275,12 @@ class MangaManager:
         data = chapter_info['data']
 
         if not os.path.exists(f'./backend/mangadex/{manga_id}'):
-            os.makedirs(f'./backend/mangadex/{manga_id}')
+            os.makedirs(f'./backend/mangadex/{manga_id}/{chapter_id}')
+        elif not os.path.exists(f'./backend/mangadex/{manga_id}/{chapter_id}'):
+            os.makedirs(f'./backend/mangadex/{manga_id}/{chapter_id}')
 
         for i in range(len(data)):
-            urlretrieve(f"{chapter_info['host']}/data/{chapter_info['hash']}/{chapter_info['data'][i]}",f"{os.path.join(r'./backend/mangadex/',f'{manga_id}/page{i}.png')}")
+            urlretrieve(f"{chapter_info['host']}/data/{chapter_info['hash']}/{chapter_info['data'][i]}",f"{os.path.join(r'./backend/mangadex/',f'{manga_id}/{chapter_id}/page{i}.png')}")
             
 
         
