@@ -785,11 +785,12 @@ class Server:
             # return jsonify(self.manga_manager.get_manga_chapters(manga_id))
             return jsonify(self.manga_manager.get_manga_chapters(request.get_json()['id']))
 
-        @self.app.route("/manga/get/download",methods=['GET'])
+        @self.app.route("/manga/get/download",methods=['POST'])
         def download_manga_chapter():
             body = request.get_json()
-            chapter_id = body['id']
-            return jsonify(self.manga_manager.download_chapter(chapter_id))
+            chapter_id = body['chapterId']
+            manga_id = body['mangaId']
+            return jsonify(self.manga_manager.download_chapter(manga_id,chapter_id))
 
         @self.app.route("/manga/get/refresh",methods=['GET'])
         def manga_refresh_token():
