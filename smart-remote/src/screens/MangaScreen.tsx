@@ -121,9 +121,11 @@ class MangaScreen extends React.Component<mangaProps> {
     this.setState({handleOpen: false})
   }
 
-  downloadChapter = async (chapterID:string) => {
+  downloadChapter = async (mangaID:string,chapterID:string) => {
     try{
-      let resp = await fetch('/manga/get/download',{method: 'GET'})
+      let resp = await axios.post('/manga/get/download',{mangaId:mangaID,chapterId:chapterID})
+
+      console.log('Downloaded chapter')
 
     }catch(e){
       console.log('Error downloading chapter')
@@ -230,7 +232,8 @@ class MangaScreen extends React.Component<mangaProps> {
                               {chapter.pages}
                             </td>
                             <td>
-                              <button className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600">
+                              <button className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600"
+                              onClick={()=>{this.downloadChapter(this.state.selectedManga.id,chapter.id)}}>
                                 Read
                               </button>
                             </td>
