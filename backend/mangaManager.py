@@ -250,8 +250,14 @@ class MangaManager:
                    ...
             else:
                 ...
+
+    def get_chapter_list(self,manga_id):
+        if self.verify_token() == False:
+            self.authenticate()
+
+        ...
     
-    def download_chapter(self,chapter_id):
+    def download_chapter(self,manga_id,chapter_id):
 
         if self.verify_token() == False:
             self.authenticate()
@@ -268,8 +274,11 @@ class MangaManager:
 
         data = chapter_info['data']
 
+        if not os.path.exists(f'./backend/mangadex/{manga_id}'):
+            os.makedirs(f'./backend/mangadex/{manga_id}')
+
         for i in range(len(data)):
-            urlretrieve(f"{chapter_info['host']}/data/{chapter_info['hash']}/{chapter_info['data'][i]}",f"{os.path.join(r'./backend/mangadex/',f'page{i}.png')}")
+            urlretrieve(f"{chapter_info['host']}/data/{chapter_info['hash']}/{chapter_info['data'][i]}",f"{os.path.join(r'./backend/mangadex/',f'{manga_id}/page{i}.png')}")
             
 
         
@@ -279,8 +288,8 @@ if __name__ == "__main__":
     print(m.authenticate())
     # print(m.search("Campfire"))
     # print(m.get_manga_chapters("8352a9ca-22e0-4a1c-bf1f-89f23d95262a"))
-    # print(m.download_chapter("2e0180cc-b4d7-426b-b473-c242fca65f24"))
+    print(m.download_chapter("8352a9ca-22e0-4a1c-bf1f-89f23d95262a","2e0180cc-b4d7-426b-b473-c242fca65f24"))
     # print(m.get_cover_art("ca70ba28-8493-4c4b-bcbe-ea8e0ffc0833"))
     # print(m.search("Tempest Tyrant")[0]['coverArt'])
-    print(m.search(included=['391b0423-d847-456f-aff0-8b0cfc03066b', 'b9af3a63-f058-46de-a9a0-e0c13906197a'],excluded=[]))
+    # print(m.search(included=['391b0423-d847-456f-aff0-8b0cfc03066b', 'b9af3a63-f058-46de-a9a0-e0c13906197a'],excluded=[]))
 
