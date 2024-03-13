@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask,request,jsonify,session,Response,redirect,make_response
+from flask import Flask,request,jsonify,session,Response,redirect,make_response,send_from_directory
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -791,6 +791,14 @@ class Server:
             chapter_id = body['chapterId']
             manga_id = body['mangaId']
             return jsonify(self.manga_manager.download_chapter(manga_id,chapter_id))
+
+        @self.app.route("/manga/get/read",methods=['POST'])
+        def read_chapter():
+            body = request.get_json()
+            chapter_id = body['chapterId']
+            manga_id = body['mangaId']
+            return jsonify({'message': 'Chapter Read Successfully'})
+
 
         @self.app.route("/manga/get/refresh",methods=['GET'])
         def manga_refresh_token():
