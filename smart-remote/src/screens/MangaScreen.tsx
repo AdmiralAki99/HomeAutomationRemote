@@ -10,7 +10,6 @@ import { ReactReader } from 'react-reader'
 
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { get } from 'http';
 
 const style = {
   position: 'absolute',
@@ -25,9 +24,24 @@ const style = {
   overflow: 'scroll'
 };
 
+const readerStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  height: 900,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+  overflow: 'scroll'
+};
 
 
-type mangaProps = NativeStackScreenProps<ScreenParamList, 'Manga'>;
+
+type mangaProps = {
+  navigation: NativeStackScreenProps<ScreenParamList, 'Manga'>
+}
 
 interface GenreRow{
   genre: string;
@@ -42,6 +56,8 @@ interface MangaScreenStateType {
   handleClose : boolean;
   selectedManga: any;
   chapterList: any[];
+  readerOpen: boolean;
+  readerClose: boolean;
 }
 
 class MangaScreen extends React.Component<mangaProps> {
@@ -52,7 +68,9 @@ class MangaScreen extends React.Component<mangaProps> {
     handleOpen: false,
     handleClose: false,
     selectedManga: {},
-    chapterList: []
+    chapterList: [],
+    readerOpen: false,
+    readerClose: false,
   }
 
   componentDidMount(): void {
@@ -75,6 +93,8 @@ class MangaScreen extends React.Component<mangaProps> {
     this.closeModal = this.closeModal.bind(this);
     this.getMangaChapterList = this.getMangaChapterList.bind(this);
     this.downloadChapter = this.downloadChapter.bind(this)
+    this.openReaderModal = this.openReaderModal.bind(this)
+    this.closeReaderModal = this.closeReaderModal.bind(this)
   }
 
   getMangaFeed = async () => {
@@ -121,12 +141,18 @@ class MangaScreen extends React.Component<mangaProps> {
     this.setState({handleOpen: false})
   }
 
+  openReaderModal = () => {
+    this.setState({readerOpen: true})
+  }
+
+  closeReaderModal = () => {
+    this.setState({readerOpen: false})
+  }
+
   downloadChapter = async (mangaID:string,chapterID:string) => {
     try{
       let resp = await axios.post('/manga/get/download',{mangaId:mangaID,chapterId:chapterID})
-
-      console.log('Downloaded chapter')
-
+      this.openReaderModal()
     }catch(e){
       console.log('Error downloading chapter')
     }
@@ -138,7 +164,7 @@ class MangaScreen extends React.Component<mangaProps> {
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
         <div className="bg-noir max-w-screen w-screen overflow-clip overflow-x-hidden">
-          <h1 className="text-white pt-10">Manga Feed</h1>
+          {/* <h1 className="text-white pt-10">Manga Feed</h1>
           <div className="flex flex-row bg-noir m-auto pt-10">
             <div className="flex overflow-x-scroll pb-10  overflow-y-scroll no-scrollbar">
               <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
@@ -176,7 +202,7 @@ class MangaScreen extends React.Component<mangaProps> {
                     {genre.manga.map((manga: any) => {
                       return (
                         <div className="inline-block px-3">
-                          <button onClick={this.mangaChapterPopUp}>
+                          <button onClick={this.openReaderModal}>
                             <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
                               <img
                                 src={manga.coverArt}
@@ -245,6 +271,23 @@ class MangaScreen extends React.Component<mangaProps> {
                 </div>
               </Box>
             </div>
+          </Modal> */}
+
+          <Modal
+          open ={true}
+          onClose={this.closeReaderModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description">
+            <Box sx={readerStyle}>
+              <div className='flex flex-nowrap h-9 justify-end items-center overflow-hidden bg-noir'>
+                <button onClick={this.closeReaderModal}>Close</button>
+              </div>
+              <div className='justify-center items-center pt-10'>
+                <div>Prev</div>
+                <img src='https://mlpnk72yciwc.i.optimole.com/cqhiHLc.IIZS~2ef73/w:auto/h:auto/q:75/https://bleedingcool.com/wp-content/uploads/2020/10/JJK_GN01_body_058.jpg' width={500} height={200}></img>
+                <div>Next</div>
+              </div>
+            </Box>
           </Modal>
 
           {/* <button onClick={this.getRandomGenre}>Fetch</button> */}
