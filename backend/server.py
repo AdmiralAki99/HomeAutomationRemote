@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask,request,jsonify,session,Response,redirect,make_response,send_from_directory
+from flask import Flask,request,jsonify,session,Response,redirect,make_response,send_file
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -803,6 +803,18 @@ class Server:
         @self.app.route("/manga/get/refresh",methods=['GET'])
         def manga_refresh_token():
             return self.manga_manager.token_refresh()
+        
+        @self.app.route("/manga/post/chapter/page",methods=['POST'])
+        def get_chapter_page():
+            body = request.get_json()
+            page_number = body['page']
+            chapter_id = body['chapterId']
+            manga_id = body['mangaId']
+            
+            if self.manga_manager.validate_chapter_page(manga_id,chapter_id,page_number):
+                return send_file(f'mangadex/{manga_id}/{chapter_id}/page{page_number}.png',mimetype='image/png')
+            else:
+                return jsonify({'message': 'Page Not Found'})
         
     async def discover_smart_lights(self):
         devices = await Discover.discover(
