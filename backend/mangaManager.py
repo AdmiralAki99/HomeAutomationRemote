@@ -260,6 +260,14 @@ class MangaManager:
         img.save(img_byte,format='PNG')
         encoded_img = encodebytes(img_byte.getvalue()).decode('ascii')
         return encoded_img
+    
+    def validate_chapter_page(self,manga_id,chapter_id,page_number):
+        if os.path.exists(f'./backend/mangadex/{manga_id}/{chapter_id}'):
+            list_of_images = os.listdir(f'./backend/mangadex/{manga_id}/{chapter_id}')
+            if f'page{page_number}.png' in list_of_images:
+                return True
+            else:
+                return False
 
     def get_chapter_images(self,manga_id,chapter_id):
         if os.path.exists(f'./backend/mangadex/{manga_id}/{chapter_id}'):
@@ -309,5 +317,6 @@ if __name__ == "__main__":
     # print(m.get_cover_art("ca70ba28-8493-4c4b-bcbe-ea8e0ffc0833"))
     # print(m.search("Tempest Tyrant")[0]['coverArt'])
     # print(m.search(included=['391b0423-d847-456f-aff0-8b0cfc03066b', 'b9af3a63-f058-46de-a9a0-e0c13906197a'],excluded=[]))
-    print(m.get_chapter_images("8352a9ca-22e0-4a1c-bf1f-89f23d95262a","2e0180cc-b4d7-426b-b473-c242fca65f24"))
+    # print(m.get_chapter_images("0df86784-961a-443c-9765-8b41702c6249","50b998be-3516-4b5d-89a7-792200af7ca2"))
+    print(m.validate_chapter_page("0df86784-961a-443c-9765-8b41702c6249","50b998be-3516-4b5d-89a7-792200af7ca2","0"))
 
