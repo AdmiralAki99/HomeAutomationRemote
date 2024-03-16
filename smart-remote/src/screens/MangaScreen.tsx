@@ -40,6 +40,18 @@ const readerStyle = {
   overflow: 'scroll'
 };
 
+const searchResultsStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  height: 700,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
+
 
 
 type mangaProps = {
@@ -108,6 +120,8 @@ class MangaScreen extends React.Component<mangaProps> {
     this.closeReaderModal = this.closeReaderModal.bind(this)
     this.getPage = this.getPage.bind(this)
     this.nextPage = this.nextPage.bind(this)
+    this.prevPage = this.prevPage.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
   }
 
   getMangaFeed = async () => {
@@ -203,6 +217,14 @@ class MangaScreen extends React.Component<mangaProps> {
     this.setState({})
   }
 
+  handleSearch = async (e: any) => {
+    console.log("Change in search")
+  }
+
+  closeSearchResults = () => {
+
+  }
+
 
   render(){
     return (
@@ -211,9 +233,32 @@ class MangaScreen extends React.Component<mangaProps> {
         <div className="bg-noir max-w-screen w-screen overflow-clip overflow-x-hidden">
           <div>
             <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
-               <input type="text" className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4" placeholder=" Search" />
+               <input type="text" className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4" placeholder=" Search" onChange={this.handleSearch} />
             </div>
           </div>
+          <Modal 
+          open={true}
+          onClose={this.closeSearchResults}
+          >
+            <Box sx={searchResultsStyle}>
+              <div>
+                <div className='grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-red-200 gap-0.5'> 
+                 <div>Image</div>
+                 <div className='grid grid-cols-1'>
+                  <div>
+                  Title
+                  </div>
+                  <div>
+                    Subtitle
+                  </div>
+                  <div>
+
+                  </div>
+                 </div>
+                </div>
+              </div>
+            </Box>
+          </Modal>
           {/* <h1 className="text-white pt-10">Manga Feed</h1>
           <div className="flex flex-row bg-noir m-auto pt-10">
             <div className="flex overflow-x-scroll pb-10  overflow-y-scroll no-scrollbar">
