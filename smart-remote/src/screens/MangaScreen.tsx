@@ -11,6 +11,9 @@ import { ReactReader } from 'react-reader'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
+import Cover from '../page0.png'
+import { TextField } from '@mui/material';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -58,6 +61,10 @@ interface MangaScreenStateType {
   chapterList: any[];
   readerOpen: boolean;
   readerClose: boolean;
+  pageSrc: string;
+  currentPage: number;
+  currentChapter: string;
+  chapterPageCount: number;
 }
 
 class MangaScreen extends React.Component<mangaProps> {
@@ -71,6 +78,10 @@ class MangaScreen extends React.Component<mangaProps> {
     chapterList: [],
     readerOpen: false,
     readerClose: false,
+    pageSrc: '',
+    currentPage: 0,
+    currentChapter: '',
+    chapterPageCount: 0
   }
 
   componentDidMount(): void {
@@ -95,6 +106,8 @@ class MangaScreen extends React.Component<mangaProps> {
     this.downloadChapter = this.downloadChapter.bind(this)
     this.openReaderModal = this.openReaderModal.bind(this)
     this.closeReaderModal = this.closeReaderModal.bind(this)
+    this.getPage = this.getPage.bind(this)
+    this.nextPage = this.nextPage.bind(this)
   }
 
   getMangaFeed = async () => {
@@ -152,10 +165,42 @@ class MangaScreen extends React.Component<mangaProps> {
   downloadChapter = async (mangaID:string,chapterID:string) => {
     try{
       let resp = await axios.post('/manga/get/download',{mangaId:mangaID,chapterId:chapterID})
+      await this.getPage(mangaID,chapterID,0)
       this.openReaderModal()
     }catch(e){
       console.log('Error downloading chapter')
     }
+  }
+
+  getPage = async (mangaID:string,chapterID:string,pageNumber:number) => {
+    try{
+     let resp = await axios.get(`/manga/post/${mangaID}/${chapterID}/${pageNumber}`,{responseType: 'arraybuffer'})
+      let blob = new Blob([resp.data],{type:resp.headers['content-type']})
+      let imgSrc = URL.createObjectURL(blob)
+      console.log("Image src",imgSrc)
+      this.setState({pageSrc: imgSrc,currentPage:pageNumber})
+    } catch(e){
+      console.log('Error importing chapter')
+    }
+  }
+
+  nextPage = async () => {
+    if (this.state.currentPage >= this.state.chapterPageCount){
+      return
+    }
+
+    this.state.currentPage = this.state.currentPage + 1
+    await this.getPage(this.state.selectedManga.id,this.state.currentChapter,this.state.currentPage)
+  }
+
+  prevPage = async () => {
+    if (this.state.currentPage <= 0){
+      return
+    }
+
+    this.state.currentPage = this.state.currentPage - 1
+    await this.getPage(this.state.selectedManga.id,this.state.currentChapter,this.state.currentPage)
+    this.setState({})
   }
 
 
@@ -164,7 +209,11 @@ class MangaScreen extends React.Component<mangaProps> {
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
         <div className="bg-noir max-w-screen w-screen overflow-clip overflow-x-hidden">
-          {/* <h1 className="text-white pt-10">Manga Feed</h1>
+          <div className='bg-white rounded-lg'>
+            <TextField id="outlined-basic" label="Search" variant="outlined"  className='w-10/12'/>
+            <button className='bg-blue-500 text-white rounded-lg p-2 h-full w-2/12'>Search</button>
+          </div>
+          <h1 className="text-white pt-10">Manga Feed</h1>
           <div className="flex flex-row bg-noir m-auto pt-10">
             <div className="flex overflow-x-scroll pb-10  overflow-y-scroll no-scrollbar">
               <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
@@ -226,7 +275,7 @@ class MangaScreen extends React.Component<mangaProps> {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <div className='flex overflow-x-scroll overflow-y-scroll no-scrollbar'>
+            <div className="flex overflow-x-scroll overflow-y-scroll no-scrollbar">
               <Box sx={style}>
                 {this.state.selectedManga.title}
                 {this.state.selectedManga.id}
@@ -258,8 +307,25 @@ class MangaScreen extends React.Component<mangaProps> {
                               {chapter.pages}
                             </td>
                             <td>
-                              <button className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600"
-                              onClick={()=>{this.downloadChapter(this.state.selectedManga.id,chapter.id)}}>
+                              <button
+                                className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600"
+                                onClick={() => {
+                                  this.downloadChapter(
+                                    this.state.selectedManga.id,
+                                    chapter.id
+                                  );
+                                  this.getPage(
+                                    this.state.selectedManga.id,
+                                    chapter.id,
+                                    0
+                                  );
+                                  this.openReaderModal();
+                                  this.setState({
+                                    currentChapter: chapter.id,
+                                    chapterPageCount: chapter.pages,
+                                  });
+                                }}
+                              >
                                 Read
                               </button>
                             </td>
@@ -271,21 +337,30 @@ class MangaScreen extends React.Component<mangaProps> {
                 </div>
               </Box>
             </div>
-          </Modal> */}
+          </Modal>
 
           <Modal
-          open ={true}
-          onClose={this.closeReaderModal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description">
+            open={this.state.readerOpen}
+            onClose={this.closeReaderModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
             <Box sx={readerStyle}>
-              <div className='flex flex-nowrap h-9 justify-end items-center overflow-hidden bg-noir'>
+              <div className="flex flex-nowrap h-9 justify-end items-center overflow-hidden bg-noir">
                 <button onClick={this.closeReaderModal}>Close</button>
               </div>
-              <div className='justify-center items-center pt-10'>
-                <div>Prev</div>
-                <img src='https://mlpnk72yciwc.i.optimole.com/cqhiHLc.IIZS~2ef73/w:auto/h:auto/q:75/https://bleedingcool.com/wp-content/uploads/2020/10/JJK_GN01_body_058.jpg' width={500} height={200}></img>
-                <div>Next</div>
+              <div className='relative z-0'>
+                <img src={this.state.pageSrc} width={500} height={200}></img>
+                <div className="grid grid-rows-1 grid-cols-2 justify-center items-center h-full absolute inset-0 z-10">
+                  <div className=" flex h-full bg-transparent items-center justify-center">
+                    <button className="h-full w-full" onClick={this.prevPage}>
+                    </button>
+                  </div>
+                  <div className="flex h-full bg-transparent items-center justify-center">
+                    <button className="h-full w-full" onClick={this.nextPage}>
+                    </button>
+                  </div>
+                </div>
               </div>
             </Box>
           </Modal>
