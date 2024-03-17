@@ -804,15 +804,11 @@ class Server:
         def manga_refresh_token():
             return self.manga_manager.token_refresh()
         
-        @self.app.route("/manga/post/chapter/page",methods=['POST'])
-        def get_chapter_page():
-            body = request.get_json()
-            page_number = body['page']
-            chapter_id = body['chapterId']
-            manga_id = body['mangaId']
+        @self.app.route("/manga/post/<mangaId>/<chapterId>/<pageNo>",methods=['GET'])
+        def get_chapter_page(mangaId,chapterId,pageNo):
             
-            if self.manga_manager.validate_chapter_page(manga_id,chapter_id,page_number):
-                return send_file(f'mangadex/{manga_id}/{chapter_id}/page{page_number}.png',mimetype='image/png')
+            if self.manga_manager.validate_chapter_page(mangaId,chapterId,pageNo):
+                return send_file(f'mangadex/{mangaId}/{chapterId}/page{pageNo}.png')
             else:
                 return jsonify({'message': 'Page Not Found'})
         
