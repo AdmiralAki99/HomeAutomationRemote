@@ -11,6 +11,7 @@ import { ReactReader } from 'react-reader'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
+import Divider from '@mui/material/Divider';
 
 import Cover from '../page0.png'
 import { TextField } from '@mui/material';
@@ -79,6 +80,7 @@ interface MangaScreenStateType {
   currentChapter: string;
   chapterPageCount: number;
   searchResultsOpen: boolean;
+  searchResults: any[];
 }
 
 class MangaScreen extends React.Component<mangaProps> {
@@ -96,7 +98,8 @@ class MangaScreen extends React.Component<mangaProps> {
     currentPage: 0,
     currentChapter: '',
     chapterPageCount: 0,
-    searchResultsOpen: false
+    searchResultsOpen: false,
+    searchResults: []
   }
 
   componentDidMount(): void {
@@ -143,6 +146,7 @@ class MangaScreen extends React.Component<mangaProps> {
     try{
       const resp = await axios.post('/manga/search',{'title':title})
       console.log(resp.data)
+      this.setState({searchResults: resp.data})
     }catch(e){
       console.log('Error searching manga')
     }
@@ -232,7 +236,13 @@ class MangaScreen extends React.Component<mangaProps> {
   }
 
   handleSearch = async (e: any) => {
-    console.log("Change in search")
+    e.preventDefault()
+    this.openSearchResults()
+    await this.searchManga(e.target.value)
+    if (e.target.value === ''){
+      this.closeSearchResults()
+      this.setState({searchResults: []})
+    }
   }
 
   closeSearchResults = () => {
@@ -249,32 +259,53 @@ class MangaScreen extends React.Component<mangaProps> {
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
         <div className="bg-noir max-w-screen w-screen overflow-clip overflow-x-hidden">
-          <div>
-            <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
-              <input
-                type="text"
-                className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4"
-                placeholder=" Search"
-                onChange={this.handleSearch}
-              />
+          <div className='relative z-10'>
+            <div>
+              <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
+                <input
+                  type="text"
+                  className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4"
+                  placeholder=" Search"
+                  onChange={this.handleSearch}
+                />
+              </div>
             </div>
           </div>
-          <Backdrop
-            sx={{
-              position: "absolute",
-              top: "100%",
-              left: "25%",
-              transform: "translate(0%,0%)",
-              color: "transparent",
-              width: 300,
-              height: 800,
-              justifyContent: "center",
-            }}
-            open={true}
-            onClick={this.openSearchResults}
-          >
-            <div>
-              <div className="grid grid-rows-1 grid-cols-2 w-full bg-red-200 gap-0.5">
+          <div className="relative z-10">
+            <div className="flex overflow-x-scroll overflow-y-scroll pb-10 no-scrollbar">
+              <div className="flex flex-nowrap">
+                <Backdrop
+                  sx={{
+                    position: "absolute",
+                    top: "100%",
+                    left: "25%",
+                    transform: "translate(0%,0%)",
+                    color: "transparent",
+                    width: 300,
+                    height: 720,
+                    justifyContent: "center",
+                    overflow: "scroll",
+                  }}
+                  open={this.state.searchResultsOpen}
+                  onClick={this.openSearchResults}
+                >
+                  <div className="w-full h-full">
+                    {this.state.searchResults.map((manga: any) => {
+                      return (
+                        <div className="grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-white border-2 border-white gap-0.5">
+                          <div>
+                            <img src={manga.coverArt} width={60} height={60} />
+                          </div>
+                          <div className="grid grid-cols-1 text-black">
+                            <div>{manga.title}</div>
+                            <div>Subtitle</div>
+                            <div></div>
+                          </div>
+                          <Divider />
+                        </div>
+                      );
+                    })}
+                    {/* <div className="grid grid-rows-1 grid-cols-2 w-full bg-red-200 border-2 border-white gap-0.5">
                 <div>
                   <img
                     src="https://static.thenounproject.com/png/161182-200.png"
@@ -283,165 +314,177 @@ class MangaScreen extends React.Component<mangaProps> {
                   />
                   Image
                 </div>
-                <div className="grid grid-cols-1">
+                <div className="grid grid-cols-1 text-white">
                   <div>Title</div>
                   <div>Subtitle</div>
                   <div></div>
                 </div>
-              </div>
-            </div>
-          </Backdrop>
-          {/* <h1 className="text-white pt-10">Manga Feed</h1>
-          <div className="flex flex-row bg-noir m-auto pt-10">
-            <div className="flex overflow-x-scroll pb-10  overflow-y-scroll no-scrollbar">
-              <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
-                {this.state.mangaFeed.map((manga: any) => {
-                  return (
-                    <div className="inline-block px-3">
-                      <button
-                        onClick={() => {
-                          this.state.selectedManga = manga;
-                          this.getMangaChapterList();
-                          this.mangaChapterPopUp();
-                        }}
-                      >
-                        <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
-                          <img src={manga.coverArt} className="w-40 h-60"></img>
-                        </div>
-                      </button>
-                      <p className="text-white">{manga.title}</p>
-                    </div>
-                  );
-                })}
+              </div> */}
+                  </div>
+                </Backdrop>
               </div>
             </div>
           </div>
-          {this.state.randomGenres.map((genre: any) => {
-            return (
-              <div className="flex flex-col bg-noir">
-                <h1 className="text-white pb-5">{genre.genres}</h1>
-                <div className="flex flex-row justify-between m-auto">
-                  <h1 className="text-2xl text-black ml-10">{genre.genre}</h1>
-                </div>
-                <div className="flex overflow-x-scroll pb-10 overflow-y-scroll no-scrollbar overflow-hidden">
-                  <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
-                    <div></div>
-                    {genre.manga.map((manga: any) => {
-                      return (
-                        <div className="inline-block px-3">
-                          <button onClick={this.openReaderModal}>
-                            <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
-                              <img
-                                src={manga.coverArt}
-                                className="w-40 h-60"
-                              ></img>
-                            </div>
-                          </button>
-                          <p className="text-white">{manga.title}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
+          <div className="relative z-0">
+            <h1 className="text-white pt-10">Manga Feed</h1>
+            <div className="flex flex-row bg-noir m-auto pt-10">
+              <div className="flex overflow-x-scroll pb-10  overflow-y-scroll no-scrollbar">
+                <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
+                  {this.state.mangaFeed.map((manga: any) => {
+                    return (
+                      <div className="inline-block px-3">
+                        <button
+                          onClick={() => {
+                            this.state.selectedManga = manga;
+                            this.getMangaChapterList();
+                            this.mangaChapterPopUp();
+                          }}
+                        >
+                          <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
+                            <img
+                              src={manga.coverArt}
+                              className="w-40 h-60"
+                            ></img>
+                          </div>
+                        </button>
+                        <p className="text-white">{manga.title}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            );
-          })}
-
-          <Modal
-            open={this.state.handleOpen}
-            onClose={this.closeModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <div className="flex overflow-x-scroll overflow-y-scroll no-scrollbar">
-              <Box sx={style}>
-                {this.state.selectedManga.title}
-                {this.state.selectedManga.id}
-                <div className="overflow-y-auto">
-                  <table className="table-auto overflow-y-auto h-600">
-                    <thead>
-                      <tr>
-                        <th>Title</th>
-                        <th>Chapter</th>
-                        <th>Volume</th>
-                        <th>Page Count</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {this.state.chapterList.map((chapter: any) => {
+            </div>
+            {this.state.randomGenres.map((genre: any) => {
+              return (
+                <div className="flex flex-col bg-noir">
+                  <h1 className="text-white pb-5">{genre.genres}</h1>
+                  <div className="flex flex-row justify-between m-auto">
+                    <h1 className="text-2xl text-black ml-10">{genre.genre}</h1>
+                  </div>
+                  <div className="flex overflow-x-scroll pb-10 overflow-y-scroll no-scrollbar overflow-hidden">
+                    <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
+                      <div></div>
+                      {genre.manga.map((manga: any) => {
                         return (
-                          <tr>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                              {chapter.title}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                              {chapter.chapter}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                              {chapter.volume}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                              {chapter.pages}
-                            </td>
-                            <td>
-                              <button
-                                className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600"
-                                onClick={() => {
-                                  this.downloadChapter(
-                                    this.state.selectedManga.id,
-                                    chapter.id
-                                  );
-                                  this.getPage(
-                                    this.state.selectedManga.id,
-                                    chapter.id,
-                                    0
-                                  );
-                                  this.openReaderModal();
-                                  this.setState({
-                                    currentChapter: chapter.id,
-                                    chapterPageCount: chapter.pages,
-                                  });
-                                }}
-                              >
-                                Read
-                              </button>
-                            </td>
-                          </tr>
+                          <div className="inline-block px-3">
+                            <button onClick={this.openReaderModal}>
+                              <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
+                                <img
+                                  src={manga.coverArt}
+                                  className="w-40 h-60"
+                                ></img>
+                              </div>
+                            </button>
+                            <p className="text-white">{manga.title}</p>
+                          </div>
                         );
                       })}
-                    </tbody>
-                  </table>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            <Modal
+              open={this.state.handleOpen}
+              onClose={this.closeModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <div className="flex overflow-x-scroll overflow-y-scroll no-scrollbar">
+                <Box sx={style}>
+                  {this.state.selectedManga.title}
+                  {this.state.selectedManga.id}
+                  <div className="overflow-y-auto">
+                    <table className="table-auto overflow-y-auto h-600">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Chapter</th>
+                          <th>Volume</th>
+                          <th>Page Count</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                        {this.state.chapterList.map((chapter: any) => {
+                          return (
+                            <tr>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                {chapter.title}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                {chapter.chapter}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                {chapter.volume}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                                {chapter.pages}
+                              </td>
+                              <td>
+                                <button
+                                  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600"
+                                  onClick={() => {
+                                    this.downloadChapter(
+                                      this.state.selectedManga.id,
+                                      chapter.id
+                                    );
+                                    this.getPage(
+                                      this.state.selectedManga.id,
+                                      chapter.id,
+                                      0
+                                    );
+                                    this.openReaderModal();
+                                    this.setState({
+                                      currentChapter: chapter.id,
+                                      chapterPageCount: chapter.pages,
+                                    });
+                                  }}
+                                >
+                                  Read
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </Box>
+              </div>
+            </Modal>
+
+            <Modal
+              open={this.state.readerOpen}
+              onClose={this.closeReaderModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={readerStyle}>
+                <div className="flex flex-nowrap h-9 justify-end items-center overflow-hidden bg-noir">
+                  <button onClick={this.closeReaderModal}>Close</button>
+                </div>
+                <div className="relative z-0">
+                  <img src={this.state.pageSrc} width={500} height={200}></img>
+                  <div className="grid grid-rows-1 grid-cols-2 justify-center items-center h-full absolute inset-0 z-10">
+                    <div className=" flex h-full bg-transparent items-center justify-center">
+                      <button
+                        className="h-full w-full"
+                        onClick={this.prevPage}
+                      ></button>
+                    </div>
+                    <div className="flex h-full bg-transparent items-center justify-center">
+                      <button
+                        className="h-full w-full"
+                        onClick={this.nextPage}
+                      ></button>
+                    </div>
+                  </div>
                 </div>
               </Box>
-            </div>
-          </Modal>
-
-          <Modal
-            open={this.state.readerOpen}
-            onClose={this.closeReaderModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={readerStyle}>
-              <div className="flex flex-nowrap h-9 justify-end items-center overflow-hidden bg-noir">
-                <button onClick={this.closeReaderModal}>Close</button>
-              </div>
-              <div className='relative z-0'>
-                <img src={this.state.pageSrc} width={500} height={200}></img>
-                <div className="grid grid-rows-1 grid-cols-2 justify-center items-center h-full absolute inset-0 z-10">
-                  <div className=" flex h-full bg-transparent items-center justify-center">
-                    <button className="h-full w-full" onClick={this.prevPage}>
-                    </button>
-                  </div>
-                  <div className="flex h-full bg-transparent items-center justify-center">
-                    <button className="h-full w-full" onClick={this.nextPage}>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </Box>
-          </Modal> */}
+            </Modal>
+          </div>
 
           {/* <button onClick={this.getRandomGenre}>Fetch</button> */}
         </div>
