@@ -10,6 +10,7 @@ import { ReactReader } from 'react-reader'
 
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import Backdrop from '@mui/material/Backdrop';
 
 import Cover from '../page0.png'
 import { TextField } from '@mui/material';
@@ -47,7 +48,7 @@ const searchResultsStyle = {
   transform: 'translate(-50%, -50%)',
   width: 300,
   height: 700,
-  bgcolor: 'background.paper',
+  backgroundColor: 'background.paper',
   boxShadow: 24,
   p: 4,
 };
@@ -77,6 +78,7 @@ interface MangaScreenStateType {
   currentPage: number;
   currentChapter: string;
   chapterPageCount: number;
+  searchResultsOpen: boolean;
 }
 
 class MangaScreen extends React.Component<mangaProps> {
@@ -93,7 +95,8 @@ class MangaScreen extends React.Component<mangaProps> {
     pageSrc: '',
     currentPage: 0,
     currentChapter: '',
-    chapterPageCount: 0
+    chapterPageCount: 0,
+    searchResultsOpen: false
   }
 
   componentDidMount(): void {
@@ -122,6 +125,8 @@ class MangaScreen extends React.Component<mangaProps> {
     this.nextPage = this.nextPage.bind(this)
     this.prevPage = this.prevPage.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
+    this.closeSearchResults = this.closeSearchResults.bind(this)
+    this.openSearchResults = this.openSearchResults.bind(this)
   }
 
   getMangaFeed = async () => {
@@ -131,6 +136,15 @@ class MangaScreen extends React.Component<mangaProps> {
     }
     catch(e){
       console.log('Error fetching manga feed')
+    }
+  }
+
+  searchManga = async (title:string) => {
+    try{
+      const resp = await axios.post('/manga/search',{'title':title})
+      console.log(resp.data)
+    }catch(e){
+      console.log('Error searching manga')
     }
   }
 
@@ -222,7 +236,11 @@ class MangaScreen extends React.Component<mangaProps> {
   }
 
   closeSearchResults = () => {
+    this.setState({searchResultsOpen: false})
+  }
 
+  openSearchResults = () => {
+    this.setState({searchResultsOpen: true})
   }
 
 
@@ -233,32 +251,46 @@ class MangaScreen extends React.Component<mangaProps> {
         <div className="bg-noir max-w-screen w-screen overflow-clip overflow-x-hidden">
           <div>
             <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
-               <input type="text" className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4" placeholder=" Search" onChange={this.handleSearch} />
+              <input
+                type="text"
+                className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4"
+                placeholder=" Search"
+                onChange={this.handleSearch}
+              />
             </div>
           </div>
-          <Modal 
-          open={true}
-          onClose={this.closeSearchResults}
+          <Backdrop
+            sx={{
+              position: "absolute",
+              top: "100%",
+              left: "25%",
+              transform: "translate(0%,0%)",
+              color: "transparent",
+              width: 300,
+              height: 800,
+              justifyContent: "center",
+            }}
+            open={true}
+            onClick={this.openSearchResults}
           >
-            <Box sx={searchResultsStyle}>
-              <div>
-                <div className='grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-red-200 gap-0.5'> 
-                 <div>Image</div>
-                 <div className='grid grid-cols-1'>
-                  <div>
-                  Title
-                  </div>
-                  <div>
-                    Subtitle
-                  </div>
-                  <div>
-
-                  </div>
-                 </div>
+            <div>
+              <div className="grid grid-rows-1 grid-cols-2 w-full bg-red-200 gap-0.5">
+                <div>
+                  <img
+                    src="https://static.thenounproject.com/png/161182-200.png"
+                    width={60}
+                    height={60}
+                  />
+                  Image
+                </div>
+                <div className="grid grid-cols-1">
+                  <div>Title</div>
+                  <div>Subtitle</div>
+                  <div></div>
                 </div>
               </div>
-            </Box>
-          </Modal>
+            </div>
+          </Backdrop>
           {/* <h1 className="text-white pt-10">Manga Feed</h1>
           <div className="flex flex-row bg-noir m-auto pt-10">
             <div className="flex overflow-x-scroll pb-10  overflow-y-scroll no-scrollbar">
