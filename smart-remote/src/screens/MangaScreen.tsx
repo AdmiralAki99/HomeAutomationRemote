@@ -271,15 +271,15 @@ class MangaScreen extends React.Component<mangaProps> {
               </div>
             </div>
           </div>
-          <div className="relative z-10">
+          <div className="fixed z-10">
             <div className="flex overflow-x-scroll overflow-y-scroll pb-10 no-scrollbar">
               <div className="flex flex-nowrap">
                 <Backdrop
                   sx={{
                     position: "absolute",
-                    top: "100%",
+                    top: "65%",
                     left: "25%",
-                    transform: "translate(0%,0%)",
+                    transform: "translate(50%,0%)",
                     color: "transparent",
                     width: 300,
                     height: 720,
