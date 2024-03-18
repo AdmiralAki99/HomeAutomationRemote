@@ -292,17 +292,27 @@ class MangaScreen extends React.Component<mangaProps> {
                   <div className="w-full h-full">
                     {this.state.searchResults.map((manga: any) => {
                       return (
-                        <div className="grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-white border-2 border-white gap-0.5">
-                          <div>
-                            <img src={manga.coverArt} width={60} height={60} />
+                        <button  className = 'w-full'onClick={()=>{
+                           this.state.selectedManga = manga;
+                            this.getMangaChapterList();
+                            this.mangaChapterPopUp();
+                        }}>
+                          <div className="grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-white border-2 border-white gap-0.5">
+                            <div>
+                              <img
+                                src={manga.coverArt}
+                                width={60}
+                                height={60}
+                              />
+                            </div>
+                            <div className="grid grid-cols-1 text-black">
+                              <div>{manga.title}</div>
+                              <div>Subtitle</div>
+                              <div></div>
+                            </div>
+                            <Divider />
                           </div>
-                          <div className="grid grid-cols-1 text-black">
-                            <div>{manga.title}</div>
-                            <div>Subtitle</div>
-                            <div></div>
-                          </div>
-                          <Divider />
-                        </div>
+                        </button>
                       );
                     })}
                     {/* <div className="grid grid-rows-1 grid-cols-2 w-full bg-red-200 border-2 border-white gap-0.5">
