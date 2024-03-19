@@ -1,4 +1,4 @@
-import React ,{useState, useEffect} from 'react';
+import React from 'react';
 import axios from 'axios';
 
 import {View} from 'react-native';
@@ -6,15 +6,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
 import {ScreenNavbar } from '../components/Navbar';
 
-import { ReactReader } from 'react-reader'
-
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
 import Divider from '@mui/material/Divider';
-
-import Cover from '../page0.png'
-import { TextField } from '@mui/material';
 
 const style = {
   position: 'absolute',
@@ -41,19 +36,6 @@ const readerStyle = {
   p: 4,
   overflow: 'scroll'
 };
-
-const searchResultsStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 300,
-  height: 700,
-  backgroundColor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-};
-
 
 
 type mangaProps = {
@@ -145,7 +127,6 @@ class MangaScreen extends React.Component<mangaProps> {
   searchManga = async (title:string) => {
     try{
       const resp = await axios.post('/manga/search',{'title':title})
-      console.log(resp.data)
       this.setState({searchResults: resp.data})
     }catch(e){
       console.log('Error searching manga')
@@ -209,7 +190,6 @@ class MangaScreen extends React.Component<mangaProps> {
      let resp = await axios.get(`/manga/post/${mangaID}/${chapterID}/${pageNumber}`,{responseType: 'arraybuffer'})
       let blob = new Blob([resp.data],{type:resp.headers['content-type']})
       let imgSrc = URL.createObjectURL(blob)
-      console.log("Image src",imgSrc)
       this.setState({pageSrc: imgSrc,currentPage:pageNumber})
     } catch(e){
       console.log('Error importing chapter')
@@ -502,9 +482,5 @@ class MangaScreen extends React.Component<mangaProps> {
     );
   }
 }
-
-
-
-
 
 export default MangaScreen;
