@@ -1,5 +1,5 @@
 import { Button,IconButton,Box,Card,CardContent,Grid,CardMedia,Paper,Slide,MobileStepper,Typography} from '@mui/material';
-import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMute,VolumeUp,Speaker,Apple,Lightbulb,LightMode,Camera,House,Person, Home,Menu,Google,CalendarMonth,WifiTethering} from '@mui/icons-material';
+import {ChevronRight,ChevronLeft,Pause,PlayArrow,SkipPrevious,SkipNext,VolumeMute,VolumeUp,Speaker,Apple,Lightbulb,LightMode,Camera,House,Person, Home,Menu,Google,CalendarMonth,WifiTethering,AutoStories} from '@mui/icons-material';
 import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
@@ -154,7 +154,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                   <div className="col col-start-1 col-end-4 flex justify-center items-center bg-noir gap-4 ">
                     <img
                       src={
-                          isEmpty(songInfo)
+                        isEmpty(songInfo)
                           ? ""
                           : songInfo["album"]["images"][0]["url"]
                       }
@@ -196,7 +196,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                           </Button>
                         )}
                         <button onClick={nextSong}>
-                            <SkipNext sx={{ color: "white" }} />
+                          <SkipNext sx={{ color: "white" }} />
                         </button>
                       </h5>
                     </div>
@@ -303,23 +303,17 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                 <div className="grid grid-rows-3 max-h-40 grid-flow-col gap-4">
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-noir border-r border-r-white">
                     <button>
-                      <ChevronRight sx={{ color: "white" }} />
+                      <AutoStories sx={{ color: "white" }} fontSize='large' />
                     </button>
                   </div>
                   <div className="row row-start-1 items-center bg-noir mb-auto">
-                    <div className="flex flex-col-2">
-                      <h5 className="text-8xl font-bold tracking-tight text-white pt-4">
-                        72
-                      </h5>
-                      <span className="text-white row-start-2 pt-5 text-lg font-bold">
-                        &#8457;
-                      </span>
-                    </div>
-
-                    <p className="text-gray-50 text-">Card Content</p>
+                    <h5 className="text-5xl font-bold tracking-tight text-white pt-7">
+                      Manga
+                    </h5>
+                    <p className="text-gray-50 pt-6">Continue Reading... 1</p>
                   </div>
-                  <div className="row row-start-1 row-end-4 flex justify-center items-center bg-bubblegum">
-                    <button onClick={()=>navigation.navigate('Manga')}>
+                  <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
+                    <button onClick={() => navigation.navigate("Manga")}>
                       <ChevronRight sx={{ color: "white" }} />
                     </button>
                   </div>
