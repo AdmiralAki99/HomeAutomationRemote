@@ -34,6 +34,10 @@ class MangaManager:
     refresh_token = None
     expires_in = None
     refresh_expires_in = None
+    local_manga_limit = 20
+
+    creation_directory = {}
+    access_directory = {}
 
     manga_keys = ['id','title','altTitles','description','publicationDemographic','status','tags','coverArt','artist','author']
 
@@ -41,7 +45,10 @@ class MangaManager:
         'base_url':'https://api.mangadex.org',
         'auth_url':'https://auth.mangadex.org/realms/mangadex/protocol/openid-connect/token',
         'cover_url':'https://uploads.mangadex.org/'
+    }
 
+    __path__ = {
+        'manga_path':'./backend/mangadex'
     }
 
     def __init__(self) -> None:
@@ -103,6 +110,46 @@ class MangaManager:
             return {"Message":"Token Refreshed"}
         else:
             return {"Error":resp.text}
+        
+    def get_storage_length(self) -> int:
+        if not os.path.exists(self.__path__['manga_path']):
+            os.makedirs(self.__path__['manga_path'])
+        else:
+            ## Path exists
+            return len(os.listdir(self.__path__['manga_path']))
+        
+
+    def create_directory(self,manga_id:str) -> str:
+        if not os.path.exists(f'{self.__path__["manga_path"]}/{manga_id}'):
+            time = datetime.now().strftime(f"%Y-%m-%d")
+            os.makedirs(f'{self.__path__["manga_path"]}/{manga_id}')
+            self.creation_directory[manga_id] = time
+            return {"Message":"Directory Created"}
+        else:
+            return {"Error":"Directory Exists"}
+    
+    def delete_directory(self,manga_id:str) -> str:
+        if os.path.exists(f'{self.__path__["manga_path"]}/{manga_id}'):
+            os.rmdir(f'{self.__path__["manga_path"]}/{manga_id}')
+            return {"Message":"Directory Deleted"}
+        else:
+            return {"Error":"Directory Does Not Exist"}
+        
+    def delete_oldest_directory(self) -> str:
+        oldest_dir = min(self.creation_directory,key=self.creation_directory.get)
+        self.update_local_directory_dict(oldest_dir)
+        os.rmdir(f'{self.__path__["manga_path"]}/{oldest_dir}')
+        return {"Message":"Oldest Directory Deleted"}
+    
+    def update_local_directory_dict(self,manga_id:str) -> None:
+        del self.creation_directory[manga_id]
+
+    def update_direcotry(self,manga_id:str) -> str:
+        if manga_id in self.creation_directory.keys():
+            self.access_directory[manga_id] = datetime.now().strftime(f"%Y-%m-%d")
+            return {"Message":"Directory Updated"}
+        else:
+            return {"Error":"Directory Does Not Exist"}
         
     def search(self,title:str,limit:int = 10):
         if self.verify_token() == False:
