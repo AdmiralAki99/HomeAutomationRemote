@@ -59,7 +59,7 @@ function LightScreen({route,navigation}: LightProps){
 
     return (
       <View style={{ alignItems: "center" }}>
-        <div className="bg-home w-screen max-w-screen">
+        <div className="bg-home w-screen max-w-screen overflow-clip">
           <LightScreenNavBar
             navigation={navigation}
             destination={"Home"}
