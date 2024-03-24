@@ -24,11 +24,18 @@ export type ScreenParamList = {
   Network : undefined;
   Epub : undefined;
   Manga: undefined;
+  MangaReader: undefined;
 }
 
 export type NavbarMode = {
   backButton : boolean;
   drawerButton : boolean;
+}
+
+const loginSpotify = async () => {
+  await fetch('/spotify/login',{method: 'GET'}).then((response) => {
+    console.log(response);
+  })
 }
 
 const Stack = createNativeStackNavigator<ScreenParamList>();
