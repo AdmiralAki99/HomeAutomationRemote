@@ -47,6 +47,8 @@ class MangaManager:
         'cover_url':'https://uploads.mangadex.org/'
     }
 
+    DIRECTORY_LIMIT = 10
+
     __path__ = {
         'manga_path':'./backend/mangadex'
     }
@@ -114,6 +116,7 @@ class MangaManager:
     def get_storage_length(self) -> int:
         if not os.path.exists(self.__path__['manga_path']):
             os.makedirs(self.__path__['manga_path'])
+            return 0
         else:
             ## Path exists
             return len(os.listdir(self.__path__['manga_path']))
@@ -150,6 +153,12 @@ class MangaManager:
             return {"Message":"Directory Updated"}
         else:
             return {"Error":"Directory Does Not Exist"}
+        
+    def validate_if_directory_exists(self,manga_id:str,chapter_id:str) -> bool:
+        if os.path.exists(f'{self.__path__["manga_path"]}/{manga_id}/{chapter_id}'):
+            return True
+        else:
+            return False
         
     def search(self,title:str,limit:int = 10):
         if self.verify_token() == False:
@@ -343,6 +352,9 @@ class MangaManager:
         }
 
         data = chapter_info['data']
+
+        if self.validate_if_directory_exists(manga_id,chapter_id):
+            return {"Message":"Chapter Already Downloaded"}
 
         if not os.path.exists(f'./backend/mangadex/{manga_id}'):
             os.makedirs(f'./backend/mangadex/{manga_id}/{chapter_id}')
