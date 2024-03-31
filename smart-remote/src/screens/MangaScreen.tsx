@@ -10,6 +10,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
 import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 const style = {
   position: 'absolute',
@@ -238,7 +239,7 @@ class MangaScreen extends React.Component<mangaProps> {
     return (
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
-        <div className="bg-noir w-screen overflow-clip overflow-x-hidden">
+        <div className="bg-noir h-screen w-screen no-scrollbar overflow-x-hidden">
           <div className='relative z-10'>
             <div>
               <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
@@ -316,7 +317,7 @@ class MangaScreen extends React.Component<mangaProps> {
             </div>
           </div>
           <div className="relative z-0">
-            <h1 className="text-white pt-10">Manga Feed</h1>
+            <div className='pt-10 pl-5'><Typography variant='h5' sx={{color:'white'}}>Manga Feed</Typography></div>
             <div className="flex flex-row bg-noir m-auto pt-10">
               <div className="flex overflow-x-scroll pb-10  overflow-y-scroll no-scrollbar">
                 <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
@@ -337,7 +338,7 @@ class MangaScreen extends React.Component<mangaProps> {
                             ></img>
                           </div>
                         </button>
-                        <p className="text-white">{manga.title}</p>
+                        <p className="text-white text-ellipsis overflow-hidden mb-3">{manga.title}</p>
                       </div>
                     );
                   })}
@@ -347,7 +348,9 @@ class MangaScreen extends React.Component<mangaProps> {
             {this.state.randomGenres.map((genre: any) => {
               return (
                 <div className="flex flex-col bg-noir">
-                  <h1 className="text-white pb-5">{genre.genres}</h1>
+                  <div className='pb-5 pl-5'>
+                    <Typography variant='h5' sx={{color:'white'}}>{genre.genres}</Typography>
+                  </div>
                   <div className="flex flex-row justify-between m-auto">
                     <h1 className="text-2xl text-black ml-10">{genre.genre}</h1>
                   </div>
@@ -383,8 +386,7 @@ class MangaScreen extends React.Component<mangaProps> {
             >
               <div className="flex overflow-x-scroll overflow-y-scroll no-scrollbar">
                 <Box sx={style}>
-                  {this.state.selectedManga.title}
-                  {this.state.selectedManga.id}
+                  <Typography variant='h5'>{this.state.selectedManga.title}</Typography>
                   <div className="overflow-y-auto">
                     <table className="table-auto overflow-y-auto h-600">
                       <thead>
@@ -433,6 +435,9 @@ class MangaScreen extends React.Component<mangaProps> {
                                   }}
                                 >
                                   Read
+                                </button>
+                                <button>
+                                  Save
                                 </button>
                               </td>
                             </tr>
