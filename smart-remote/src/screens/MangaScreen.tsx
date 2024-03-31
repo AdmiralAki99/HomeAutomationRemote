@@ -238,7 +238,7 @@ class MangaScreen extends React.Component<mangaProps> {
     return (
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
-        <div className="bg-noir max-w-screen w-screen overflow-clip overflow-x-hidden">
+        <div className="bg-noir w-screen overflow-clip overflow-x-hidden">
           <div className='relative z-10'>
             <div>
               <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
