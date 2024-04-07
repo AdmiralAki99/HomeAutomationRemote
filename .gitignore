@@ -41,6 +41,9 @@ SHASUMS256.txt
 compile_commands.json
 .envrc
 
+# Ignore flask session files
+backend/.flask_session/
+
 # npm package
 /npm/dist
 /npm/path.txt
