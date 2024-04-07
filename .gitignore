@@ -72,3 +72,8 @@ ts-gen
 
 # Used to accelerate builds after sync
 patches/mtime-cache.json
+.flask_session/
+
+backend/.cache
+
+.cache
