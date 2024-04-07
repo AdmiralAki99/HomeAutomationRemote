@@ -72,7 +72,7 @@ function LightScreen({route,navigation}: LightProps){
                     {lights ? (
                       lights.map((light:any, index:any) => (
                         <div className="flex items-center mb-4 gap-10" key={index}>
-                          <LightCard
+                          {/* <LightCard
                             min={0}
                             value={masterLightIntensity}
                             label={light["name"]}
@@ -84,7 +84,8 @@ function LightScreen({route,navigation}: LightProps){
                             }}
                             lightID={light.id}
                             state={(light.state == "on")? true:false}
-                          />
+                          /> */}
+                          <LightCard powerState={(light.state == 'on')? true:false} id={light.id} name={light.name} brightness={masterLightIntensity}/>
                         </div>
                       ))
                     ) : (
