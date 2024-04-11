@@ -67,6 +67,9 @@ class LightCard extends React.Component<LightCardProps> {
             brightness: this.state.brightness+10
            })
     }
+    else{
+      console.log('Not checked')
+    }
   }
 
   render() {
