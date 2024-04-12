@@ -62,7 +62,7 @@ class LightCard extends React.Component<LightCardProps> {
   };
 
   handleBrightnessUpdate = (brightness: number) => {
-    if(this.state.checked == true){
+    if(this.state.checked == false){
         this.setState({
             brightness: this.state.brightness+10
            })
@@ -76,7 +76,13 @@ class LightCard extends React.Component<LightCardProps> {
     return (
       <div>
         <input type="checkbox" checked={this.state.checked} onChange={() => {
-            this.setState({checked: !this.state.checked})
+            if (this.state.checked == false){
+                this.setState({checked: true})
+                this.handleBrightnessUpdate(this.state.brightness)
+            }
+            else{
+                this.setState({checked: false})
+            }
 
         }} />
         <div>
@@ -116,7 +122,7 @@ class LightCard extends React.Component<LightCardProps> {
                 <LightSlider
                   min={0}
                   value={this.state.brightness}
-                  onChange={() => {}}
+                  onChange={() => {console.log('Brightness Changed')}}
                 ></LightSlider>
               </div>
             </div>
