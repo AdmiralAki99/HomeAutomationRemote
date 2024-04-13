@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import axios from 'axios';
 
@@ -40,11 +40,15 @@ class LightCard extends React.Component<LightCardProps> {
   }
 
   onComponentDidMount() {
-
+    console.log("Component Mounted")
+    console.log(this.state.brightness)
   }
 
-  onComponentDidUpdate() {
-    this.handleBrightnessUpdate(this.state.brightness);
+  componentDidUpdate(prevProps: Readonly<LightCardProps>, prevState: Readonly<{}>, snapshot?: any): void {
+    // this.handleBrightnessUpdate(this.state.brightness)
+    if (this.state.checked == false){
+      this.handleBrightnessUpdate(this.state.brightness)
+    }
   }
 
   handlePowerState = () => {
@@ -78,7 +82,6 @@ class LightCard extends React.Component<LightCardProps> {
         <input type="checkbox" checked={this.state.checked} onChange={() => {
             if (this.state.checked == false){
                 this.setState({checked: true})
-                this.handleBrightnessUpdate(this.state.brightness)
             }
             else{
                 this.setState({checked: false})
