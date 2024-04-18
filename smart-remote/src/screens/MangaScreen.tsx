@@ -360,7 +360,11 @@ class MangaScreen extends React.Component<mangaProps> {
                       {genre.manga.map((manga: any) => {
                         return (
                           <div className="inline-block px-3">
-                            <button onClick={this.openReaderModal}>
+                            <button onClick={()=>{
+                              this.state.selectedManga = manga;
+                              this.getMangaChapterList();
+                              this.mangaChapterPopUp();
+                            }}>
                               <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
                                 <img
                                   src={manga.coverArt}

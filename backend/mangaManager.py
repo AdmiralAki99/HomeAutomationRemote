@@ -337,13 +337,13 @@ class MangaManager:
             return {"Error":"Chapter not downloaded"}
 
     def download_chapter(self,manga_id,chapter_id):
-
+        
         if self.verify_token() == False:
             self.authenticate()
 
         headers = self.get_headers()
 
-        resp = requests.get(f'{self.__url__["base_url"]}/at-home/server/{chapter_id}',headers=headers)
+        resp = requests.get(f'{self.__url__["base_url"]}/at-home/server/{chapter_id}', headers=headers)
 
         chapter_info = {
             'host': resp.json()['baseUrl'],
@@ -353,18 +353,22 @@ class MangaManager:
 
         data = chapter_info['data']
 
-        if self.validate_if_directory_exists(manga_id,chapter_id):
-            return {"Message":"Chapter Already Downloaded"}
+        # Create directories if they don't exist
+        base_path = f'./backend/mangadex/{manga_id}/{chapter_id}'
+        if not os.path.exists(base_path):
+            os.makedirs(base_path)
 
-        if not os.path.exists(f'./backend/mangadex/{manga_id}'):
-            os.makedirs(f'./backend/mangadex/{manga_id}/{chapter_id}')
-        elif not os.path.exists(f'./backend/mangadex/{manga_id}/{chapter_id}'):
-            os.makedirs(f'./backend/mangadex/{manga_id}/{chapter_id}')
+        # Download each page of the chapter
+        for i, page in enumerate(data):
+            page_url = f"{chapter_info['host']}/data/{chapter_info['hash']}/{page}"
+            page_path = os.path.join(base_path, f'page{i}.png')
 
-        for i in range(len(data)):
-            urlretrieve(f"{chapter_info['host']}/data/{chapter_info['hash']}/{chapter_info['data'][i]}",f"{os.path.join(r'./backend/mangadex/',f'{manga_id}/{chapter_id}/page{i}.png')}")
-            
+            # Download and save the page content to a file
+            with open(page_path, 'wb') as page_file:
+                page_resp = requests.get(page_url)
+                page_file.write(page_resp.content)
 
+        return {"Message": "Chapter Downloaded"}
         
 
 if __name__ == "__main__":
@@ -372,10 +376,10 @@ if __name__ == "__main__":
     print(m.authenticate())
     # print(m.search("Campfire"))
     # print(m.get_manga_chapters("8352a9ca-22e0-4a1c-bf1f-89f23d95262a"))
-    # print(m.download_chapter("8352a9ca-22e0-4a1c-bf1f-89f23d95262a","2e0180cc-b4d7-426b-b473-c242fca65f24"))
+    print(m.download_chapter("8352a9ca-22e0-4a1c-bf1f-89f23d95262a","2e0180cc-b4d7-426b-b473-c242fca65f24"))
     # print(m.get_cover_art("ca70ba28-8493-4c4b-bcbe-ea8e0ffc0833"))
     # print(m.search("Tempest Tyrant")[0]['coverArt'])
     # print(m.search(included=['391b0423-d847-456f-aff0-8b0cfc03066b', 'b9af3a63-f058-46de-a9a0-e0c13906197a'],excluded=[]))
     # print(m.get_chapter_images("0df86784-961a-443c-9765-8b41702c6249","50b998be-3516-4b5d-89a7-792200af7ca2"))
-    print(m.validate_chapter_page("0df86784-961a-443c-9765-8b41702c6249","50b998be-3516-4b5d-89a7-792200af7ca2","0"))
+    # print(m.validate_chapter_page("0df86784-961a-443c-9765-8b41702c6249","50b998be-3516-4b5d-89a7-792200af7ca2","0"))
 
