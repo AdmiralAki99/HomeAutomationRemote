@@ -41,6 +41,9 @@ SHASUMS256.txt
 compile_commands.json
 .envrc
 
+## Ignore Manga Stored Files
+backend/mangadex/
+
 # Ignore flask session files
 backend/.flask_session/
 
