@@ -240,7 +240,7 @@ class MangaScreen extends React.Component<mangaProps> {
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
         <div className="bg-noir h-screen w-screen no-scrollbar overflow-x-hidden">
-          <div className='relative z-10'>
+          <div className="relative z-10">
             <div>
               <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
                 <input
@@ -273,11 +273,14 @@ class MangaScreen extends React.Component<mangaProps> {
                   <div className="w-full h-full">
                     {this.state.searchResults.map((manga: any) => {
                       return (
-                        <button  className = 'w-full'onClick={()=>{
-                           this.state.selectedManga = manga;
+                        <button
+                          className="w-full"
+                          onClick={() => {
+                            this.state.selectedManga = manga;
                             this.getMangaChapterList();
                             this.mangaChapterPopUp();
-                        }}>
+                          }}
+                        >
                           <div className="grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-white border-2 border-white gap-0.5">
                             <div>
                               <img
@@ -317,7 +320,11 @@ class MangaScreen extends React.Component<mangaProps> {
             </div>
           </div>
           <div className="relative z-0">
-            <div className='pt-10 pl-5'><Typography variant='h5' sx={{color:'white'}}>Manga Feed</Typography></div>
+            <div className="pt-10 pl-5">
+              <Typography variant="h5" sx={{ color: "white" }}>
+                Manga Feed
+              </Typography>
+            </div>
             <div className="flex flex-row bg-noir m-auto pt-10">
               <div className="flex overflow-x-scroll pb-10  overflow-y-scroll no-scrollbar">
                 <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
@@ -338,7 +345,9 @@ class MangaScreen extends React.Component<mangaProps> {
                             ></img>
                           </div>
                         </button>
-                        <p className="text-white text-ellipsis overflow-hidden mb-3">{manga.title}</p>
+                        <p className="text-white text-ellipsis overflow-hidden mb-3">
+                          {manga.title}
+                        </p>
                       </div>
                     );
                   })}
@@ -348,8 +357,10 @@ class MangaScreen extends React.Component<mangaProps> {
             {this.state.randomGenres.map((genre: any) => {
               return (
                 <div className="flex flex-col bg-noir">
-                  <div className='pb-5 pl-5'>
-                    <Typography variant='h5' sx={{color:'white'}}>{genre.genres}</Typography>
+                  <div className="pb-5 pl-5">
+                    <Typography variant="h5" sx={{ color: "white" }}>
+                      {genre.genres}
+                    </Typography>
                   </div>
                   <div className="flex flex-row justify-between m-auto">
                     <h1 className="text-2xl text-black ml-10">{genre.genre}</h1>
@@ -360,11 +371,13 @@ class MangaScreen extends React.Component<mangaProps> {
                       {genre.manga.map((manga: any) => {
                         return (
                           <div className="inline-block px-3">
-                            <button onClick={()=>{
-                              this.state.selectedManga = manga;
-                              this.getMangaChapterList();
-                              this.mangaChapterPopUp();
-                            }}>
+                            <button
+                              onClick={() => {
+                                this.state.selectedManga = manga;
+                                this.getMangaChapterList();
+                                this.mangaChapterPopUp();
+                              }}
+                            >
                               <div className="w-40 h-60 max-w-xs overflow-hidden rounded-lg shadow-md bg-bubblegum hover:shadow-xl transition-none duration-300 ease-in-out shadow-white">
                                 <img
                                   src={manga.coverArt}
@@ -390,7 +403,21 @@ class MangaScreen extends React.Component<mangaProps> {
             >
               <div className="flex overflow-x-scroll overflow-y-scroll no-scrollbar">
                 <Box sx={style}>
-                  <Typography variant='h5'>{this.state.selectedManga.title}</Typography>
+                  <div className="flex flex-row">
+                    <img
+                      src={this.state.selectedManga.coverArt}
+                      width="80px"
+                      height="80px"
+                    ></img>
+                    <div className='flex flex-col pl-5'>
+                      <Typography variant="h5">
+                        {this.state.selectedManga.title}
+                      </Typography>
+                      <p className='text-justify overflow-y-clip w-82 h-20'>
+                        {(this.state.selectedManga.description != undefined)? `${this.state.selectedManga.description.en}`:''}
+                      </p>
+                    </div>
+                  </div>
                   <div className="overflow-y-auto">
                     <table className="table-auto overflow-y-auto h-600">
                       <thead>
@@ -398,7 +425,7 @@ class MangaScreen extends React.Component<mangaProps> {
                           <th>Title</th>
                           <th>Chapter</th>
                           <th>Volume</th>
-                          <th>Page Count</th>
+                          <th>Pages</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
@@ -440,9 +467,8 @@ class MangaScreen extends React.Component<mangaProps> {
                                 >
                                   Read
                                 </button>
-                                <button>
-                                  Save
-                                </button>
+                                <Divider orientation="vertical" flexItem />
+                                <button>Save</button>
                               </td>
                             </tr>
                           );
