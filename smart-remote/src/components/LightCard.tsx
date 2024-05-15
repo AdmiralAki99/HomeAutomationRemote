@@ -44,10 +44,11 @@ class LightCard extends React.Component<LightCardProps> {
     console.log(this.state.brightness)
   }
 
-  componentDidUpdate(prevProps: Readonly<LightCardProps>, prevState: Readonly<{}>, snapshot?: any): void {
+  async componentDidUpdate(prevProps: Readonly<LightCardProps>, prevState: Readonly<LightCardProps>, snapshot?: any){
     // this.handleBrightnessUpdate(this.state.brightness)
-    if (this.state.checked == false){
-      this.handleBrightnessUpdate(this.state.brightness)
+    if (this.state.checked == true && prevProps.brightness != this.state.brightness){
+      // this.setState({brightness: this.state.brightness})
+      this.setState({brightness: this.props.brightness})
     }
   }
 
@@ -65,15 +66,10 @@ class LightCard extends React.Component<LightCardProps> {
     }
   };
 
-  handleBrightnessUpdate = (brightness: number) => {
-    if(this.state.checked == false){
-        this.setState({
-            brightness: this.state.brightness+10
-           })
-    }
-    else{
-      console.log('Not checked')
-    }
+  handleBrightnessUpdate = async (brightness: number) => {
+    // this.setState({ brightness: brightness });
+    this.state.brightness = brightness
+    this.setState({})
   }
 
   render() {
