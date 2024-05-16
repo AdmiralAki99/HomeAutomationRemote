@@ -274,6 +274,7 @@ class SpotifyAPI:
         info = {
             "id": response.json()['device']['id'],
             "is_active": response.json()['device']['is_active'],
+            "is_playing":response.json()['is_playing'],
             "name": response.json()['device']['name'],
             "type": response.json()['device']['type'],
             "volume_percent": response.json()['device']['volume_percent'],
@@ -372,6 +373,25 @@ class SpotifyAPI:
             return {'message': 'Success'}
         else:
             return {'message': 'Failed'}
+        
+    def change_volume(self,volume_percent):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player/volume'
+
+        response = requests.put(player_url,headers=header,params={'volume_percent': volume_percent})
+
+        if response.status_code == 204:
+            return {'message': 'Success'}
+        else:
+            return {'message': 'Failed'}
+        
+    def get_current_volume(self):
+        header = self.__get_auth_header__(token=self.access_token)
+        player_url = self.__url__['base_url'] + 'me/player'
+
+        response = requests.get(player_url,headers=header)
+
+        return response.json()['device']['volume_percent']
 
 
 if __name__ == "__main__":
