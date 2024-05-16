@@ -8,7 +8,7 @@ from flask_marshmallow import Marshmallow
 from datetime import date
 import datetime
 
-from spotifyManager import SpotifyManager,SpotifyAPI
+from spotifyManager import SpotifyAPI
 from GutenbergScraper import GutenbergAPI
 from mangaManager import MangaManager
 from scanner import NetworkScanner
@@ -24,7 +24,6 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 class Server:
 
-    spotify_manager = SpotifyManager()
     network_scanner = NetworkScanner()
     camera_manager = Camera()
     sp_manager = SpotifyAPI()
@@ -383,6 +382,16 @@ class Server:
             self.sp_manager.set_auth_code(request.args['code'])
             self.sp_manager.login()
             return {'message': 'Success'}
+    
+        @self.app.route("/spotify/set/volume",methods=['PUT'])
+        def change_volume():
+            volume = request.get_json()['volume']
+            return self.sp_manager.change_volume(volume)
+        
+        @self.app.route("/spotify/get/volume",methods=['GET'])
+        def get_current_volume():
+            return {'volume': self.sp_manager.get_current_volume()}
+
         
         """ Calendar Routes """
 

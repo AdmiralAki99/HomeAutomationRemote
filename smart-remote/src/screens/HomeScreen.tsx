@@ -6,6 +6,7 @@ import { ScreenParamList } from '../App';
 import { useEffect, useState } from 'react';
 import { HomeScreenNavbar } from '../components/Navbar';
 import { response } from 'express';
+import axios from 'axios';
 
 type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
 
@@ -13,6 +14,7 @@ type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
 function HomeScreen({route, navigation} : HomeScreenProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [songInfo , setSongInfo] = useState<Record<string,any>>({});
+  const [currentVolume, setCurrentVolume] = useState(0);
 
   const getSongName = async () => {
     await fetch('/spotify/get/current',{method: 'GET'}).then(res => res.json()).then(
@@ -43,6 +45,22 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
     )
   }
 
+  const getCurrentVolume = async () => {
+    await fetch('/spotify/get/volume',{method: 'GET'}).then(
+      (response) => response.json()
+    ).then(
+      (val) => setCurrentVolume(val.volume)
+    )
+  }
+
+  const handleVolumeChange = async (value: number) => {
+    await axios.put('/spotify/set/volume', {
+      volume: value
+    }).then((response) => {
+      
+    })
+  }
+
   const controlPlayback = async () => {
     if(isPlaying){
       await fetch('/spotify/pause',{method: 'GET'}).then(
@@ -68,6 +86,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
   useEffect(()=> {
     const timeInterval = setInterval(()=>{
       getSongName()
+      getCurrentVolume()
     },3000)
   },[])
 
@@ -138,20 +157,20 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
               </a>
               <a className="block max-w-lg w-80 h-30 bg-noir rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70 relative">
                 <div className="grid grid-rows-3 max-h-40 grid-flow-col bg-yellow-300">
-                  <div className="col col-start-1 col-end-4 flex justify-center items-center bg-noir gap-24 ">
+                  <div className="col col-start-1 col-end-4 flex justify-center items-center bg-noir gap-20 pl-4 ">
                     <button>
-                      <Apple sx={{ color: "gray" }} />
+                      <Google sx={{ color: "gray" }} />
                     </button>
-                    <div className="row pt-2">
+                    <div className="row pt-4">
                       <h5 className="bg-noir text-white text-lg pr-4">
-                        Apple Homepod
+                        Google Nest Mini
                       </h5>
                       <h5 className="bg-noir text-white text-xs">
                         Smart Audio Line-Up
                       </h5>
                     </div>
                   </div>
-                  <div className="col col-start-1 col-end-4 flex justify-center items-center bg-noir gap-4 ">
+                  <div className="col col-start-1 col-end-4 flex justify-center items-center bg-noir gap-4 pl-4 ">
                     <img
                       src={
                         isEmpty(songInfo)
@@ -162,14 +181,16 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                       className="w-10 h-10 object-cover shadow-lg shadow-gray-400/50"
                     />
                     <div className="row pt-2">
-                      <h5 className="bg-noir text-white font-bold text-sm">
-                        {isEmpty(songInfo) === true ? "-" : songInfo["name"]}
-                      </h5>
-                      <h5 className="bg-noir text-white text-sm">
-                        {isEmpty(songInfo) === true
-                          ? "-"
-                          : songInfo["artists"]["name"]}
-                      </h5>
+                      <div className="grid grid-cols-1">
+                        <h5 className="bg-noir text-white font-bold text-sm truncate">
+                          {isEmpty(songInfo) === true ? "-" : songInfo["name"]}
+                        </h5>
+                        <h5 className="bg-noir text-white text-sm">
+                          {isEmpty(songInfo) === true
+                            ? "-"
+                            : songInfo["artists"]["name"]}
+                        </h5>
+                      </div>
                     </div>
                     <div className="row pt-2">
                       <h5 className="bg-noir text-white font-bold text-sm">
@@ -206,7 +227,10 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                       <VolumeMute sx={{ color: "gray" }} />
                     </button>
                     <input
-                      type="range"
+                      min={0}
+                      value={currentVolume}
+                      max={100}
+                      type="range" onChange={(volume)=>{handleVolumeChange(parseInt(volume.target.value))}}
                       className="accent-white h-1 w-full bg-gray-200 rounded-lg border-transparent "
                     ></input>
                     <button>
@@ -228,8 +252,8 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                         Lights
                       </h5>
                     </div>
-                    <p className="text-gray-50 pt-6">Brightness: 75%</p>
-                    <p className="text-gray-50">Lights: 12</p>
+                    {/* <p className="text-gray-50 pt-6">Brightness: 75%</p>
+                    <p className="text-gray-50">Lights: 12</p> */}
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
                     <button onClick={() => navigation.navigate("Light")}>
@@ -303,7 +327,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                 <div className="grid grid-rows-3 max-h-40 grid-flow-col gap-4">
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-noir border-r border-r-white">
                     <button>
-                      <AutoStories sx={{ color: "white" }} fontSize='large' />
+                      <AutoStories sx={{ color: "white" }} fontSize="large" />
                     </button>
                   </div>
                   <div className="row row-start-1 items-center bg-noir mb-auto">
