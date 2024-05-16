@@ -5,7 +5,7 @@ import axios from 'axios';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import LightSlider from './LightSlider';
-
+import './LightCard.css';
 
 interface LightCardProps {
     powerState: boolean;
@@ -74,8 +74,9 @@ class LightCard extends React.Component<LightCardProps> {
 
   render() {
     return (
-      <div>
-        <input type="checkbox" checked={this.state.checked} onChange={() => {
+      <div className='flex gap-4 items-center'>
+        <div className='checkbox-container'>
+        <input type="checkbox" checked={this.state.checked} className={(this.state.checked == true)? "Checked":"Unchecked"} onChange={() => {
             if (this.state.checked == false){
                 this.setState({checked: true})
             }
@@ -84,9 +85,10 @@ class LightCard extends React.Component<LightCardProps> {
             }
 
         }} />
+        </div>
         <div>
-          <a className="block max-w-lg w-80 h-40 p-6 bg-black border border-gray-200 rounded-md shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
-            <div className="grid grid-rows-4 grid-cols-2 gap-4">
+          <a className="block max-w-lg w-60 h-40 p-6 bg-black border border-gray-200 rounded-md shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
+            <div className="grid grid-cols-2 gap-5">
               <div
                 className="row row-start-1 row-end-3 text-white"
                 onClick={() => {}}

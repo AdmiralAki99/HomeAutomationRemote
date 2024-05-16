@@ -1,0 +1,15 @@
+.checkbox-container input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.0em;
+    height: 1.0em;
+    border-radius: 0.5em;
+    border: 0.15em solid #DA3B5E;
+    outline: none;
+    cursor: pointer;
+}
+
+input.Checked {
+    background-color: #DA3B5E;
+    position: relative;
+}
