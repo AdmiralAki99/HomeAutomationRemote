@@ -22,7 +22,7 @@ class LightCard extends React.Component<LightCardProps> {
     brightness: 0,
     color: "",
     ip: "",
-    checked : false
+    checked : false,
   };
 
   constructor(props: LightCardProps) {
@@ -49,7 +49,22 @@ class LightCard extends React.Component<LightCardProps> {
     if (this.state.checked == true && prevProps.brightness != this.state.brightness){
       // this.setState({brightness: this.state.brightness})
       this.setState({brightness: this.props.brightness})
+      setTimeout(()=>{
+        this.updateLightBrightness(this.state.brightness)
+      }, 1000)
     }
+  }
+
+  updateLightBrightness = async (brightness: number) => {
+    try{
+      axios.post("/light/set/brightness", {
+        id: this.state.id,
+        brightness: brightness,
+      });
+    } catch(error: any){
+      console.log(error.response.data)
+    }
+    
   }
 
   handlePowerState = () => {

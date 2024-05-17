@@ -311,6 +311,18 @@ class Server:
             light.state = body['state']
             self.db.session.commit()
             return jsonify({'message': 'Light Updated Successfully'})
+        
+        @self.app.route("/light/set/brightness",methods=['POST'])
+        def change_brightness():
+            body = request.get_json()
+            id = body['id']
+            brightness = body['brightness']
+            light = SmartLight.query.get(id)
+            if light is None:
+                return jsonify({'message': 'Light not found'})
+            else:
+                asyncio.run(self.change_brightness(light.ip,brightness))
+                return jsonify({'message': 'Brightness Changed Successfully'}) 
             
                 
             """ Spotify Routes """
