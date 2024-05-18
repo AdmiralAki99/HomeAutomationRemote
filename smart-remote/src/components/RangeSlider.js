@@ -2,11 +2,13 @@ import { PropTypes } from "prop-types";
 import { useState, useCallback, useEffect, useRef } from "react";
 import classnames from "classnames";
 import './RangeSlider.css'
+import { handler } from "tailwindcss-animate";
 
 //TODO: Need To Refactor This Component (IMPORTANT)
 
-const RangeSlider = ({ min, onChange }) => {
+const RangeSlider = ({ min, onChange , onMouseUp, onTouchEnd }) => {
   const [minVal, setVal] = useState(min);
+  const [isSliding, setSliding] = useState(false);
 
   /* Creating References */
   const valRef = useRef(null);
@@ -45,6 +47,8 @@ const RangeSlider = ({ min, onChange }) => {
             const value = Math.min(+event.target.value, 100);
             setVal(value);
           }}
+          onMouseUp={onMouseUp}
+          onTouchEnd={onTouchEnd}
           className={classnames("thumb thumb--zindex-3")}
         />
       </div>

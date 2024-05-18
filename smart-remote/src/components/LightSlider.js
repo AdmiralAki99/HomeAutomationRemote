@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import classnames from "classnames";
 import './LightSlider.css'
 
-const LightSlider = ({ id ,min, value, onChange }) => {
+const LightSlider = ({ id ,min, value, onChange}) => {
   const [minVal, setVal] = useState(value);
 
   /* Creating References */

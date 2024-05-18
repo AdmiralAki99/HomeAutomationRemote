@@ -49,21 +49,24 @@ class LightCard extends React.Component<LightCardProps> {
     if (this.state.checked == true && prevProps.brightness != this.state.brightness){
       // this.setState({brightness: this.state.brightness})
       this.setState({brightness: this.props.brightness})
-      setTimeout(()=>{
-        this.updateLightBrightness(this.state.brightness)
-      }, 1000)
+      this.updateLightBrightness(this.state.brightness)
     }
   }
 
   updateLightBrightness = async (brightness: number) => {
-    try{
       axios.post("/light/set/brightness", {
         id: this.state.id,
         brightness: brightness,
-      });
-    } catch(error: any){
-      console.log(error.response.data)
-    }
+      }).catch((err) => {
+        if (err.response) {
+          console.log(err.response.data);
+        } else if (err.request) {
+          console.log(err.request);
+        } else {
+          console.log('Error', err.message);
+        }
+        console.log(err.config);
+      })
     
   }
 
@@ -138,7 +141,6 @@ class LightCard extends React.Component<LightCardProps> {
                 <LightSlider
                   min={0}
                   value={this.state.brightness}
-                  onChange={() => {console.log('Brightness Changed')}}
                 ></LightSlider>
               </div>
             </div>

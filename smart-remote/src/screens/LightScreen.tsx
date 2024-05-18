@@ -10,19 +10,17 @@ import { LightScreenNavBar } from '../components/Navbar';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
 import axios from 'axios';
+import { truncate } from 'fs/promises';
 
 type LightProps = NativeStackScreenProps<ScreenParamList, 'Light'>;
 
 
 function LightScreen({route,navigation}: LightProps){
-  const [masterLightIntensity, setMasterLightIntensity] = useState(0);
+  let [masterLightIntensity, setMasterLightIntensity] = useState(0);
+  const [isSliderActive, setIsSliderActive] = useState(false);
   const [lightArray, setLightArray] = useState([0,0,0,0]);
   const [selectedLights, setSelectedLights] = useState([false,false,false,false]);
   const [lights,setLights] = useState<Record<string,any>>([])
-
-  const setLightIntensity = (intensity: number) => {
-    setMasterLightIntensity(intensity);
-  }
 
   const setElementInSelectedLightArray = (index: number) => {
     const newLightArray = [...selectedLights];
@@ -49,9 +47,7 @@ function LightScreen({route,navigation}: LightProps){
     }).then((res) => { console.log(res) })
   }
 
-  const handleMasterLightIntensity = (intensity:number) => {
-    setLightIntensity(intensity);
-  }
+  
 
   useEffect(()=> {
     handleLightsList();
@@ -72,19 +68,6 @@ function LightScreen({route,navigation}: LightProps){
                     {lights ? (
                       lights.map((light:any, index:any) => (
                         <div className="flex items-center mb-4 gap-10" key={index}>
-                          {/* <LightCard
-                            min={0}
-                            value={masterLightIntensity}
-                            label={light["name"]}
-                            isChecked={false}
-                            onChange={({ min }: { min: number }) => {}}
-                            onCheck={() => {
-                              setElementInSelectedLightArray(index);
-                              console.log('Selected Lights: '+selectedLights)
-                            }}
-                            lightID={light.id}
-                            state={(light.state == "on")? true:false}
-                          /> */}
                           <LightCard powerState={(light.state == 'on')? true:false} id={light.id} name={light.name} brightness={masterLightIntensity}/>
                         </div>
                       ))
@@ -96,7 +79,13 @@ function LightScreen({route,navigation}: LightProps){
                     <RangeSlider
                       min={0}
                       onChange={({ min }: { min: number }) => {
-                        handleMasterLightIntensity(min);
+                        setMasterLightIntensity(min);
+                      }}
+                      onMouseUp={() => {
+                        setIsSliderActive(false);
+                      }}
+                      onTouchEnd={() => {
+                        
                       }}
                     ></RangeSlider>
                   </div>

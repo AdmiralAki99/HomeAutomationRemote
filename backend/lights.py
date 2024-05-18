@@ -54,10 +54,12 @@ class Light:
     async def set_brightness(self, brightness):
         if self.bulb is None:
             return None
-
-        await self.bulb.set_brightness(brightness)
-        await self.bulb.update()
-        self.brightness = brightness
+        try:
+            await self.bulb.set_brightness(brightness)
+            await self.bulb.update()
+            self.brightness = brightness
+        except:
+            return self.get_brightness()
         
     def get_alias(self):
         if self.bulb is None:
