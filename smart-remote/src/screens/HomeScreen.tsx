@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { HomeScreenNavbar } from '../components/Navbar';
 import { response } from 'express';
 import axios from 'axios';
+import { log } from 'console';
 
 type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
 
@@ -84,15 +85,40 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
   const isEmpty = (val: any) => val == null || !(Object.keys(val) || val).length;
 
   useEffect(()=> {
+    // handleLogin()
+
     const timeInterval = setInterval(()=>{
       getSongName()
       getCurrentVolume()
     },3000)
+
+    const loginInterval = setInterval(()=>{
+      console.log("Logging in")
+      handleLogin()
+    },(1000*60*60))
   },[])
 
   const handlePlayPause = () => {
     controlPlayback()
   };
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.get('/spotify/login', {
+        withCredentials: true,
+      });
+  
+      if (response.status === 200) {
+        window.location.href = response.request.responseURL;
+      } else {
+        console.error('Unexpected response status:', response.status);
+      }
+    } catch (error) {
+      console.error('Error during Spotify login:', error);
+    }
+  };
+
+
   
 
   return (
@@ -112,24 +138,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
           </div>
           <div className="flex items-center justify-center">
             <div className="grid grid-cols-1 items-center justify-center gap-6 p-6">
-              <a className="block max-w-lg w-80 h-40 p-6 bg-yellow-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70">
-                <div className="grid grid-rows-3 grid-flow-col gap-4">
-                  <div className="row row-start-1 row-end-3">01</div>
-                  <div className="row row-start-1 row-end-3 items-center bg-black mb-auto">
-                    <h5 className="text-3xl font-bold tracking-tight text-white">
-                      Card Title
-                    </h5>
-                    <p className="text-white"> Card Content</p>
-                    <p> Card Content</p>
-                  </div>
-                  <div className="row row-start-1 row-end-3">
-                    <button>
-                      <ChevronRight />
-                    </button>
-                  </div>
-                </div>
-              </a>
-              <a className="block max-w-lg w-80 h-30 bg-noir rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70 relative">
+              {/* <a className="block max-w-lg w-80 h-30 bg-noir rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70 relative">
                 <div className="grid grid-rows-3 max-h-40 grid-flow-col gap-4">
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-noir border-r border-r-white">
                     <button>
@@ -154,7 +163,7 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     </button>
                   </div>
                 </div>
-              </a>
+              </a> */}
               <a className="block max-w-lg w-80 h-30 bg-noir rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-70 relative">
                 <div className="grid grid-rows-3 max-h-40 grid-flow-col bg-yellow-300">
                   <div className="col col-start-1 col-end-4 flex justify-center items-center bg-noir gap-20 pl-4 ">
