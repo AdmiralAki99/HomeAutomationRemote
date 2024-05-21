@@ -4,6 +4,7 @@ from flask import Flask,request,jsonify,session,Response,redirect,make_response,
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 
 from datetime import date
 import datetime
@@ -832,6 +833,13 @@ class Server:
                 return send_file(f'mangadex/{mangaId}/{chapterId}/page{pageNo}.png')
             else:
                 return jsonify({'message': 'Page Not Found'})
+            
+        @self.app.after_request
+        def after_request(response):
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+            response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+            return response
         
     async def discover_smart_lights(self):
         devices = await Discover.discover(
@@ -880,7 +888,8 @@ class Server:
         await bulb.update()
 
     def run(self):
-        self.app.run(debug=True)
+        cors = CORS(self.app)
+        self.app.run()
 
 
 if __name__ == "__main__":
