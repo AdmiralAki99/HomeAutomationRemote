@@ -5,13 +5,20 @@ import "react-simple-keyboard/build/css/index.css";
 class KeyboardComponent extends React.Component{
   state = {
     layoutName: "default",
-    input: ""
+    input: "",
+    onChange:()=>{},
+    onKeyPress:()=>{}
   };
 
-  onChange = input => {
-    this.setState({ input });
-    console.log("Input changed", input);
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      layoutName: props.layoutName,
+      input: props.input,
+      onChange: props.onChange,
+      onKeyPress: props.onKeyPress
+    }
+  }
 
   onKeyPress = button => {
     console.log("Button pressed", button);
@@ -39,15 +46,10 @@ class KeyboardComponent extends React.Component{
   render() {
     return (
       <div>
-        <input
-          value={this.state.input}
-          placeholder={"Tap on the virtual keyboard to start"}
-          onChange={this.onChangeInput}
-        />
         <Keyboard
           keyboardRef={r => (this.keyboard = r)}
           layoutName={this.state.layoutName}
-          onChange={this.onChange}
+          onChange={this.state.onChange}
           onKeyPress={this.onKeyPress}
         />
       </div>
