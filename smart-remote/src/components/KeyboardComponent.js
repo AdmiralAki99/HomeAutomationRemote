@@ -32,7 +32,8 @@ let display = {
   "{altright}": "alt ⌥",
   "{metaleft}": "cmd ⌘",
   "{metaright}": "cmd ⌘",
-  "{abc}": "ABC"
+  "{abc}": "ABC",
+  '{hide}': '\u{2304}'
 }
 
 class KeyboardComponent extends React.Component{
