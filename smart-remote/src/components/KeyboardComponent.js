@@ -55,10 +55,6 @@ class KeyboardComponent extends React.Component{
     }
   }
 
-  onComponentDidUpdate = (prevProps) => {
-    console.log("Props updated", prevProps);
-  }
-
   onKeyPress = button => {
     console.log("Button pressed", button);
 
@@ -68,6 +64,7 @@ class KeyboardComponent extends React.Component{
     if (button === "{shift}" || button === "{lock}") this.handleShift();
     if (button === '{numbers}' || button === "{abc}") this.handleNumbers()
     if (button === "{hide}") this.props.onHide()
+    if (button === "{ent}") this.props.onSubmit()
   };
 
   handleNumbers = () =>{
@@ -97,9 +94,11 @@ class KeyboardComponent extends React.Component{
   };
 
   onChangeInput = event => {
-    const input = event.target.value;
-    this.setState({ input });
-    this.keyboard.setInput(input);
+    console.log("Input changed", event);
+    this.props.input = event;
+    // this.setState({ input });
+    // console.log("Input changed", input);
+    // this.keyboard.setInput(input);
   };
 
   render() {
@@ -110,7 +109,7 @@ class KeyboardComponent extends React.Component{
           layoutName={this.state.layoutName}
           layout={layout}
           display={display}
-          onChange={this.state.onChange}
+          onChange={this.props.onChange}
           onKeyPress={this.onKeyPress}
         />
       </div>

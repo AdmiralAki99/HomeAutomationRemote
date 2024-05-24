@@ -5,6 +5,7 @@ import {View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
 import {ScreenNavbar } from '../components/Navbar';
+import { KeyboardComponent } from '../components/KeyboardComponent';
 
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -64,6 +65,8 @@ interface MangaScreenStateType {
   chapterPageCount: number;
   searchResultsOpen: boolean;
   searchResults: any[];
+  searchInput: string;
+  inputFocused: boolean;
 }
 
 class MangaScreen extends React.Component<mangaProps> {
@@ -82,7 +85,9 @@ class MangaScreen extends React.Component<mangaProps> {
     currentChapter: '',
     chapterPageCount: 0,
     searchResultsOpen: false,
-    searchResults: []
+    searchResults: [],
+    searchInput: '',
+    inputFocused: false
   }
 
   componentDidMount(): void {
@@ -113,6 +118,9 @@ class MangaScreen extends React.Component<mangaProps> {
     this.handleSearch = this.handleSearch.bind(this)
     this.closeSearchResults = this.closeSearchResults.bind(this)
     this.openSearchResults = this.openSearchResults.bind(this)
+    this.onHide = this.onHide.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
   getMangaFeed = async () => {
@@ -216,14 +224,9 @@ class MangaScreen extends React.Component<mangaProps> {
     this.setState({})
   }
 
-  handleSearch = async (e: any) => {
-    e.preventDefault()
+  handleSearch = async (input:string) => {
     this.openSearchResults()
-    await this.searchManga(e.target.value)
-    if (e.target.value === ''){
-      this.closeSearchResults()
-      this.setState({searchResults: []})
-    }
+    await this.searchManga(input)
   }
 
   closeSearchResults = () => {
@@ -234,21 +237,55 @@ class MangaScreen extends React.Component<mangaProps> {
     this.setState({searchResultsOpen: true})
   }
 
+  onHide = () =>{
+    this.setState({inputFocused: false})
+    if(this.state.searchInput === ''){
+      this.closeSearchResults()
+    }
+  }
+
+  onChange = (input:any) => {
+    this.setState({searchInput: input})
+  };
+
+  onSubmit = ()=>{
+    this.handleSearch(this.state.searchInput)
+    this.onHide()
+  }
+
 
   render(){
     return (
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
         <div className="bg-noir h-screen w-screen no-scrollbar overflow-x-hidden">
-          <div className="relative z-10">
+          <div className="relative z-20">
             <div>
-              <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
+              <div className="w-full h-16 max-w-lg translate-x-7 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
                 <input
                   type="text"
+                  value={this.state.searchInput}
+                  onFocus={() => {
+                    this.setState({ inputFocused: true });
+                  }}
                   className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4"
                   placeholder=" Search"
-                  onChange={this.handleSearch}
+                  onChange={() => {
+                    console.log("Input changed", this.state.searchInput);
+                    if (this.state.searchInput === '') {
+                      this.closeSearchResults();
+                      this.setState({ searchResults: [] });
+                    }
+                  }}
                 />
+                <div className={`${this.state.inputFocused === false ? "hidden" : ""}`}>
+                <KeyboardComponent
+                  onChange={this.onChange}
+                  isToggled={this.state.inputFocused}
+                  onHide={this.onHide}
+                  onSubmit={this.onSubmit}
+                />
+              </div>
               </div>
             </div>
           </div>
@@ -409,12 +446,14 @@ class MangaScreen extends React.Component<mangaProps> {
                       width="80px"
                       height="80px"
                     ></img>
-                    <div className='flex flex-col pl-5'>
+                    <div className="flex flex-col pl-5">
                       <Typography variant="h5">
                         {this.state.selectedManga.title}
                       </Typography>
-                      <p className='text-justify overflow-y-clip w-82 h-20'>
-                        {(this.state.selectedManga.description != undefined)? `${this.state.selectedManga.description.en}`:''}
+                      <p className="text-justify overflow-y-clip w-82 h-20">
+                        {this.state.selectedManga.description != undefined
+                          ? `${this.state.selectedManga.description.en}`
+                          : ""}
                       </p>
                     </div>
                   </div>
@@ -510,7 +549,6 @@ class MangaScreen extends React.Component<mangaProps> {
               </Box>
             </Modal>
           </div>
-
           {/* <button onClick={this.getRandomGenre}>Fetch</button> */}
         </div>
       </View>
