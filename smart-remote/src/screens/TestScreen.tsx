@@ -36,45 +36,36 @@ function TestScreen({route, navigation} : testProps){
     navigation.navigate('Test')
     const [data,setData] = useState<Record<string,any>>([])
     const [modalOpen, setOpen] = useState(false);
-    const [keyboardStatus, setKeyboardStatus] = useState('');
+    const [input, setInput] = useState('');
+    const [inputFocused, setInputFocused] = useState(false);
 
-    useEffect(() => {
-      const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-        setKeyboardStatus('Keyboard Shown');
-      });
-      const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-        setKeyboardStatus('Keyboard Hidden');
-      });
-  
-      return () => {
-        showSubscription.remove();
-        hideSubscription.remove();
-      };
-    }, []);
+   const onChange = (input:any) => {
+      setInput(input);
+      console.log("Input changed", input);
+    };
 
-  const handleOpen = () =>{
-    setOpen(true)
-  }
-
-  const handleClose = () =>{
-    setOpen(false)
-  }
-
-  const isEmpty = (val: any) => val == null || !(Object.keys(val) || val).length;
-
-  const handleLogin = async () => {
-    try {
-      const response = await axios.get('/spotify/login').catch((error) => {
-        console.error('Error during Spotify login:', error);
-      })
-    } catch (error) {
-      console.error('Error during Spotify login:', error);
+    const onHide = () =>{
+      setInputFocused(false);
     }
-  };
-
+  
     return (
       <View>
-        <KeyboardComponent/>
+        <input
+          value={input}
+          placeholder={"Tap on the virtual keyboard to start"}
+          onFocus={() => {
+            console.log("Input focused");
+            setInputFocused(true);
+          }}
+        />
+
+        <div className={`${inputFocused === false ? "hidden" : ""}`}>
+          <KeyboardComponent
+            onChange={onChange}
+            isToggled={inputFocused}
+            onHide={onHide}
+          />
+        </div>
       </View>
     );
 
