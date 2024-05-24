@@ -642,7 +642,7 @@ class Server:
             body = request.get_json()
             ip_addr = body['ip']
             if ip_addr is None or ip_addr == '':
-                self.network_scanner.scan(ip_addr='10.0.0.1/24')
+                self.network_scanner.scan()
                 devices = self.network_scanner.get_scanned_devices()
                 devices = [{'id': idx + 1, **device} for idx, device in enumerate(devices)]
                 return jsonify({'devices': devices})

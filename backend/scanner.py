@@ -2,6 +2,7 @@
 
 from scapy.all import ARP, Ether, srp
 import socket
+import netifaces
 import sys
 import struct
 import subprocess
@@ -15,11 +16,12 @@ class NetworkScanner:
     def __init__(self) -> None:
         # ip = get('https://api.ipify.org').content.decode('utf8')
         # self.ip = ip
-        ...
+        gateways = netifaces.gateways()
+        self.ip = gateways['default'][netifaces.AF_INET][0]
 
-    def scan(self,ip_addr) -> []:
+    def scan(self) -> []:
         self.scanned_devices.clear()
-        arp = ARP(pdst=ip_addr)
+        arp = ARP(pdst=self.ip+"/24")
         ether = Ether(dst="ff:ff:ff:ff:ff:ff")
         packet = ether/arp
 
@@ -65,5 +67,5 @@ class NetworkScanner:
 
 if __name__ == '__main__':
     network = NetworkScanner()
-    network.scan(ip_addr="10.0.0.1/24")
+    network.scan()
     network.print_scanned_devices()
