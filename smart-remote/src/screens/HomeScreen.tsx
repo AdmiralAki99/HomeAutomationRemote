@@ -8,6 +8,7 @@ import { HomeScreenNavbar } from '../components/Navbar';
 import { response } from 'express';
 import axios from 'axios';
 import { log } from 'console';
+import { motion } from 'framer-motion';
 
 type HomeScreenProps = NativeStackScreenProps<ScreenParamList, 'Home'>;
 
@@ -203,9 +204,9 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     </div>
                     <div className="row pt-2">
                       <h5 className="bg-noir text-white font-bold text-sm">
-                        <button>
-                          <SkipPrevious sx={{ color: "white" }} />
-                        </button>
+                          <button>
+                            <SkipPrevious sx={{ color: "white" }} />
+                          </button>
                         {isPlaying ? (
                           <Button
                             onClick={() => handlePlayPause()}
@@ -239,7 +240,10 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                       min={0}
                       value={currentVolume}
                       max={100}
-                      type="range" onChange={(volume)=>{handleVolumeChange(parseInt(volume.target.value))}}
+                      type="range"
+                      onChange={(volume) => {
+                        handleVolumeChange(parseInt(volume.target.value));
+                      }}
                       className="accent-white h-1 w-full bg-gray-200 rounded-lg border-transparent "
                     ></input>
                     <button>
@@ -261,13 +265,17 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                         Lights
                       </h5>
                     </div>
-                    {/* <p className="text-gray-50 pt-6">Brightness: 75%</p>
-                    <p className="text-gray-50">Lights: 12</p> */}
+                    <p className="text-gray-50 pt-6">Lights: 12</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button onClick={() => navigation.navigate("Light")}>
-                      <ChevronRight sx={{ color: "white" }} />
-                    </button>
+                    <motion.div
+                      whileHover={{ scale: 1.5 }}
+                      whileTap={{ scale: 0.8 }}
+                    >
+                      <button onClick={() => navigation.navigate("Light")}>
+                        <ChevronRight sx={{ color: "white" }} />
+                      </button>
+                    </motion.div>
                   </div>
                 </div>
               </a>
@@ -285,9 +293,14 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     <p className="text-gray-50 pt-6">Status: Online</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button onClick={() => navigation.navigate("Camera")}>
-                      <ChevronRight sx={{ color: "white" }} />
-                    </button>
+                    <motion.div
+                      whileHover={{ scale: 1.5 }}
+                      whileTap={{ scale: 0.8 }}
+                    >
+                      <button onClick={() => navigation.navigate("Camera")}>
+                        <ChevronRight sx={{ color: "white" }} />
+                      </button>
+                    </motion.div>
                   </div>
                 </div>
               </a>
@@ -306,9 +319,14 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     <p className="text-gray-50">Day Looks: Busy</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button onClick={() => navigation.navigate("Calendar")}>
-                      <ChevronRight sx={{ color: "white" }} />
-                    </button>
+                    <motion.div
+                      whileHover={{ scale: 1.5 }}
+                      whileTap={{ scale: 0.8 }}
+                    >
+                      <button onClick={() => navigation.navigate("Calendar")}>
+                        <ChevronRight sx={{ color: "white" }} />
+                      </button>
+                    </motion.div>
                   </div>
                 </div>
               </a>
@@ -326,9 +344,14 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     <p className="text-gray-50 pt-6">Devices On Network : 1</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button onClick={() => navigation.navigate("Network")}>
-                      <ChevronRight sx={{ color: "white" }} />
-                    </button>
+                    <motion.div
+                      whileHover={{ scale: 1.5 }}
+                      whileTap={{ scale: 0.8 }}
+                    >
+                      <button onClick={() => navigation.navigate("Network")}>
+                        <ChevronRight sx={{ color: "white" }} />
+                      </button>
+                    </motion.div>
                   </div>
                 </div>
               </a>
@@ -346,9 +369,14 @@ function HomeScreen({route, navigation} : HomeScreenProps) {
                     <p className="text-gray-50 pt-6">Continue Reading... 1</p>
                   </div>
                   <div className="row row-start-1 row-end-4 flex justify-center items-center bg-pink-600">
-                    <button onClick={() => navigation.navigate("Manga")}>
-                      <ChevronRight sx={{ color: "white" }} />
-                    </button>
+                    <motion.div
+                      whileHover={{ scale: 1.5 }}
+                      whileTap={{ scale: 0.8 }}
+                    >
+                      <button onClick={() => navigation.navigate("Manga")}>
+                        <ChevronRight sx={{ color: "white" }} />
+                      </button>
+                    </motion.div>
                   </div>
                 </div>
               </a>
