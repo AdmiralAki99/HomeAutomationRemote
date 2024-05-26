@@ -6,6 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenParamList } from '../App';
 import {ScreenNavbar } from '../components/Navbar';
 import { KeyboardComponent } from '../components/KeyboardComponent';
+import MangaReader from '../components/MangaReader';
 
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -159,7 +160,6 @@ class MangaScreen extends React.Component<mangaProps> {
   getMangaChapterList = async ()=>{
     try{
       let resp = await axios.post('/manga/get/chapters',{id:this.state.selectedManga.id})
-      console.log(resp.data)
       this.setState({chapterList: resp.data})
       // this.setState({chapterList: resp.data})
       return resp.data
@@ -271,7 +271,6 @@ class MangaScreen extends React.Component<mangaProps> {
                   className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4"
                   placeholder=" Search"
                   onChange={() => {
-                    console.log("Input changed", this.state.searchInput);
                     if (this.state.searchInput === '') {
                       this.closeSearchResults();
                       this.setState({ searchResults: [] });
@@ -488,19 +487,20 @@ class MangaScreen extends React.Component<mangaProps> {
                                 <button
                                   className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600"
                                   onClick={() => {
-                                    this.downloadChapter(
-                                      this.state.selectedManga.id,
-                                      chapter.id
-                                    );
-                                    this.getPage(
-                                      this.state.selectedManga.id,
-                                      chapter.id,
-                                      0
-                                    );
-                                    this.openReaderModal();
+                                    // this.downloadChapter(
+                                    //   this.state.selectedManga.id,
+                                    //   chapter.id
+                                    // );
+                                    // this.getPage(
+                                    //   this.state.selectedManga.id,
+                                    //   chapter.id,
+                                    //   0
+                                    // );
+                                    // this.openReaderModal();
                                     this.setState({
                                       currentChapter: chapter.id,
                                       chapterPageCount: chapter.pages,
+                                      readerOpen: true,
                                     });
                                   }}
                                 >
@@ -519,7 +519,9 @@ class MangaScreen extends React.Component<mangaProps> {
               </div>
             </Modal>
 
-            <Modal
+            {(this.state.readerOpen === true) ? <MangaReader open={this.state.readerOpen} totalPages={this.state.chapterPageCount} currentPage={this.state.currentPage} mangaID={this.state.selectedManga.id} chapterID={this.state.currentChapter} onClose={this.closeReaderModal}/> : <div></div>}
+
+            {/* <Modal
               open={this.state.readerOpen}
               onClose={this.closeReaderModal}
               aria-labelledby="modal-modal-title"
@@ -547,7 +549,7 @@ class MangaScreen extends React.Component<mangaProps> {
                   </div>
                 </div>
               </Box>
-            </Modal>
+            </Modal> */}
           </div>
           {/* <button onClick={this.getRandomGenre}>Fetch</button> */}
         </div>
