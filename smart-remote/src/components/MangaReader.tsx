@@ -3,6 +3,8 @@ import axios from "axios";
 
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
+import CloseFullscreen from "@mui/icons-material/CloseFullscreen";
 
 interface MangaReaderProp{
   totalPages : number
@@ -14,15 +16,9 @@ interface MangaReaderProp{
 }
 
 const readerStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
   width: 600,
   height: 900,
   bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
   overflow: 'scroll'
 };
 
@@ -100,7 +96,7 @@ class MangaReader extends React.Component<MangaReaderProp>{
 
     render(){
         return (
-          <div className="relative z-5">
+          <div>
             <Modal
               open={this.state.readerOpen}
               onClose={() => {
@@ -118,11 +114,15 @@ class MangaReader extends React.Component<MangaReaderProp>{
                       this.props.onClose();
                     }}
                   >
-                    Close
+                    <CloseFullscreen sx={{ color: "white", fontSize: "large" }} />
                   </button>
                 </div>
-                <div className="relative z-0">
-                  <img src={this.state.pageSrc} width={500} height={200}></img>
+                <div className="relative z-0 items-center justify-center">
+                  <LinearProgress
+                    variant="determinate"
+                    value={(this.state.currentPage / (this.state.totalPages - 1)) * 100} color="secondary"
+                    sx={{height:"7px"}} ></LinearProgress>
+                  <img src={this.state.pageSrc} width={600} height={200}></img>
                   <div className="grid grid-rows-1 grid-cols-2 justify-center items-center h-full absolute inset-0 z-10">
                     <div className=" flex h-full bg-transparent items-center justify-center">
                       <button

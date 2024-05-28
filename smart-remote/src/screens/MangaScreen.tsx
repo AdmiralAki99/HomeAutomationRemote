@@ -7,6 +7,8 @@ import { ScreenParamList } from '../App';
 import {ScreenNavbar } from '../components/Navbar';
 import { KeyboardComponent } from '../components/KeyboardComponent';
 import MangaReader from '../components/MangaReader';
+import SearchResultComponent from '../components/SearchResultComponent';
+import { motion } from 'framer-motion';
 
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -271,27 +273,36 @@ class MangaScreen extends React.Component<mangaProps> {
                   className="w-full h-full rounded-full bg-transparent text-white dark:text-gray-200 pl-4"
                   placeholder=" Search"
                   onChange={() => {
-                    if (this.state.searchInput === '') {
+                    if (this.state.searchInput === "") {
                       this.closeSearchResults();
                       this.setState({ searchResults: [] });
                     }
                   }}
                 />
-                <div className={`${this.state.inputFocused === false ? "hidden" : ""}`}>
-                <KeyboardComponent
-                  onChange={this.onChange}
-                  isToggled={this.state.inputFocused}
-                  onHide={this.onHide}
-                  onSubmit={this.onSubmit}
-                />
-              </div>
+
+                <div
+                  className={`${
+                    this.state.inputFocused === false ? "hidden" : ""
+                  }`}
+                >
+                  <motion.div
+                    drag
+                  >
+                    <KeyboardComponent
+                      onChange={this.onChange}
+                      isToggled={this.state.inputFocused}
+                      onHide={this.onHide}
+                      onSubmit={this.onSubmit}
+                    />
+                  </motion.div>
+                </div>
               </div>
             </div>
           </div>
           <div className="fixed z-10">
             <div className="flex overflow-x-scroll overflow-y-scroll pb-10 no-scrollbar">
               <div className="flex flex-nowrap">
-                <Backdrop
+                {/* <Backdrop
                   sx={{
                     position: "absolute",
                     top: "65%",
@@ -335,23 +346,12 @@ class MangaScreen extends React.Component<mangaProps> {
                         </button>
                       );
                     })}
-                    {/* <div className="grid grid-rows-1 grid-cols-2 w-full bg-red-200 border-2 border-white gap-0.5">
-                <div>
-                  <img
-                    src="https://static.thenounproject.com/png/161182-200.png"
-                    width={60}
-                    height={60}
-                  />
-                  Image
-                </div>
-                <div className="grid grid-cols-1 text-white">
-                  <div>Title</div>
-                  <div>Subtitle</div>
-                  <div></div>
-                </div>
-              </div> */}
                   </div>
-                </Backdrop>
+                </Backdrop> */}
+                {
+                  (this.state.searchResultsOpen === true) ? <SearchResultComponent searchResults={this.state.searchResults} /> : <div></div>
+                }
+                
               </div>
             </div>
           </div>
@@ -519,7 +519,18 @@ class MangaScreen extends React.Component<mangaProps> {
               </div>
             </Modal>
 
-            {(this.state.readerOpen === true) ? <MangaReader open={this.state.readerOpen} totalPages={this.state.chapterPageCount} currentPage={this.state.currentPage} mangaID={this.state.selectedManga.id} chapterID={this.state.currentChapter} onClose={this.closeReaderModal}/> : <div></div>}
+            {this.state.readerOpen === true ? (
+              <MangaReader
+                open={this.state.readerOpen}
+                totalPages={this.state.chapterPageCount}
+                currentPage={this.state.currentPage}
+                mangaID={this.state.selectedManga.id}
+                chapterID={this.state.currentChapter}
+                onClose={this.closeReaderModal}
+              />
+            ) : (
+              <div></div>
+            )}
 
             {/* <Modal
               open={this.state.readerOpen}
