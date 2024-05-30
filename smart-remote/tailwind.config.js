@@ -22,6 +22,7 @@ module.exports = withMT({
       home: '#181818',
       bubblegum: '#DA3B5E',
       noir: '#1C1C1D',
+      menuBg: '#1e1e2f',
       greyCard: "#2F2F2F"
     },
     extend: {
