@@ -8,6 +8,7 @@ import {ScreenNavbar } from '../components/Navbar';
 import { KeyboardComponent } from '../components/KeyboardComponent';
 import MangaReader from '../components/MangaReader';
 import SearchResultComponent from '../components/SearchResultComponent';
+import MangaViewerComponent from '../components/MangaViewer';
 import { motion } from 'framer-motion';
 
 import Modal from '@mui/material/Modal';
@@ -227,8 +228,10 @@ class MangaScreen extends React.Component<mangaProps> {
   }
 
   handleSearch = async (input:string) => {
-    this.openSearchResults()
+    this.closeSearchResults()
     await this.searchManga(input)
+    console.log(this.state.searchResults)
+    this.openSearchResults()
   }
 
   closeSearchResults = () => {
@@ -261,9 +264,9 @@ class MangaScreen extends React.Component<mangaProps> {
       <View>
         <ScreenNavbar navigation={this.props.navigation} destination={"Home"} />
         <div className="bg-noir h-screen w-screen no-scrollbar overflow-x-hidden">
-          <div className="relative z-20">
+          <div className="relative z-20 pt-2">
             <div>
-              <div className="w-full h-16 max-w-lg translate-x-7 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
+              <div className="w-full h-16 max-w-lg translate-x-12 bg-black border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600 items-center justify-center">
                 <input
                   type="text"
                   value={this.state.searchInput}
@@ -285,9 +288,7 @@ class MangaScreen extends React.Component<mangaProps> {
                     this.state.inputFocused === false ? "hidden" : ""
                   }`}
                 >
-                  <motion.div
-                    drag
-                  >
+                  <motion.div drag>
                     <KeyboardComponent
                       onChange={this.onChange}
                       isToggled={this.state.inputFocused}
@@ -299,63 +300,20 @@ class MangaScreen extends React.Component<mangaProps> {
               </div>
             </div>
           </div>
-          <div className="fixed z-10">
-            <div className="flex overflow-x-scroll overflow-y-scroll pb-10 no-scrollbar">
-              <div className="flex flex-nowrap">
-                {/* <Backdrop
-                  sx={{
-                    position: "absolute",
-                    top: "65%",
-                    left: "25%",
-                    transform: "translate(50%,0%)",
-                    color: "transparent",
-                    width: 300,
-                    height: 720,
-                    justifyContent: "center",
-                    overflow: "scroll",
-                  }}
-                  open={this.state.searchResultsOpen}
-                  onClick={this.openSearchResults}
-                >
-                  <div className="w-full h-full">
-                    {this.state.searchResults.map((manga: any) => {
-                      return (
-                        <button
-                          className="w-full"
-                          onClick={() => {
-                            this.state.selectedManga = manga;
-                            this.getMangaChapterList();
-                            this.mangaChapterPopUp();
-                          }}
-                        >
-                          <div className="grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-white border-2 border-white gap-0.5">
-                            <div>
-                              <img
-                                src={manga.coverArt}
-                                width={60}
-                                height={60}
-                              />
-                            </div>
-                            <div className="grid grid-cols-1 text-black">
-                              <div>{manga.title}</div>
-                              <div>Subtitle</div>
-                              <div></div>
-                            </div>
-                            <Divider />
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </Backdrop> */}
-                {
-                  (this.state.searchResultsOpen === true) ? <SearchResultComponent searchResults={this.state.searchResults} /> : <div></div>
-                }
-                
-              </div>
+          <div className='absolute top-31 pt-2 h-5/6 overflow-y-scroll z-10 no-scrollbar'>
+            <div>
+              {this.state.searchResultsOpen === true ? (
+                <div>
+                  <SearchResultComponent
+                    searchResults={this.state.searchResults}
+                  />
+                </div>
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
-          <div className="relative z-0">
+          <div className="z-0">
             <div className="pt-10 pl-5">
               <Typography variant="h5" sx={{ color: "white" }}>
                 Manga Feed
@@ -368,9 +326,9 @@ class MangaScreen extends React.Component<mangaProps> {
                     return (
                       <div className="inline-block px-3">
                         <button
-                          onClick={() => {
+                          onClick={async () => {
                             this.state.selectedManga = manga;
-                            this.getMangaChapterList();
+                            await this.getMangaChapterList();
                             this.mangaChapterPopUp();
                           }}
                         >
@@ -431,7 +389,7 @@ class MangaScreen extends React.Component<mangaProps> {
               );
             })}
 
-            <Modal
+            {/* <Modal
               open={this.state.handleOpen}
               onClose={this.closeModal}
               aria-labelledby="modal-modal-title"
@@ -517,7 +475,11 @@ class MangaScreen extends React.Component<mangaProps> {
                   </div>
                 </Box>
               </div>
-            </Modal>
+            </Modal> */}
+
+            {this.state.handleOpen == true ? <div>
+                <MangaViewerComponent isOpen={this.state.handleOpen} closeModal={this.closeModal} selectedManga={this.state.selectedManga} chapterList={this.state.chapterList}/>
+            </div>:<div></div>}
 
             {this.state.readerOpen === true ? (
               <MangaReader
