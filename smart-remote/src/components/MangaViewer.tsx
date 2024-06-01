@@ -1,9 +1,8 @@
-import e from "express";
 import React from "react";
+import axios from "axios";
 
 import { Modal,Box,Divider,Typography } from "@mui/material";
 import MangaReader from "./MangaReader";
-import axios from "axios";
 
 const style = {
     position: 'absolute',
@@ -15,7 +14,7 @@ const style = {
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
-    overflow: 'scroll'
+    overflow: 'scroll',
   };
 
 interface MangaViewerComponentProps {
@@ -111,7 +110,7 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
                     </div>
                   </div>
                   <div className="overflow-y-auto">
-                    <table className="table-auto overflow-y-auto h-600">
+                    <table className="table overflow-y-auto h-600">
                       <thead>
                         <tr>
                           <th>Title</th>
