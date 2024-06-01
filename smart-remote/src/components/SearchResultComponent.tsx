@@ -3,6 +3,7 @@ import React from "react";
 import Divider from '@mui/material/Divider';
 import axios from "axios";
 import MangaViewerComponent from "./MangaViewer";
+import {AnimatePresence,motion,useIsPresent} from "framer-motion";
 
 
 interface SearchResultComponentProps {
@@ -24,7 +25,7 @@ class SearchResultComponent extends React.Component<SearchResultComponentProps> 
             searchResults: props.searchResults,
             viewerOpen: false,
             selectedManga: {},
-            chapterList: [{}]
+            chapterList: [{}],
         }
     }
 
@@ -57,30 +58,38 @@ class SearchResultComponent extends React.Component<SearchResultComponentProps> 
               <div>
                 {this.state.searchResults.map((manga: any) => {
                   return (
-                    <button
-                      className="w-full pb-1"
-                      onClick={async () => {
-                        this.state.selectedManga = manga;
-                        await this.getMangaChapterList();
-                        this.openViewerModal();
-                      }}
+                    <motion.nav
+                        animate={"open"}
+                        variants={{
+                          hidden: { opacity: 0, x: "-100%" },
+                          visible: { opacity: 1, x: 0 },
+                        }}
                     >
-                      <div className="grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-white border-2 border-noir gap-0.5 rounded-xl">
-                        <div>
-                          <img
-                            src={manga.coverArt}
-                            width={60}
-                            height={60}
-                            className="rounded-xl"
-                          />
+                      <button
+                        className="w-full pb-1"
+                        onClick={async () => {
+                          this.state.selectedManga = manga;
+                          await this.getMangaChapterList();
+                          this.openViewerModal();
+                        }}
+                      >
+                        <div className="grid grid-rows-1 grid-cols-2 w-full h-1/5 bg-white border-2 border-noir gap-0.5 rounded-xl">
+                          <div>
+                            <img
+                              src={manga.coverArt}
+                              width={60}
+                              height={60}
+                              className="rounded-xl"
+                            />
+                          </div>
+                          <div className="grid grid-cols-1 text-black">
+                            <div>{manga.title}</div>
+                            <div>Subtitle</div>
+                          </div>
+                          {/* <Divider/> */}
                         </div>
-                        <div className="grid grid-cols-1 text-black">
-                          <div>{manga.title}</div>
-                          <div>Subtitle</div>
-                        </div>
-                        {/* <Divider/> */}
-                      </div>
-                    </button>
+                      </button>
+                    </motion.nav>
                   );
                 })}
               </div>
