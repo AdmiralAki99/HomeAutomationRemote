@@ -7,6 +7,7 @@ import SaveIcon from "@mui/icons-material/Save";
 
 
 import MangaReader from "./MangaReader";
+import LoadingScreen from "./LoadingScreen";
 
 const style = {
     position: 'absolute',
@@ -73,7 +74,6 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
       try{
         let resp = await axios.post('/manga/get/download',{mangaId:mangaID,chapterId:chapterID})
         await this.getPage(mangaID,chapterID,0)
-        this.openReader()
       }catch(e){
         console.log('Error downloading chapter')
       }
@@ -147,8 +147,9 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
                               <td className="flex items-center justify-center w-full h-full px-6 py-4">
                                 <button
                                   className="pr-2"
-                                  onClick={() => {
-                                    this.downloadChapter(
+                                  onClick={async () => {
+                                    this.setState({ readerLoading: true });
+                                    await this.downloadChapter(
                                       this.props.selectedManga.id,
                                       chapter.id
                                     );
@@ -156,13 +157,20 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
                                       chapterID: chapter.id,
                                       totalPages: chapter.pages,
                                       readerOpen: true,
-                                    })
+                                      readerLoading: false,
+                                    });
                                   }}
                                 >
-                                  <AutoStories sx={{color : "black", fontSize: "large"}} />
+                                  <AutoStories
+                                    sx={{ color: "black", fontSize: "large" }}
+                                  />
                                 </button>
                                 <Divider orientation="vertical" flexItem />
-                                <button className="pl-2"><SaveIcon sx={{color:"black", fontSize: "large"}}/></button>
+                                <button className="pl-2">
+                                  <SaveIcon
+                                    sx={{ color: "black", fontSize: "large" }}
+                                  />
+                                </button>
                               </td>
                             </tr>
                           );
@@ -173,6 +181,7 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
                 </Box>
               </div>
             </Modal>
+            {this.state.readerLoading == true ? <LoadingScreen loading ={this.state.readerLoading}/> : <div></div>}
             {this.state.readerOpen == true? <MangaReader open={this.state.readerOpen} totalPages={this.state.totalPages} currentPage={this.state.currentPage} mangaID={this.state.mangaID} chapterID={this.state.chapterID} onClose={this.closeReaderModal}  /> : <div></div>}
           </div>
         );
