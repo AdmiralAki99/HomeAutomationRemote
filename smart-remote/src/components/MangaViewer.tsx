@@ -2,6 +2,10 @@ import React from "react";
 import axios from "axios";
 
 import { Modal,Box,Divider,Typography } from "@mui/material";
+import AutoStories from "@mui/icons-material/AutoStories";
+import SaveIcon from "@mui/icons-material/Save";
+
+
 import MangaReader from "./MangaReader";
 
 const style = {
@@ -34,6 +38,8 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
         mangaID : '',
         chapterID : '',
         chapterPageCount : 0,
+        scrollPosition : 0,
+        readerLoading : false,
     }
 
     constructor(props: MangaViewerComponentProps) {
@@ -46,7 +52,9 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
             currentPage: 0,
             mangaID: props.selectedManga.id,
             chapterID: '',
-            chapterPageCount: 0
+            chapterPageCount: 0,
+            scrollPosition: 0,
+            readerLoading: false,
         }
     }
 
@@ -102,7 +110,7 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
                       <Typography variant="h5">
                         {this.props.selectedManga.title}
                       </Typography>
-                      <p className="text-justify overflow-y-clip w-82 h-20">
+                      <p className="text-justify max-w-82 max-h-20 overflow-y-clip">
                         {this.props.selectedManga.description != undefined
                           ? `${this.props.selectedManga.description.en}`
                           : ""}
@@ -124,7 +132,7 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
                         {this.state.chapterList.map((chapter: any) => {
                           return (
                             <tr>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200 text-ellipsis w-100">
                                 {chapter.title}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -136,9 +144,9 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                                 {chapter.pages}
                               </td>
-                              <td>
+                              <td className="flex items-center justify-center w-full h-full px-6 py-4">
                                 <button
-                                  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600"
+                                  className="pr-2"
                                   onClick={() => {
                                     this.downloadChapter(
                                       this.props.selectedManga.id,
@@ -151,10 +159,10 @@ class MangaViewerComponent extends React.Component<MangaViewerComponentProps> {
                                     })
                                   }}
                                 >
-                                  Read
+                                  <AutoStories sx={{color : "black", fontSize: "large"}} />
                                 </button>
                                 <Divider orientation="vertical" flexItem />
-                                <button>Save</button>
+                                <button className="pl-2"><SaveIcon sx={{color:"black", fontSize: "large"}}/></button>
                               </td>
                             </tr>
                           );
