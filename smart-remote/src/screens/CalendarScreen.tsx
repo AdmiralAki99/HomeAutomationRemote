@@ -4,8 +4,9 @@ import { useState, ReactDOM } from 'react';
 
 // import { Calendar } from 'react-calendar'
 
-import { CalendarScreenNavBar } from '../components/Navbar';
+import CalendarScreenNavBar from '../components/CalendarNavbar';
 import Calendar from '../components/Calendar';
+import DatePickerWithRange from '../components/DatePickerWithRange';
 
 import { ScreenParamList } from '../App';
 import '../stylesheets/calendar.css'
