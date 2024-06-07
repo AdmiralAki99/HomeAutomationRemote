@@ -1,13 +1,16 @@
-import React from "react";
+import React from "react"
 
-
-import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { LocalizationProvider, TimeClock } from "@mui/x-date-pickers";
 import DatePickerWithRange from "./DatePickerWithRange";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { createTheme,ThemeProvider } from "@mui/material/styles";
 import dayjs from "dayjs";
+
+import { KeyboardComponent } from './KeyboardComponent';
+import {motion} from "framer-motion";
+
+
 
 interface CalendarFormProps{
     modalOpen: boolean;
@@ -41,121 +44,97 @@ const timeClockStyle = createTheme({
 
 })
 
-class CalendarForm extends React.Component<CalendarFormProps>{
-    state = {
-        modalOpen: false,
-    }
+class CalendarForm extends React.Component<CalendarFormProps> {
+  state = {
+    modalOpen: false,
+    inputFocused: false,
+    eventInput: ''
+  };
 
-    constructor(props: CalendarFormProps){
-        super(props);
-        this.state = {
-            modalOpen: props.modalOpen,
-        }
-    }
+  constructor(props: CalendarFormProps) {
+    super(props);
+    this.state = {
+      modalOpen: props.modalOpen,
+      inputFocused: false,
+      eventInput: ''
+    };
+  }
 
+  onChange = (input: any) => {
+    this.setState({ eventInput: input });
+  };
 
-    render(){
-        return (
-          <Box sx={formStyle}>
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <div className="grid grid-cols-2">
-                <Typography
-                  id="modal-modal-title"
-                  variant="h6"
-                  component="h2"
-                >
-                  Event
-                </Typography>
-                <IconButton edge="end" aria-label="Edit">
-                  <DoneIcon />
-                </IconButton>
-              </div>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Title
-              </Typography>
-              <TextField id="outlined-basic" variant="outlined" />
-              <Button variant="contained">Scan</Button>
-              <div>
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Switch defaultChecked />}
-                    label="All Day"
-                  />
-                </FormGroup>
-                <div className="grid grid-cols-3 pl-2">
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Start Date
-                  </Typography>
-                  <DatePicker />
-                  <TimePicker />
-                </div>
-                <div className="grid grid-cols-3 pl-2">
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    End Date
-                  </Typography>
-                  <DatePicker />
-                  <TimePicker />
-                </div>
-                <div className="grid grid-cols-2 pl-2">
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Completed
-                  </Typography>
-                  <Checkbox sx={{}} />
-                </div>
-                <div>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Description
-                  </Typography>
-                  <TextField
-                    id="standard-multiline-static"
-                    multiline
-                    rows={4}
-                    defaultValue="Description"
-                    variant="standard"
-                  />
-                </div>
-                <div>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Colour
-                  </Typography>
-                </div>
-              </div>
-            </LocalizationProvider> */}
-            <div className="text-white">
-              <div className="flex bg-bubblegum items-center justify-between h-10 pr-2 pl-2">
-                <h1>Event</h1>
-                <button onClick={this.props.handleCloseModal}>Close</button>
-              </div>
-              <div className="pl-4 pt-2">
-                <h2 className="pb-2">Title</h2>
-                <input
-                  type="text"
-                  className="bg-transparent border-2 border-white w-3/4 h-10"
+  onHide = () =>{
+    this.setState({inputFocused: false})
+  }
+
+  onSubmit = ()=>{
+    console.log(this.state.eventInput)
+    this.onHide()
+  }
+
+  render() {
+    return (
+      <Box sx={formStyle}>
+        <div className="text-white">
+          <div className="flex bg-bubblegum items-center justify-between h-10 pr-2 pl-2">
+            <h1>Event</h1>
+            <button onClick={this.props.handleCloseModal}>Close</button>
+          </div>
+          <div className="pl-4 pt-2">
+            <h2 className="pb-2">Title</h2>
+            <input
+              type="text"
+              className="bg-transparent border-2 border-white w-3/4 h-10 text-white"
+              value={this.state.eventInput}
+              onFocus={() => {
+                this.setState({ inputFocused: true });
+              }}
+            />
+            <div
+              className={`${
+                this.state.inputFocused === false ? "hidden" : "text-black absolute z-50 w-3/4"
+              }`}
+            >
+              <motion.div drag>
+                <KeyboardComponent
+                  onChange={this.onChange}
+                  isToggled={this.state.inputFocused}
+                  onHide={this.onHide}
+                  onSubmit={this.onSubmit}
                 />
-                <form className=" z-50">
-                  <h2 className="pb-2 pt-2">Date</h2>
-                  <DatePickerWithRange />
-                  <h2 className="pb-2 pt-2">Time</h2>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <ThemeProvider theme={timeClockStyle}>
-                      <div className="flex justify-end items-center">
-                        <div className="w-1/2 flex flex-row">
-                          <h2 className="pb-2 pt-2">From</h2>
-                          <TimeClock defaultValue={dayjs(new Date())} onChange={(date) => console.log(date)} />
-                        </div>
-                        <div className="w-1/2 flex flex-row">
-                          <h2 className="pb-2 pt-2">To</h2>
-                          <TimeClock defaultValue={dayjs(new Date())} onChange={(date) => console.log(date)} />
-                        </div>
-                      </div>
-                    </ThemeProvider>
-                  </LocalizationProvider>
-                </form>
-              </div>
+              </motion.div>
             </div>
-          </Box>
-        );
-    }
+            <form className=" z-50">
+              <h2 className="pb-2 pt-2">Date</h2>
+              <DatePickerWithRange />
+              <h2 className="pb-2 pt-2">Time</h2>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <ThemeProvider theme={timeClockStyle}>
+                  <div className="flex justify-end items-center">
+                    <div className="w-1/2 flex flex-row">
+                      <h2 className="pb-2 pt-2">From</h2>
+                      <TimeClock
+                        defaultValue={dayjs(new Date())}
+                        onChange={(date) => console.log(date)}
+                      />
+                    </div>
+                    <div className="w-1/2 flex flex-row">
+                      <h2 className="pb-2 pt-2">To</h2>
+                      <TimeClock
+                        defaultValue={dayjs(new Date())}
+                        onChange={(date) => console.log(date)}
+                      />
+                    </div>
+                  </div>
+                </ThemeProvider>
+              </LocalizationProvider>
+            </form>
+          </div>
+        </div>
+      </Box>
+    );
+  }
 }
 
 export default CalendarForm
