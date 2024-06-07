@@ -6,7 +6,7 @@ import { useState, ReactDOM } from 'react';
 
 import CalendarScreenNavBar from '../components/CalendarNavbar';
 import Calendar from '../components/Calendar';
-import DatePickerWithRange from '../components/DatePickerWithRange';
+import { KeyboardComponent } from '../components/KeyboardComponent';
 
 import { ScreenParamList } from '../App';
 import '../stylesheets/calendar.css'
@@ -55,11 +55,6 @@ function CalendarScreen({route, navigation} : CalendarProps){
     <View>
       <CalendarScreenNavBar navigation={navigation} destination={"Home"} />
       <div className="max-w-screen w-screen">
-        {/* <Calendar
-          onClickDay={handleDateChange}
-          value={date}
-          className="w-screen"
-        /> */}
         <Calendar />
       </div>
     </View>
