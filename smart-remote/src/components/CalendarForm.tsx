@@ -1,7 +1,7 @@
 import React from "react"
 
 import Box from '@mui/material/Box';
-import { LocalizationProvider, TimeClock } from "@mui/x-date-pickers";
+import { LocalizationProvider, MobileTimePicker } from "@mui/x-date-pickers";
 import DatePickerWithRange from "./DatePickerWithRange";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { createTheme,ThemeProvider } from "@mui/material/styles";
@@ -9,6 +9,8 @@ import dayjs from "dayjs";
 
 import { KeyboardComponent } from './KeyboardComponent';
 import {motion} from "framer-motion";
+import CloseIcon  from "@mui/icons-material/Close";
+import DoneIcon  from "@mui/icons-material/Done";
 
 
 
@@ -30,17 +32,20 @@ const formStyle = {
 
 const timeClockStyle = createTheme({
 
-    palette:{
-        background: {
-            default: "#1c1c1c",
-        },
-        text: {
-            primary: "#ffffff",
-        },
-        primary: {
-            main: "#DA3B5E",
-        },
-    }
+  palette:{
+      mode: "dark",
+      background: {
+          paper: "#1c1c1c",
+      },
+      text: {
+          primary: "#ffffff",
+          secondary: "#ffffff"
+      },
+      primary: {
+          main: "#DA3B5E",
+      },
+
+  }
 
 })
 
@@ -73,13 +78,17 @@ class CalendarForm extends React.Component<CalendarFormProps> {
     this.onHide()
   }
 
+ 
   render() {
     return (
       <Box sx={formStyle}>
         <div className="text-white">
           <div className="flex bg-bubblegum items-center justify-between h-10 pr-2 pl-2">
             <h1>Event</h1>
-            <button onClick={this.props.handleCloseModal}>Close</button>
+            <div className="flex flex-row justify-between">
+              <button className="pr-2"><DoneIcon sx={{color:"white"}}/></button>
+              <button onClick={this.props.handleCloseModal}><CloseIcon sx={{color:"white"}}/></button>
+            </div>
           </div>
           <div className="pl-4 pt-2">
             <h2 className="pb-2">Title</h2>
@@ -93,7 +102,9 @@ class CalendarForm extends React.Component<CalendarFormProps> {
             />
             <div
               className={`${
-                this.state.inputFocused === false ? "hidden" : "text-black absolute z-50 w-3/4"
+                this.state.inputFocused === false
+                  ? "hidden"
+                  : "text-black absolute z-50 w-3/4"
               }`}
             >
               <motion.div drag>
@@ -107,28 +118,32 @@ class CalendarForm extends React.Component<CalendarFormProps> {
             </div>
             <form className=" z-50">
               <h2 className="pb-2 pt-2">Date</h2>
-              <DatePickerWithRange />
+              <DatePickerWithRange className={""} from={""} to={""} />
               <h2 className="pb-2 pt-2">Time</h2>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <ThemeProvider theme={timeClockStyle}>
                   <div className="flex justify-end items-center">
                     <div className="w-1/2 flex flex-row">
                       <h2 className="pb-2 pt-2">From</h2>
-                      <TimeClock
-                        defaultValue={dayjs(new Date())}
-                        onChange={(date) => console.log(date)}
+                      <MobileTimePicker
+                        sx={{ bgcolor: "#1c1c1c" }}
+                        format="hh:mm"
                       />
                     </div>
                     <div className="w-1/2 flex flex-row">
                       <h2 className="pb-2 pt-2">To</h2>
-                      <TimeClock
-                        defaultValue={dayjs(new Date())}
-                        onChange={(date) => console.log(date)}
+                      <MobileTimePicker
+                        sx={{ bgcolor: "#1c1c1c" }}
+                        format="hh:mm"
+                        onAccept={(time: any) => {
+                          console.log(time.$H);
+                        }}
                       />
                     </div>
                   </div>
                 </ThemeProvider>
               </LocalizationProvider>
+              <div></div>
             </form>
           </div>
         </div>

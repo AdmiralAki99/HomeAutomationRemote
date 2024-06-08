@@ -3,8 +3,6 @@ import format from "date-fns/format"
 import addMonths from "date-fns/addMonths";
 import isSameMonth from "date-fns/isSameMonth";
 import subMonths from "date-fns/subMonths";
-import addYears from "date-fns/addYears";
-import subYears from "date-fns/subYears";
 import startOfWeek from "date-fns/startOfWeek";
 import endOfWeek from "date-fns/endOfWeek";
 import endOfMonth from "date-fns/endOfMonth";
@@ -12,21 +10,11 @@ import addDays from "date-fns/addDays";
 
 import './Calendar.css'
 import { isSameDay, startOfMonth } from "date-fns";
-import parse from "date-fns/parse";
-import { rowsMetaStateInitializer } from "@mui/x-data-grid/internals";
+import CalendarEventList from "./CalendarEventList";
 
 import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
@@ -184,114 +172,8 @@ class Calendar extends React.Component{
 
     renderEventList(){
       return(
-        <div>
-          <Box>
-            <List>
-              {(isEmpty(this.state.dayEvents)) ? <ListItem><ListItemText primary="No events for this day"></ListItemText></ListItem>:this.state.dayEvents.map((event:any)=>{
-                return (
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar style={{backgroundColor:event.colour}}></Avatar>
-                    </ListItemAvatar>
-                    {/* <Button variant="text"><ListItemText primary={event.title}></ListItemText></Button> */}
-                    <ListItemText primary={event.title} secondary={event.time}></ListItemText>
-                    <IconButton edge="end" aria-label="Edit" onClick={()=>{this.setState({open:true})}}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton edge="end" aria-label="Edit">
-                      <DoneIcon />
-                    </IconButton>
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItem>
-                )
-              })}
-            </List>
-          </Box>
-        </div>
+        <CalendarEventList events={this.state.dayEvents}/>
       )
-    }
-
-    renderEventModal(){
-      return (
-        <div>
-          <Modal
-            open={this.state.open}
-            onClose={() => {
-              this.setState({ open: false });
-            }}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={eventStyle}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <div className="grid grid-cols-2">
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h6"
-                    component="h2"
-                  >
-                    Event
-                  </Typography>
-                  <IconButton edge="end" aria-label="Edit">
-                    <DoneIcon />
-                  </IconButton>
-                </div>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  Title
-                </Typography>
-                <TextField id="outlined-basic" variant="outlined" />
-                <div>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Switch defaultChecked />}
-                      label="All Day"
-                    />
-                  </FormGroup>
-                  <div className="grid grid-cols-3 pl-2">
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Start Date
-                    </Typography>
-                    <DatePicker />
-                    <TimePicker />
-                  </div>
-                  <div className="grid grid-cols-3 pl-2">
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      End Date
-                    </Typography>
-                    <DatePicker />
-                    <TimePicker />
-                  </div>
-                  <div className="grid grid-cols-2 pl-2">
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Completed
-                    </Typography>
-                    <Checkbox {...label} sx={{}} />
-                  </div>
-                  <div>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Description
-                    </Typography>
-                    <TextField
-                      id="standard-multiline-static"
-                      multiline
-                      rows={4}
-                      defaultValue="Description"
-                      variant="standard"
-                    />
-                  </div>
-                  <div>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Colour
-                    </Typography>
-                  </div>
-                </div>
-              </LocalizationProvider>
-            </Box>
-          </Modal>
-        </div>
-      );
     }
 
     onDateClick = (date:Date) =>{
@@ -329,7 +211,6 @@ class Calendar extends React.Component{
         return (
           <div className="calendar">
             {this.renderHeader()}
-            {this.renderEventModal()}
             {this.renderDays()}
             {this.renderCells()}
             {this.renderEventList()}
