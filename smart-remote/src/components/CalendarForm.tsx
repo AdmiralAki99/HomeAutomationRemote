@@ -78,6 +78,10 @@ class CalendarForm extends React.Component<CalendarFormProps> {
     this.onHide()
   }
 
+  onSetDate = (date: any) => {
+    console.log(date);
+  }
+
  
   render() {
     return (
@@ -118,7 +122,7 @@ class CalendarForm extends React.Component<CalendarFormProps> {
             </div>
             <form className=" z-50">
               <h2 className="pb-2 pt-2">Date</h2>
-              <DatePickerWithRange className={""} from={""} to={""} />
+              <DatePickerWithRange className={""} from={""} to={""} onSetDate={this.onSetDate} />
               <h2 className="pb-2 pt-2">Time</h2>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <ThemeProvider theme={timeClockStyle}>

@@ -7,10 +7,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { createTheme,ThemeProvider } from "@mui/material/styles";
 
 import { KeyboardComponent } from './KeyboardComponent';
+import axios from "axios";
 import {motion} from "framer-motion";
 
-import CloseIcon  from "@mui/icons-material/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon  from "@mui/icons-material/Save";
+import DoneIcon  from "@mui/icons-material/Done";
+import { id } from "date-fns/locale";
 
 
 
@@ -62,8 +65,10 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
     description: '' ,
     startDate: '',
     endDate: '',
-    startTime: '',
-    endTime: '',
+    startHour: '',
+    startMinute: '',
+    endHour: '',
+    endMinute: '',
     completed: false,
   };
 
@@ -98,19 +103,19 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
               props.event.end_date_month,
               props.event.end_date_year
             ),
-      startTime:
-        props.event.start_time_hour === undefined ||
-        props.event.start_time_minute == undefined
-          ? ""
-          : `${props.event.start_time_hour}:${props.event.start_time_minute}`,
-      endTime:
-        props.event.end_time_hour === undefined ||
-        props.event.end_time_minute == undefined
-          ? ""
-          : `${props.event.end_time_hour}:${props.event.end_time_minute}`,
+      startHour: props.event.start_hour === undefined ? "" : props.event.start_hour,
+      startMinute: props.event.start_minute === undefined ? "" : props.event.start_minute,
+      endHour: props.event.end_hour === undefined ? "" : props.event.end_hour,
+      endMinute: props.event.end_minute === undefined ? "" : props.event.end_minute,
       completed: props.event.status === undefined ? false : props.event.status,
     };
     this.formatString = this.formatString.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onHide = this.onHide.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onSetDate = this.onSetDate.bind(this);
+    this.updateEvent = this.updateEvent.bind(this);
+    this.completeEvent = this.completeEvent.bind(this);
   }
 
   onChange = (input: any) => {
@@ -124,6 +129,43 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
   onSubmit = ()=>{
     console.log(this.state.eventInput)
     this.onHide()
+  }
+
+  onSetDate = (date: any) => {
+    if(date.from !== undefined ||  date.to !== undefined || date == undefined){
+      this.setState({startDate: date.from, endDate: date.to})
+    }
+  }
+
+  updateEvent = () =>{
+    axios.post('/calendar/update',{
+      id: this.props.event.id,
+      title: this.state.eventInput,
+      allDay: this.state.allDay,
+      colour: this.state.colour,
+      calendar: this.state.calendar,
+      description: this.state.description,
+      start_date_day: new Date(this.state.startDate).getDate(),
+      start_date_month: new Date(this.state.startDate).getMonth(),
+      start_date_year: new Date(this.state.startDate).getFullYear(),
+      end_date_day: new Date(this.state.endDate).getDate(),
+      end_date_month: new Date(this.state.endDate).getMonth(),
+      end_date_year: new Date(this.state.endDate).getFullYear(),
+      start_time_hour: this.state.startHour,
+      start_time_minute: this.state.startMinute,
+      end_time_hour: this.state.endHour,
+      end_time_minute: this.state.endMinute,
+      status: this.state.completed
+    }).then(response => {
+
+    })
+  }
+
+  completeEvent = () =>{
+    this.setState({completed: true})
+    axios.post('/calendar/complete',{
+      id: this.props.event.id
+    })
   }
 
   formatString = (day:number, month:number, year:number) => {
@@ -164,7 +206,10 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
           <div className="flex bg-bubblegum items-center justify-between h-10 pr-2 pl-2">
             <h1>Event</h1>
             <div className="flex flex-row justify-between">
-              <button className="pr-2">
+              <button className="pr-2" onClick={this.completeEvent}>
+                <DoneIcon sx={{ color: "white" }} />
+              </button>
+              <button className="pr-2" onClick={this.updateEvent}>
                 <SaveIcon sx={{ color: "white" }} />
               </button>
               <button onClick={this.props.handleCloseModal}>
@@ -204,6 +249,7 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
                 className={""}
                 from={this.state.startDate}
                 to={this.state.endDate}
+                onSetDate={this.onSetDate}
               />
               <h2 className="pb-2 pt-2">Time</h2>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -214,6 +260,9 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
                       <MobileTimePicker
                         sx={{ bgcolor: "#1c1c1c" }}
                         format="hh:mm"
+                        onAccept={(time: any) => {
+                          this.setState({startHour: time.$H,startMinute: time.$m})
+                        }}
                       />
                     </div>
                     <div className="w-1/2 flex flex-row">
@@ -222,7 +271,7 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
                         sx={{ bgcolor: "#1c1c1c" }}
                         format="hh:mm"
                         onAccept={(time: any) => {
-                          console.log(time.$H);
+                          this.setState({endHour: time.$H,endMinute: time.$m})
                         }}
                       />
                     </div>

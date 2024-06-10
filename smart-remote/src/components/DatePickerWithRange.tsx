@@ -17,7 +17,8 @@ import {
 interface DatePickerWithRangeProps{
   className:string,
   from:string,
-  to:string
+  to:string,
+  onSetDate: (date: DateRange|undefined) => void
 
 }
 
@@ -139,7 +140,10 @@ class DatePickerWithRange extends React.Component<DatePickerWithRangeProps> {
               mode="range"
               defaultMonth={this.state.date.from}
               selected={this.state.date}
-              onSelect={(date) => this.setDate(date)}
+              onSelect={(date) => {
+                this.setDate(date)
+                this.props.onSetDate(date)
+              }}
               numberOfMonths={2}
             />
           </PopoverContent>
