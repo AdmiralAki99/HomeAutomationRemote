@@ -12,22 +12,6 @@ import './Calendar.css'
 import { isSameDay, startOfMonth } from "date-fns";
 import CalendarEventList from "./CalendarEventList";
 
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import DoneIcon from '@mui/icons-material/Done';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import FormGroup from '@mui/material/FormGroup';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { DatePicker } from "@mui/x-date-pickers";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-
-
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 interface CalendarComponentState{
