@@ -156,7 +156,9 @@ class Calendar extends React.Component{
 
     renderEventList(){
       return(
-        <CalendarEventList events={this.state.dayEvents}/>
+        <div>
+          {(isEmpty(this.state.dayEvents) == false)? <CalendarEventList events={this.state.dayEvents}/>: <div></div>}
+        </div>
       )
     }
 

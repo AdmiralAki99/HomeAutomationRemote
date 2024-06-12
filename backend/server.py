@@ -537,19 +537,20 @@ class Server:
             else:
                 return jsonify({'count':len(query_results)})
 
-        @self.app.route("/calendar/add/",methods=['POST'])
+        @self.app.route("/calendar/add",methods=['POST'])
         def add_event():
-            calendar_keys = ['title','start_date_day','start_date_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute','all_day', 'description', 'calendar', 'status','colour']
-            if not all(key in request.json for key in calendar_keys):
+            calendar_keys = ['title','start_date_day','start_date_month','start_date_year','start_time_hour','start_time_minute','end_date_day','end_date_month','end_date_year','end_time_hour','end_time_minute', 'description', 'calendar', 'status','colour']
+            body = request.get_json()
+            if not all(key in body for key in calendar_keys):
                 return jsonify({'error': 'Some elements are missing'}), 400
-            event = CalendarEvent(request.json['id'],request.json['title'],request.json['start_date_day'],request.json['start_date_month'],request.json['start_date_year'],request.json['start_time_hour'],request.json['start_time_minute'],request.json['end_date_day'],request.json['end_date_month'],request.json['end_date_year'],request.json['end_time_hour'],request.json['end_time_minute'],request.json['all_day'],request.json['description'],request.json['calendar'],request.json['status'],request.json['colour'])
+            event = CalendarEvent(body['title'],body['start_date_day'],body['start_date_month'],body['start_date_year'],body['start_time_hour'],body['start_time_minute'],body['end_date_day'],body['end_date_month'],body['end_date_year'],body['end_time_hour'],body['end_time_minute'],body['status'],body['description'],body['calendar'],body['colour'])
             self.db.session.add(event)
             self.db.session.commit()
             return jsonify({'message': 'Event Added Successfully'})
         
-        @self.app.route("/calendar/complete/<int:event_id>",methods=['POST'])
-        def complete_event(event_id):
-            event = CalendarEvent.query.get(event_id)
+        @self.app.route("/calendar/complete",methods=['POST'])
+        def complete_event():
+            event = CalendarEvent.query.get(request.json['id'])
             if event is None:
                 return jsonify({'message': 'Event not found'})
             else:
@@ -588,6 +589,32 @@ class Server:
                 event.end_time_minute = new_end_minute
                 self.db.session.commit()
                 return jsonify({'message': 'Event End Time Changed Successfully'})
+        
+        @self.app.route("/calendar/update",methods=['POST'])
+        def update_event():
+            body = request.get_json()
+            event = CalendarEvent.query.get(body['id'])
+            if event is None:
+                return jsonify({'message': 'Event not found'})
+            else:
+                event.title = body['title']
+                event.start_date_day = body['start_date_day']
+                event.start_date_month = body['start_date_month']
+                event.start_date_year = body['start_date_year']
+                event.start_time_hour = body['start_time_hour']
+                event.start_time_minute = body['start_time_minute']
+                event.end_date_day = body['end_date_day']
+                event.end_date_month = body['end_date_month']
+                event.end_date_year = body['end_date_year']
+                event.end_time_hour = body['end_time_hour']
+                event.end_time_minute = body['end_time_minute']
+                event.all_day = body['status']
+                event.description = body['description']
+                event.calendar = body['calendar']
+                event.status = body['status']
+                event.colour = body['colour']
+                self.db.session.commit()
+                return jsonify({'message': 'Event Updated Successfully'})
             
         @self.app.route("/calendar/delete/date/<int:event_id>",methods=['POST'])
         def delete_event(event_id):

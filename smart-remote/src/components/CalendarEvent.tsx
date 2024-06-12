@@ -13,7 +13,7 @@ import {motion} from "framer-motion";
 import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon  from "@mui/icons-material/Save";
 import DoneIcon  from "@mui/icons-material/Done";
-import { id } from "date-fns/locale";
+import dayjs from "dayjs";
 
 
 
@@ -102,11 +102,11 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
               props.event.end_date_day,
               props.event.end_date_month,
               props.event.end_date_year
-            ),
-      startHour: props.event.start_hour === undefined ? "" : props.event.start_hour,
-      startMinute: props.event.start_minute === undefined ? "" : props.event.start_minute,
-      endHour: props.event.end_hour === undefined ? "" : props.event.end_hour,
-      endMinute: props.event.end_minute === undefined ? "" : props.event.end_minute,
+            )+' 00:00:00 GMT',
+      startHour: props.event.start_time_hour === undefined ? "" : props.event.start_time_hour,
+      startMinute: props.event.start_time_minute === undefined ? "" : props.event.start_time_minute,
+      endHour: props.event.end_time_hour === undefined ? "" : props.event.end_time_hour,
+      endMinute: props.event.end_time_minute === undefined ? "" : props.event.end_time_minute,
       completed: props.event.status === undefined ? false : props.event.status,
     };
     this.formatString = this.formatString.bind(this);
@@ -116,6 +116,14 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
     this.onSetDate = this.onSetDate.bind(this);
     this.updateEvent = this.updateEvent.bind(this);
     this.completeEvent = this.completeEvent.bind(this);
+
+    console.log(
+      'Props Start Time:'+this.props.event.start_time_hour+':'+this.props.event.start_time_minute
+    )
+    console.log(
+      'Props End Time:'+this.props.event.end_time_hour+':'+this.props.event.end_time_minute
+    )
+    console.log(this.props.event)
   }
 
   onChange = (input: any) => {
@@ -141,15 +149,14 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
     axios.post('/calendar/update',{
       id: this.props.event.id,
       title: this.state.eventInput,
-      allDay: this.state.allDay,
       colour: this.state.colour,
       calendar: this.state.calendar,
       description: this.state.description,
       start_date_day: new Date(this.state.startDate).getDate(),
-      start_date_month: new Date(this.state.startDate).getMonth(),
+      start_date_month: new Date(this.state.startDate).getMonth()+1,
       start_date_year: new Date(this.state.startDate).getFullYear(),
       end_date_day: new Date(this.state.endDate).getDate(),
-      end_date_month: new Date(this.state.endDate).getMonth(),
+      end_date_month: new Date(this.state.endDate).getMonth()+1,
       end_date_year: new Date(this.state.endDate).getFullYear(),
       start_time_hour: this.state.startHour,
       start_time_minute: this.state.startMinute,
@@ -157,7 +164,7 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
       end_time_minute: this.state.endMinute,
       status: this.state.completed
     }).then(response => {
-
+      console.log(response)
     })
   }
 
@@ -171,29 +178,29 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
   formatString = (day:number, month:number, year:number) => {
     switch (month) {
         case 1:
-            return `${day} January ${year} 00:00:00 GMT`;
+            return `${day} January ${year}`;
         case 2:
-            return `${day} February ${year} 00:00:00 GMT`;
+            return `${day} February ${year}`;
         case 3:
-            return `${day} March ${year} 00:00:00 GMT`;
+            return `${day} March ${year}`;
         case 4:
-            return `${day} April ${year} 00:00:00 GMT`;
+            return `${day} April ${year}`;
         case 5:
-            return `${day} May ${year} 00:00:00 GMT`;
+            return `${day} May ${year}`;
         case 6:
-            return `${day} June ${year} 00:00:00 GMT`;
+            return `${day} June ${year}`;
         case 7:
-            return `${day} July ${year} 00:00:00 GMT`;
+            return `${day} July ${year}`;
         case 8:
-            return `${day} August ${year} 00:00:00 GMT`;
+            return `${day} August ${year}`;
         case 9:
-            return `${day} September ${year} 00:00:00 GMT`;
+            return `${day} September ${year}`;
         case 10:
-            return `${day} October ${year} 00:00:00 GMT`;
+            return `${day} October ${year}`;
         case 11:
-            return `${day} November ${year} 00:00:00 GMT`;
+            return `${day} November ${year}`;
         case 12:
-            return `${day} December ${year} 00:00:00 GMT`;
+            return `${day} December ${year}`;
         default:
             return "";
     }
@@ -260,6 +267,7 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
                       <MobileTimePicker
                         sx={{ bgcolor: "#1c1c1c" }}
                         format="hh:mm"
+                        value = {dayjs('2021-10-10T'+this.state.startHour+':'+this.state.startMinute)}
                         onAccept={(time: any) => {
                           this.setState({startHour: time.$H,startMinute: time.$m})
                         }}
@@ -270,6 +278,7 @@ class CalendarEvent extends React.Component<CalendarEventProps> {
                       <MobileTimePicker
                         sx={{ bgcolor: "#1c1c1c" }}
                         format="hh:mm"
+                        value = {dayjs('2021-10-10T'+this.state.endHour+':'+this.state.endMinute)}
                         onAccept={(time: any) => {
                           this.setState({endHour: time.$H,endMinute: time.$m})
                         }}
