@@ -12,6 +12,8 @@ import {motion} from "framer-motion";
 import CloseIcon  from "@mui/icons-material/Close";
 import DoneIcon  from "@mui/icons-material/Done";
 
+import axios from "axios";
+
 
 
 interface CalendarFormProps{
@@ -53,7 +55,13 @@ class CalendarForm extends React.Component<CalendarFormProps> {
   state = {
     modalOpen: false,
     inputFocused: false,
-    eventInput: ''
+    eventInput: '',
+    startHour: dayjs().hour(),
+    startMinute: dayjs().minute(),
+    endHour: dayjs().hour(),
+    endMinute: dayjs().minute(),
+    startDate: new Date(),
+    endDate: new Date()
   };
 
   constructor(props: CalendarFormProps) {
@@ -61,8 +69,15 @@ class CalendarForm extends React.Component<CalendarFormProps> {
     this.state = {
       modalOpen: props.modalOpen,
       inputFocused: false,
-      eventInput: ''
+      eventInput: '',
+      startHour: dayjs().hour(),
+      startMinute: dayjs().minute(),
+      endHour: dayjs().hour(),
+      endMinute: dayjs().minute(),
+      startDate: new Date(),
+      endDate: new Date()
     };
+    this.createEvent = this.createEvent.bind(this)
   }
 
   onChange = (input: any) => {
@@ -79,7 +94,31 @@ class CalendarForm extends React.Component<CalendarFormProps> {
   }
 
   onSetDate = (date: any) => {
-    console.log(date);
+    if(date.from !== undefined ||  date.to !== undefined || date == undefined){
+      this.setState({startDate: date.from, endDate: date.to})
+    }
+  }
+
+  async createEvent(){
+    await axios.post("/calendar/add",{
+      title: this.state.eventInput,
+      colour: "#DA3B5E",
+      calendar: "Personal",
+      description: "",
+      start_date_day: this.state.startDate.getDate(),
+      start_date_month: this.state.startDate.getMonth()+1,
+      start_date_year: this.state.startDate.getFullYear(),
+      end_date_day: this.state.endDate.getDate(),
+      end_date_month: this.state.endDate.getMonth()+1,
+      end_date_year:this.state.endDate.getFullYear(),
+      start_time_hour: this.state.startHour,
+      start_time_minute: this.state.startMinute,
+      end_time_hour: this.state.endHour,
+      end_time_minute: this.state.endMinute,
+      status: false
+    }).then((res) => {
+      console.log(res)
+    })
   }
 
  
@@ -90,7 +129,7 @@ class CalendarForm extends React.Component<CalendarFormProps> {
           <div className="flex bg-bubblegum items-center justify-between h-10 pr-2 pl-2">
             <h1>Event</h1>
             <div className="flex flex-row justify-between">
-              <button className="pr-2"><DoneIcon sx={{color:"white"}}/></button>
+              <button className="pr-2" onClick={this.createEvent}><DoneIcon sx={{color:"white"}}/></button>
               <button onClick={this.props.handleCloseModal}><CloseIcon sx={{color:"white"}}/></button>
             </div>
           </div>
@@ -132,6 +171,9 @@ class CalendarForm extends React.Component<CalendarFormProps> {
                       <MobileTimePicker
                         sx={{ bgcolor: "#1c1c1c" }}
                         format="hh:mm"
+                        onAccept={(time: any) => {
+                          this.setState({startHour: time.$H,startMinute: time.$m})
+                        }}
                       />
                     </div>
                     <div className="w-1/2 flex flex-row">
@@ -140,7 +182,7 @@ class CalendarForm extends React.Component<CalendarFormProps> {
                         sx={{ bgcolor: "#1c1c1c" }}
                         format="hh:mm"
                         onAccept={(time: any) => {
-                          console.log(time.$H);
+                          this.setState({endHour: time.$H,endMinute: time.$m})
                         }}
                       />
                     </div>

@@ -91,7 +91,7 @@ class DatePickerWithRange extends React.Component<DatePickerWithRangeProps> {
       from: (props.from) ? props.from : '',
       to: (props.to) ? props.to : '',
       date: (props.from != "")? {
-        from: addDays(new Date(props.from),1),
+        from: addDays(new Date(props.from),0),
         to: addDays(new Date(props.to),1),
       }: {
         from: new Date(),
