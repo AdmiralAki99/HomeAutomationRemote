@@ -10,6 +10,19 @@ This project was made to understand basics [React Framework](https://react.dev),
   <source src="./Smart Home Remote v9.mp4" type="video/mp4">
 </video>
 
+### Reference Pictures
+
+<table border="0">
+ <tr >
+    <td>
+        <img src="./Render 1.png" width="512",height="512">
+    </td>
+    <td>
+        <img src="./Render 2.png" width="512",height="512">
+    </td>
+ </tr>
+</table>
+
 ## 3D Model
 
 Created Model using Autodesk Fusion, although the board could be integrated into PCB, the wires and features can be taken care of by using loose wires with header pins so I did not create a PCB.
