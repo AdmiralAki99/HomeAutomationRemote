@@ -9,7 +9,6 @@ Created a basic backend server to hold the data and models and route them on the
 <ol>
     <li>Python</li>
     <li>Flask API</li>
-    <li> React</li>
 </ol>
 
 ## Feature Managers
@@ -19,6 +18,7 @@ Created a basic backend server to hold the data and models and route them on the
     <li>Manga Manager</li>
     <li>Ebook Downloader</li>
     <li>Spotify Manager</li>
+    <li>Anime Scraper</li>
 </ol>
 
 ### Lights Manager
@@ -58,4 +58,18 @@ The network scanner scans the connected network for devices connected on the net
     <li>JSON Object Management</li>
     <li>Network Scanning</li>
 </ol>
+
+## Todo
+
+<ul>
+    <li> Implementing a memory allocation management (LRU,Time-based,Manual control) for Manga Scraper  rather than storing all recent Mangas</li>
+    <li>Implemeting Anime Scraper</li>
+</ul>
+
+## Problems Faced
+
+<ul>
+    <li> Parsing Complex JSON data with data from different languages</li>
+    <li> Using the OAuth2.0 For Spotify Manager</li>
+</ul>
 

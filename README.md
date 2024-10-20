@@ -77,3 +77,13 @@ This project was made to understand basics [React Framework](https://react.dev),
     <li> Create Global UI Components To Use Everywhere</li>
 </ol>
 
+## Problems Faced
+
+<ul>
+    <li> Understanding Typescript Syntax & Objects</li>
+    <li> Understanding when to use useState or useRef in React </li>
+    <li> Creating custom components to display UI</li>
+    <li> Uniform JSON creation/parsing to allow for easier handoff of data between components</li>
+    <li> Polling for information from the backend in React</li>
+</ul>
+
