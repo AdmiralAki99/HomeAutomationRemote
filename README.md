@@ -4,6 +4,37 @@
 
 This project was made to understand basics [React Framework](https://react.dev), Web server basics and learning how to join the Python Backend to React Frontend.
 
+## Render
+
+<video width="512" height="512" loop autoplay muted>
+  <source src="./Smart Home Remote v9.mp4" type="video/mp4">
+</video>
+
+### Reference Pictures
+
+<table border="0">
+ <tr >
+    <td>
+        <img src="./Render 1.png" width="512",height="512">
+    </td>
+    <td>
+        <img src="./Render 2.png" width="512",height="512">
+    </td>
+ </tr>
+</table>
+
+## 3D Model
+
+Created Model using Autodesk Fusion, although the board could be integrated into PCB, the wires and features can be taken care of by using loose wires with header pins so I did not create a PCB.
+
+### Parts Used
+<ol>
+    <li> Raspberry Pi Pico</li>
+    <li> Adafruit PowerBoost 1000C Charger</li>
+    <li> 5000mAh Battery </li>
+    <li> 7" 1024x600 HDMI Capacative Touch Screen</li>
+</ol>
+
 ## Features
 
 ### Smart Light Control (Kasa)
