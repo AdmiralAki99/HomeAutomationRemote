@@ -79,4 +79,8 @@ patches/mtime-cache.json
 
 backend/.cache
 
+# Add Database
+
+backend/database/*.db
+
 .cache
