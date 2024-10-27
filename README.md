@@ -6,9 +6,11 @@ This project was made to understand basics [React Framework](https://react.dev),
 
 ## Render
 
-<video width="512" height="512" loop autoplay muted>
-  <source src="./Smart Home Remote v9.mp4" type="video/mp4">
-</video>
+
+
+https://github.com/user-attachments/assets/3a3554da-1c1d-4434-8c28-5fb528f4f00d
+
+
 
 ### Reference Pictures
 
