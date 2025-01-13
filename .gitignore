@@ -1,0 +1,17 @@
+# Path to the .env file for the backend
+/backend/.env
+
+# Cache for the Services
+/backend/services/__pycache__
+
+# Cache for the Routers
+/backend/routers/__pycache__
+
+# Node Modules for the Frontend
+/frontend/node_modules
+
+
+# VSCode settings
+/frontend/.vscode
+
+

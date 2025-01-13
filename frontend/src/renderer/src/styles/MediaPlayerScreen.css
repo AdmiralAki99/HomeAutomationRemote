@@ -1,0 +1,7 @@
+.landscape {
+    transform: rotate(90deg); /* Rotate the iframe */
+    height: 100vw; /* Set the height of the iframe to the width of the screen */
+    width: 95vh; /* Set the width of the iframe to the height of the screen */
+    margin-left: -18vh; /* Move the iframe down to the bottom of the screen */
+    margin-top: 18vh; /* Move the iframe to the right of the screen */
+}

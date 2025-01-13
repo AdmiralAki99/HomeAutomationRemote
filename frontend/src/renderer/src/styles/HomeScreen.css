@@ -1,0 +1,11 @@
+View::--webkit-scrollbar {
+    display: none;
+}
+
+View{
+    scrollbar-width: none;
+}
+
+View{
+    overflow: auto;
+}
