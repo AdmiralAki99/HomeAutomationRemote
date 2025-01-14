@@ -35,7 +35,7 @@ class MediaPlayerScreen extends Component<MediaPlayerScreenProps> {
 
   async getMovieSource() {
     await serverAPI
-      .get(`/movies/get/link?query=${this.props.route.params.url}`)
+      .get(`${this.props.route.params.url}`)
       .then((response) => {
         this.setState({ source: response.data.default_url })
       })

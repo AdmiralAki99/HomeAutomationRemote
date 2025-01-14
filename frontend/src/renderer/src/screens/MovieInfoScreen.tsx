@@ -62,7 +62,7 @@ class MovieInfoScreen extends Component<MovieInfoScreenProps> {
   }
 
   pushPlayerScreen(){
-    this.props.navigation.push('MediaPlayerScreen', {url: this.state.link})
+    this.props.navigation.push('MediaPlayerScreen', {url: `/movies/get/link?query=${this.state.link}`})
   }
 
   render() {

@@ -1,11 +1,14 @@
 import { Component } from 'react'
-
 import { View } from 'react-native'
+
+import '../ServerAPI'
 
 import { ChevronLeft, Play } from 'react-bootstrap-icons'
 import Navbar from '../components/Navbar'
 import Carousel from '../components/Carousel'
+import SeasonCarousel from '../components/SeasonCarousel'
 import CircularProgressBar from '../components/CircularProgressBar'
+import serverAPI from '../ServerAPI'
 
 type ShowInfoScreenProps = {
   navigation: any
@@ -18,25 +21,64 @@ class ShowInfoScreen extends Component<ShowInfoScreenProps> {
     title: '',
     description: '',
     link: '',
-    director: '',
-    writer: '',
     recommendations: [],
+    seasons: [],
+    seasonInfo: [],
     status: '',
     score: 0,
     releaseDate: '',
     runTime: '',
+    seasonSelected: 1,
     genres: []
   }
 
+  constructor(props: ShowInfoScreenProps) {
+    super(props)
+    this.handleShowInfo = this.handleShowInfo.bind(this)
+    this.pushPlayerScreen = this.pushPlayerScreen.bind(this)
+  }
+
+  componentDidMount(): void {
+    this.handleShowInfo()
+    this.handleGetSeason()
+  }
+
+  async handleShowInfo() {
+    await serverAPI.get(`/tv/get/info?query=${this.props.route.params.url}`).then((response) => {
+      this.setState({
+        title: response.data.title,
+        description: response.data.description,
+        score: response.data.score,
+        releaseDate: response.data.release_date,
+        genres: response.data.genres,
+        seasons: response.data.seasons,
+        recommendations: response.data.recommendations,
+        status: response.data.status
+      })
+    })
+  }
+
+  async handleGetSeason() {
+    await serverAPI
+      .get(
+        `/tv/get/season?link=${this.props.route.params.url}&season_number=${this.state.seasonSelected}`
+      )
+      .then((response) => {
+        this.setState({
+          seasonInfo: response.data
+        })
+      })
+  }
+
   pushPlayerScreen() {
-    this.props.navigation.push('MediaPlayerScreen', { url: this.state.link })
+    this.props.navigation.push('MediaPlayerScreen', { url: `/tv/get/episode/source?link=${this.props.route.params.url}&season_number=${this.state.seasonSelected}&episode_number=1` })
   }
 
   render() {
     return (
       <View>
         <div className="bg-home h-screen">
-          <div className="bg-home h-screen flex flex-col">
+          <div className="bg-home h-screen flex flex-col no-scrollbar">
             <Navbar
               leftItems={[
                 <button
@@ -49,7 +91,7 @@ class ShowInfoScreen extends Component<ShowInfoScreenProps> {
               rightItems={[]}
             />
 
-            <div className="flex-grow overflow-y-auto p-4">
+            <div className="flex-grow p-4">
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <img
@@ -62,7 +104,6 @@ class ShowInfoScreen extends Component<ShowInfoScreenProps> {
                   <h1 className="text-primary_text text-2xl font-bold">{this.state.title}</h1>
 
                   <div className="mt-4">
-                    <p className="text-primary_text">Director(s): {this.state.director}</p>
                     <div className="text-primary_text pt-2 pb-2">
                       Genres:{' '}
                       <div className="flex flex-wrap gap-2">
@@ -76,7 +117,6 @@ class ShowInfoScreen extends Component<ShowInfoScreenProps> {
                         ))}
                       </div>
                     </div>
-                    <p className="text-primary_text">Writer(s): {this.state.writer}</p>
                     <p className="text-primary_text">Score: {this.state.score}/10</p>
                     <p className="text-primary_text">Release Date: {this.state.releaseDate}</p>
                     <p className="text-primary_text">Run Time: {this.state.runTime}</p>
@@ -94,12 +134,25 @@ class ShowInfoScreen extends Component<ShowInfoScreenProps> {
                         text={`${this.state.score}`}
                       />
                     </div>
+                    {/* <h2 className="text-primary_text text-2xl font-bold p-2">Summary</h2> */}
+                    <p className="text-primary_text p-2 justify-around line-clamp-4">
+                      {this.state.description}
+                    </p>
                   </div>
                 </div>
               </div>
               <div>
-                <h2 className="text-primary_text text-2xl font-bold p-2">Summary</h2>
-                <p className="text-primary_text p-2 justify-around">{this.state.description}</p>
+                <div className="flex flex-row items-center justify-between bg-noir rounded-lg">
+                  <h2 className="text-primary_text text-2xl font-bold p-2">Seasons</h2>
+                  <select className='bg-noir text-primary_text p-2' onChange={(e) => this.setState({ seasonSelected: e.target.value }, this.handleGetSeason)}>
+                    {this.state.seasons.map((season: any, index: number) => (
+                      <option key={index} value={index + 1} className='bg-noir text-primary_text'>
+                        {season}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <SeasonCarousel episodes={this.state.seasonInfo} navigation={this.props.navigation} link={this.props.route.params.url} seasonNumber={this.state.seasonSelected} />
               </div>
               <div>
                 <h2 className="text-primary_text text-2xl font-bold p-2">Recommendations</h2>

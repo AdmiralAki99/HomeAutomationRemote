@@ -11,7 +11,15 @@ class TvScraper:
     def __init__(self):
         self.semaphore = asyncio.Semaphore(4)
     
+
     async def search_show(self, show_name):
+        """
+        Search for a show on the website
+        Parameters:
+            show_name (str): The name of the show to search for
+        Returns:
+            list: A list of JSON objects containing the search results
+        """
         start_time = time.time()
         driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
         page = await driver.newPage()
@@ -43,8 +51,8 @@ class TvScraper:
                     poster_card = media.find("div", class_="posterBlock")
                     if("lazy-load-image-loaded" in poster_card.find("span")['class']):
                         ## The media has a poster and is loaded
-                        poster_img = self.get_poster_info(poster_card)
-                        title,date,media_type = self.get_text_info(media.find("div", class_="textBlock"))
+                        poster_img = self.__get_poster_info(poster_card)
+                        title,date,media_type = self.__get_text_info(media.find("div", class_="textBlock"))
                         if(media_type == "TV"):
                             response.append({
                                 'title': title,
@@ -73,74 +81,39 @@ class TvScraper:
         print(f"Time taken: {time.time() - start_time}")
         return response
     
-    def get_poster_info(self, poster_card):
+    def __get_poster_info(self, poster_card):
+        """
+        Get the poster image of the media
+        Parameters:
+            poster_card (BeautifulSoup): The BeautifulSoup object of the poster card
+        Returns:
+            str: The URL of the poster image
+        """
         return poster_card.find("img")["src"]
     
-    def get_text_info(self, text_block):
+    def __get_text_info(self, text_block):
+        """
+        Get the text information of the media
+        Parameters:
+            text_block (BeautifulSoup): The BeautifulSoup object of the text block
+        Returns:
+            tuple: A tuple containing the title, date and media type of the media
+        """
         title = text_block.find("span", class_="title").text.strip()
         date = text_block.find("span",class_="date").text.strip()
         media_type = text_block.find("span", class_="mediaType").text.strip()
         
         return title,date,media_type
     
-    # async def get_show_info(self,show_url):
-    #     start_time = time.time()
-    #     driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
-    #     page = await driver.newPage()
-        
-    #     await page.goto(f"{self.ROOT_URL}{show_url}")
-        
-    #     try:
-    #         # Wait for the page to load
-    #         await page.waitForSelector(".posterImg")
-            
-    #         # Getting the static details of the movie
-    #         body = BeautifulSoup(await page.content(), "html.parser")
-            
-    #         # Now need to get the information about the seasons and the episodes
-            
-    #         seasons = body.find("select",id="season")
-    #         num_seasons = len(seasons.find_all("option"))
-    #         seasons = seasons.find_all("option")
-    #         show_info = []
-    #         for i in range(0,num_seasons):
-                
-    #             # Need to select the season from the dropdown
-    #             await page.select("#season",str(i))
-                
-    #             try:
-    #                 await page.waitForSelector(".episodeSection .more-button")
-    #             except TimeoutError:
-    #                 # print(f"No 'more-button' found for Season {i + 1}")
-    #                 pass
-                
-    #             while True:
-    #                 try:
-    #                     more_button = await page.querySelector(".episodeSection .more-button")
-    #                     if await more_button.isIntersectingViewport():
-    #                         await more_button.click()
-    #                         # print("Clicked 'more-button'")
-    #                         time.sleep(1)  # Small delay to allow content to load
-    #                     else:
-    #                         break
-    #                 except Exception as e:
-    #                     # print("No more 'more-button' found.")
-    #                     break
-                
-    #             await page.waitForSelector(".episodeContainer")
-                
-    #             episodes = self.get_season_info(await page.content())
-    #             show_info.append(episodes)
-                
-    #     except TimeoutError:
-    #         print("Timeout")
-    #     finally:
-    #         await driver.close()
-            
-    #     print(f"Time taken: {time.time() - start_time}")
-    #     return show_info
-    
     async def get_show_season_info(self,show_url, season_number):
+        """
+        Get the information about the seasons and episodes of a show
+        Parameters:
+            show_url (str): The URL of the show
+            season_number (int): The season number to get the information for
+        Returns:
+            list: A list of JSON objects containing the information about the episodes
+        """
         start_time = time.time()
         driver = await pyppeteer.launch(
             executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe",
@@ -203,6 +176,13 @@ class TvScraper:
         return episodes
     
     async def get_show_info(self, show_url):
+        """
+        Get the information about a show
+        Parameters:
+            show_url (str): The URL of the show
+        Returns:
+            dict: A dictionary containing the information about the show
+        """
         start_time = time.time()
         driver = await pyppeteer.launch(
             executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe",
@@ -293,6 +273,12 @@ class TvScraper:
         }
         
     def __process_carousel_item(self,item,recommendations):
+        """
+        Process the carousel item
+        Parameters:
+            item (BeautifulSoup): The BeautifulSoup object of the carousel item
+            recommendations (list): The list to store the recommendations
+        """
         item_link = item['href']
         text_block = item.find("div",class_="textBlock")
         title = text_block.find("span",class_="title").text.strip()
@@ -318,6 +304,15 @@ class TvScraper:
         })
         
     async def __process_season(self,show_url,browser,i):
+        """
+        Process the season
+        Parameters:
+            show_url (str): The URL of the show
+            browser (pyppeteer.browser): The browser object
+            i (int): The season number
+        Returns:
+            list: A list of JSON objects containing the information about the episodes
+        """
         page = await browser.newPage()
         await page.goto(f"{self.ROOT_URL}{show_url}")
         start_time = time.time()
@@ -357,19 +352,28 @@ class TvScraper:
         return episodes
             
     def __get_season_info(self,page_source,season_number):
+        """
+        Get the information about the episodes of a season
+        Parameters:
+            page_source (str): The HTML content of the page
+            season_number (int): The season number
+        Returns:
+            list: A list of JSON objects containing the information about the episodes
+        """
         try:
             body = BeautifulSoup(page_source, "html.parser")
             episodeContainer = body.find("div", class_="episodeContainer")
             episode_list = episodeContainer.find_all("div", class_="episodeCard")
             episodes = []
-            for episode in episode_list:
-                episode_img = episode.find("div", class_="episodeThumbnail").find("img")["src"]
-                info = episode.find("div", class_="episodeInfo")
+            for index in range(len(episode_list)):
+                episode_img = episode_list[index].find("div", class_="episodeThumbnail").find("img")["src"]
+                info = episode_list[index].find("div", class_="episodeInfo")
                 title = info.find("h3").text.strip()
                 date = info.find("p", class_="air-date").text.strip()
                 desc = info.find("p", class_="overview").text.strip()
                 run_time = info.find("p", class_="runtime").text.strip()
                 episodes.append({
+                    'number': index + 1,
                     'title': title,
                     'date': date,
                     'desc': desc,
@@ -382,10 +386,19 @@ class TvScraper:
         return episodes
     
     async def get_episode_source_url(self, show_url, season_number, episode_number):
+        """
+        Get the source URL of the episode
+        Parameters:
+            show_url (str): The URL of the show
+            season_number (int): The season number
+            episode_number (int): The episode number
+        Returns:
+            dict: A dictionary containing the default source and the list of servers
+        """
         start_time = time.time()
         browser = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe",headless=True)
         page = await browser.newPage()
-        await page.goto(f'{self.ROOT_URL}/watch/{show_url}/{season_number}/{episode_number}')
+        await page.goto(f'{self.ROOT_URL}/watch{show_url}/{season_number}/{episode_number}')
         
         try:
             await page.waitForSelector(".video-wrapper")
@@ -421,16 +434,26 @@ class TvScraper:
         print(f"Time taken: {time.time() - start_time}")
         
         return {
-            'default_source': default_source,
+            'default_url': default_source,
             'servers': servers
         }
         
             
     async def change_server(self, show_url, season_number, episode_number, server_name):
+        """
+        Change the server of the episode
+        Parameters:
+            show_url (str): The URL of the show
+            season_number (int): The season number
+            episode_number (int): The episode number
+            server_name (str): The name of the new server
+        Returns:
+            dict: A dictionary containing the new source URL
+        """
         start_time = time.time()
         browser = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe",headless=True)
         page = await browser.newPage()
-        await page.goto(f'{self.ROOT_URL}/watch/{show_url}/{season_number}/{episode_number}')
+        await page.goto(f'{self.ROOT_URL}/watch{show_url}/{season_number}/{episode_number}')
         
         try:
             # Wait for elements to load
@@ -467,7 +490,7 @@ class TvScraper:
             
         print(f"Time taken: {time.time() - start_time}")
         return {
-            'new_source': new_source
+            'default_url': new_source
         }
         
 if __name__ == "__main__":
@@ -484,11 +507,10 @@ if __name__ == "__main__":
         # print(shows)
         # info = await scraper.get_show_info("/tv/60735")
         # print(info)
-        episodes = await scraper.get_show_season_info("/tv/60735",2)
-        print(episodes)
-        print(f"Number of episodes: {len(episodes)}")
-        # episode = await scraper.get_episode_source_url('tv/19885',2,1)
-        # print(episode)
+        # episodes = await scraper.get_show_season_info("/tv/60735",2)
+        # print(episodes)
+        episode = await scraper.get_episode_source_url('tv/19885',1,1)
+        print(episode)
         # server = await scraper.change_server('tv/19885',2,1,"VidSrc RIP")
         # print(server)
 
