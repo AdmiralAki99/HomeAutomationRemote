@@ -1,4 +1,5 @@
 import requests
+import threading
 import time
 import pyppeteer
 import asyncio
@@ -16,7 +17,7 @@ class ComicBookScraper:
     async def get_home_page(self):
         # Getting the home page
         start_time = time.time()
-        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=False)
+        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
         page = await driver.newPage()
         await page.goto(f"{self.ROOT_URL}/")
         
@@ -32,19 +33,20 @@ class ComicBookScraper:
             tab_top_month = soup.find("div", id="tab-top-month")
             tab_mostview = soup.find("div", id="tab-mostview")
             
-            threads = []
-            for tab in [tab_newest, tab_top_day, tab_top_week, tab_top_month, tab_mostview]:
-                threads.append(await asyncio.create_task(self.get_tab(tab)))
-                
-            tab_results = await asyncio.gather(*threads)
-            
+            tab_results = []
+            tab_results = await asyncio.gather(
+                self.get_tab(tab_newest),
+                self.get_tab(tab_top_day),
+                self.get_tab(tab_top_week),
+                self.get_tab(tab_top_month),
+                self.get_tab(tab_mostview)
+            )
+                    
             newest_comics = tab_results[0]
             top_day_comics = tab_results[1]
             top_week_comics = tab_results[2]
             top_month_comics = tab_results[3]
-            mostview_comics = tab_results[4]
-            
-            print(f"Newest: {newest_comics}")           
+            mostview_comics = tab_results[4]          
         
         except TimeoutError:
             print("Timeout")
@@ -52,19 +54,50 @@ class ComicBookScraper:
             await driver.close()
             
         print(f"Time taken: {time.time() - start_time}")
-        return newest_comics, top_day_comics, top_week_comics, top_month_comics, mostview_comics
+        return {
+            "newest": newest_comics,
+            "top_day": top_day_comics,
+            "top_week": top_week_comics,
+            "top_month": top_month_comics,
+            "mostview": mostview_comics
+        }
         
     async def get_tab(self,tab):
         # Get the tab
         # TODO: Implement the scraping
-        tab_comics = [{}]
-        for comics in tab.find_all("div"):
-            title = comics.find("a",class_="title")
+        tab_comics = []
+        for comics in tab.find_all("div",recursive=False):
+            if "text-align" not in comics['style']:
+                tab_comics.append(await self.__get_comic_book_series(comics))
             
-            print(title)
             
             
         return tab_comics
+        
+    async def __get_comic_book_series(self, series_name):
+        img = series_name.find_all("a")[0]
+        img = img.find("img")["src"]
+        title = series_name.find("a",class_="title")
+        title = title.text.strip()
+        url = f'{self.ROOT_URL}/Comic/{title}'
+        
+        genres = series_name.find_all("p")[0]
+        genre_list = []
+        for genre in genres.find_all("a",class_="dotUnder"):
+            genre_list.append(genre.text)
+            
+        latest = series_name.find_all("p")[1]
+        latest = latest.find("a")
+        latest = latest.text.strip()
+        
+        return{
+            "title": title,
+            "url": url,
+            "img": self.ROOT_URL+img,
+            "genres": genre_list,
+            latest: latest
+        }
+        
             
     async def search_comic_book_series(self, series_name):
         # Search for the comic book series by using requests
@@ -243,7 +276,8 @@ if __name__ == "__main__":
         # series = await scraper.get_comic_book_series("Comic/The-Amazing-Spider-Man-2018")
         # print(series)
         # pages = await scraper.get_comic_book_issue("/Comic/The-Amazing-Spider-Man-2018/Issue-93?id=196317")
-        await scraper.get_home_page()
+        page = await scraper.get_home_page()
+        print(page)
         
 
     asyncio.get_event_loop().run_until_complete(main())

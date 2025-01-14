@@ -7,6 +7,7 @@ import '../styles/ComicScreen.css'
 
 import Navbar from '../components/Navbar'
 import ComicSearchResult from '../components/ComicSearchResult'
+import Carousel from '../components/Carousel'
 
 type ComicsScreenProps = {
   navigation: any
@@ -15,17 +16,31 @@ type ComicsScreenProps = {
 class ComicsScreen extends Component<ComicsScreenProps> {
   state = {
     searchPopupClicked: false,
-    searchResults: []
+    searchResults: [],
+    newComics: [],
+    topToday: [],
+    topThisWeek: [],
+    topThisMonth: [],
+    popular: []
   }
 
   constructor(props: ComicsScreenProps) {
     super(props)
     this.state = {
       searchPopupClicked: false,
-      searchResults: []
+      searchResults: [],
+      newComics: [],
+      topToday: [],
+      topThisWeek: [],
+      topThisMonth: [],
+      popular: []
     }
 
     this.handleSearch = this.handleSearch.bind(this)
+  }
+
+  componentDidMount(): void {
+    this.handleHomePage()
   }
 
   async handleSearch(event) {
@@ -40,6 +55,18 @@ class ComicsScreen extends Component<ComicsScreenProps> {
       console.log()
       this.setState({ searchResults: response.data })
     }
+  }
+
+  async handleHomePage() {
+    await serverAPI.get('/comics/get/homepage').then((response) => {
+      this.setState({
+        newComics: response.data.newest,
+        topToday: response.data.top_day,
+        topThisWeek: response.data.top_week,
+        topThisMonth: response.data.top_month,
+        popular: response.data.mostview
+      })
+    })
   }
 
   renderSearchBar() {
@@ -72,9 +99,17 @@ class ComicsScreen extends Component<ComicsScreenProps> {
             <h3 className="text-lg font-medium">Comic Title</h3>
             <p className="text-gray-600">This is a static result card.</p>
           </div> */}
-          {this.state.searchResults.map((result: any,index) => (
-            <ComicSearchResult key={index} title={result.title} url={result.url} thumbnail={result.img} 
-              publication={result.publication} status={result.status} summary={result.summary} navigation={this.props.navigation}/>
+          {this.state.searchResults.map((result: any, index) => (
+            <ComicSearchResult
+              key={index}
+              title={result.title}
+              url={result.url}
+              thumbnail={result.img}
+              publication={result.publication}
+              status={result.status}
+              summary={result.summary}
+              navigation={this.props.navigation}
+            />
           ))}
         </div>
       </div>
@@ -88,8 +123,10 @@ class ComicsScreen extends Component<ComicsScreenProps> {
           {this.state.searchPopupClicked ? this.renderSearchBar() : null}
           <Navbar
             leftItems={[
-              <button className="flex w-12 h-12 bg-noir text-primary_text items-center justify-center "
-                onClick={() => this.props.navigation.navigate('Home')}>
+              <button
+                className="flex w-12 h-12 bg-noir text-primary_text items-center justify-center "
+                onClick={() => this.props.navigation.navigate('Home')}
+              >
                 <ChevronLeft color="white" />
               </button>
             ]}
@@ -104,7 +141,32 @@ class ComicsScreen extends Component<ComicsScreenProps> {
               </button>
             ]}
           />
-          <div className="grid grid-cols-2 gap-4 max-w-full bg-home w-screen absolute z-0"></div>
+          <div className="grid grid-cols-1 gap-1 p-2 max-w-full bg-home w-screen absolute z-0">
+            <div className="bg-noir w-full rounded-2xl">
+              <p className="text-2xl text-white pl-2"> New Comics</p>
+              <Carousel
+                images={this.state.newComics.map((item: any) => item.img)}
+                titles={this.state.newComics.map((item: any) => item.title)}
+                subtitles={this.state.newComics.map((item: any) => item.genres.join(', '))}
+              />
+            </div>
+            <div className="bg-noir w-full rounded-2xl pl-2">
+              <p className="text-2xl text-white"> Top Today</p>
+              <Carousel
+                images={this.state.topToday.map((item: any) => item.img)}
+                titles={this.state.topToday.map((item: any) => item.title)}
+                subtitles={this.state.topToday.map((item: any) => item.genres.join(', '))}
+              />
+            </div>
+            <div className="bg-noir w-full rounded-2xl pl-2">
+              <p className="text-2xl text-white"> Top This Week</p>
+              <Carousel
+                images={this.state.topThisWeek.map((item: any) => item.img)}
+                titles={this.state.topThisWeek.map((item: any) => item.title)}
+                subtitles={this.state.topThisWeek.map((item: any) => item.genres.join(', '))}
+              />
+            </div>
+          </div>
         </div>
       </View>
     )

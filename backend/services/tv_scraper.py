@@ -21,20 +21,54 @@ class TvScraper:
             list: A list of JSON objects containing the search results
         """
         start_time = time.time()
-        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
+        driver = await pyppeteer.launch(
+            executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", 
+            headless=True,
+            args=[ 
+                  '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+                  '--window-size=1920,1080'
+                ]
+        )
         page = await driver.newPage()
         
         await page.goto(f"{self.ROOT_URL}/search/{show_name}")
         
         try:
+            
+            # Wait for the filter buttons
+            await page.waitForSelector(".mediaTypeFilter")
+            await asyncio.sleep(1)
+            
+            # Get all the filter buttons
+            filter_buttons = await page.querySelectorAll(".preferenceButton")
+            for button in filter_buttons:
+                button_text = await page.evaluate('(el) => el.textContent', button)
+                if "TV Shows" in button_text:
+                    # Click the TV Shows button
+                    while True:
+                        try:
+                            if await button.isIntersectingViewport():
+                                await button.click()
+                                break
+                        except:
+                            pass
+                    print("Clicked TV Shows button")
+            
+            print("Waiting for search results")
+            
             # Wait for the page to load
             await page.waitForSelector(".searchResultsPage")
-            time.sleep(1.5)
+            await asyncio.sleep(2)
             
-            SCROLL_PAUSE_TIME = 0.25
+            SCROLL_PAUSE_TIME = 0.5
+            SCROLL_INCREMENT = 500
             
             # Get scroll height
             last_height = await page.evaluate("document.body.scrollHeight")
+            print("Original Height: ", last_height)
+            screenshot_time = time.time()
+            await page.screenshot()
+            print(f"Screenshot taken: {time.time() - screenshot_time}")
             response = []
             while True:
                 # Wait to load page
@@ -53,20 +87,21 @@ class TvScraper:
                         ## The media has a poster and is loaded
                         poster_img = self.__get_poster_info(poster_card)
                         title,date,media_type = self.__get_text_info(media.find("div", class_="textBlock"))
-                        if(media_type == "TV"):
-                            response.append({
+                        response.append({
                                 'title': title,
                                 'date': date,
                                 'poster_img': poster_img if "http" in poster_img else self.ROOT_URL + poster_img,
                                 'media_type': media_type,
                                 'link': media['href']
-                            })
+                        })
+                           
                     else:
                         ## The media has no poster and is not loaded, when the window is scrolled down then the media would be loaded by JS
                         pass
                     
                 # Scroll down to bottom
                 await page.evaluate("window.scrollTo(0, document.body.scrollHeight);")
+                await page.screenshot()
                 # Calculate new scroll height and compare with last scroll height
                 new_height = await page.evaluate("document.body.scrollHeight")
                 if new_height == last_height:
@@ -76,6 +111,7 @@ class TvScraper:
         except TimeoutError:
             print("Timeout")
         finally:
+            await page.screenshot()
             await driver.close()
             
         print(f"Time taken: {time.time() - start_time}")
@@ -494,6 +530,7 @@ class TvScraper:
         }
         
 if __name__ == "__main__":
+    
     scraper = TvScraper()
     # print(scraper.search_show("The Flash"))
     
@@ -503,14 +540,14 @@ if __name__ == "__main__":
     # print(scraper.change_server('/tv/59427',1,1,"VidSrc RIP"))
     
     async def main():
-        # shows = await scraper.search_show("The Flash")
-        # print(shows)
+        shows = await scraper.search_show("avengers")
+        print(shows)
         # info = await scraper.get_show_info("/tv/60735")
         # print(info)
         # episodes = await scraper.get_show_season_info("/tv/60735",2)
         # print(episodes)
-        episode = await scraper.get_episode_source_url('tv/19885',1,1)
-        print(episode)
+        # episode = await scraper.get_episode_source_url('tv/19885',1,1)
+        # print(episode)
         # server = await scraper.change_server('tv/19885',2,1,"VidSrc RIP")
         # print(server)
 

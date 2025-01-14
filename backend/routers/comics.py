@@ -10,11 +10,18 @@ scraper = ComicBookScraper()
 def read_root():
     return {"Hello": "World Comics"}
 
+@router.get("/get/homepage")
+async def get_comic_book_homepage():
+    """Get the homepage of the comic book scraper"""
+    try:
+        return await scraper.get_home_page()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/search")
 async def search_comic_book_series(query: str,background_tasks: BackgroundTasks):
     """Search for a comic book series"""
     try:
-        ## TODO: Implement multithreading to make the search faster (Current 13 seconds)
         return await scraper.search_comic_book_series(query)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
