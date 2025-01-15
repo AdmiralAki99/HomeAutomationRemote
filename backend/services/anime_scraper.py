@@ -10,6 +10,61 @@ class AnimeScraper:
     def __init__(self):
         pass
     
+    async def get_homepage(self):
+        start_time = time.time()
+        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
+        page = await driver.newPage()
+        
+        await page.goto(self.ROOT_URL)
+        # await asyncio.sleep(5)
+        
+        try:
+            await page.waitForSelector(".card")
+            soup = BeautifulSoup(await page.content(),"html.parser")
+            trending_container = soup.find("div",class_="trending-container")
+            trending_animes = trending_container.find_all("a",class_="card")
+            
+            popular_container = soup.find("div",class_="popular-container")
+            popular_animes = popular_container.find_all("a",class_="card")
+            
+            anime_results = []
+            anime_results = await asyncio.gather(self.__process_anime_list(trending_animes),self.__process_anime_list(popular_animes))
+            
+            trending_animes = anime_results[0]
+            popular_animes = anime_results[1]
+            
+            # Concatenate the two lists
+            trending_animes.extend(popular_animes)
+        except TimeoutError:
+            print("Timeout")
+        finally:
+            await driver.close()
+            
+        print(f"Time taken: {time.time() - start_time}")
+        return{
+            "trending": trending_animes,
+        }
+            
+    async def __process_anime_list(self,anime_list):
+        response = []
+        for anime in anime_list:
+            response.append(await self.__process_anime_card(anime))
+    
+        return response
+            
+    async def __process_anime_card(self,anime_card):
+        link = anime_card['href']
+        img = anime_card.find("img")['src']
+        card_title = anime_card.find("div",class_="card-content")
+        card_title = card_title.find("div",class_="card-title")
+        title = card_title.find("a").text.strip()
+        
+        return {
+            "title": title,
+            "link": link,
+            "img": img
+        }
+    
     async def search_anime(self,anime_name):
         start_time = time.time()
         driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
@@ -72,9 +127,9 @@ class AnimeScraper:
                 episode_link = episodes[index].find("a")['href']
                 episode_title = episodes[index].find("a").text.split(".")[1].strip()
                 response.append({
-                    "Episode No": index+1,
-                    "Episode Title": episode_title,
-                    "Episode Link": episode_link
+                    "number": index+1,
+                    "title": episode_title,
+                    "link": episode_link
                 })
                 
             # Get the poster and get the title and description
@@ -154,7 +209,7 @@ class AnimeScraper:
         print(f"Time taken: {time.time() - start_time}")
             
         return {
-            "default_source": default_source,
+            "default_url": default_source,
             "servers": server_info
         }
         
@@ -210,7 +265,7 @@ class AnimeScraper:
         print(f"Time taken: {time.time() - start_time}")
             
         return {
-            "default_source": default_source
+            "default_url": default_source
         }
         
     # def change_server(self,anime_link,server_id):
@@ -290,6 +345,8 @@ if __name__ == "__main__":
         # print(link)
         # change = await scraper.change_server("/watch/?id=haikyu-3rd-season-18&ep=765","s2-d")
         # print(change)
+        # homepage = await scraper.get_homepage()
+        # print(homepage)
 
     asyncio.get_event_loop().run_until_complete(main())
     

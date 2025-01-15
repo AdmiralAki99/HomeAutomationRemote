@@ -5,6 +5,7 @@ import { LightbulbFill, BookFill } from 'react-bootstrap-icons'
 
 import MovieScreen from './MovieScreen'
 import ShowScreen from './ShowScreen'
+import AnimeScreen from './AnimeScreen'
 
 type MediaScreenProps = {
   navigation: any
@@ -26,7 +27,7 @@ class MediaScreen extends Component<MediaScreenProps> {
         <div>
             {this.state.currentScreen === 'Movies' ? <MovieScreen navigation={this.props.navigation} /> : null}
             {this.state.currentScreen === 'TV' ? <ShowScreen navigation={this.props.navigation} /> : null}
-            {this.state.currentScreen === 'Anime' ? null : null}
+            {this.state.currentScreen === 'Anime' ? <AnimeScreen navigation={this.props.navigation} /> : null}
           <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-noir border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
             <div className="grid h-full max-w-lg grid-cols-3 mx-auto">
               <button onClick={() => this.setState({ currentScreen: 'Movies' })}>

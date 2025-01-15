@@ -18,6 +18,13 @@ async def search_movie(query: str):
         return await scraper.search_media(query)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.get("/get/homepage")
+async def get_homepage():
+    try:
+        return await scraper.get_homepage()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/get/link")
 async def get_movie_link(query: str):

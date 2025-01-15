@@ -24,8 +24,14 @@ async def get_show_info(query: str):
         return await scraper.get_show_info(query)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
 
+@router.get("/get/homepage")
+async def get_homepage():
+    try:
+        return await scraper.get_homepage()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 @router.get("/get/season")
 async def get_season(link: str,season_number: int):
     try:

@@ -5,23 +5,20 @@ type CarouselProps = {
   episodes: any[]
   navigation: any
   link: string
-  seasonNumber: number
 }
 
 type CarouselState = {
   currentColumn: number
-  seasonSelected: number
   episodeSelected: number
 }
 
-class SeasonCarousel extends Component<CarouselProps, CarouselState> {
+class EpisodeCarousel extends Component<CarouselProps, CarouselState> {
   reference: RefObject<HTMLDivElement> = createRef()
 
   constructor(props: CarouselProps) {
     super(props)
     this.state = {
       currentColumn: 0,
-      seasonSelected: 1,
       episodeSelected: 1
     }
     this.scrollLeft = this.scrollLeft.bind(this)
@@ -59,7 +56,7 @@ class SeasonCarousel extends Component<CarouselProps, CarouselState> {
   pushPlayerScreen(episode: number) {
     console.log("Episode Selected:", episode)
     this.props.navigation.push('MediaPlayerScreen', {
-      url: `/tv/get/episode/source?link=${this.props.link}&season_number=${this.state.seasonSelected}&episode_number=${episode}`
+      url: `/animes/get/episode/link?link=${this.props.episodes[episode - 1].link}`
     })
   }
 
@@ -135,4 +132,4 @@ class SeasonCarousel extends Component<CarouselProps, CarouselState> {
   }
 }
 
-export default SeasonCarousel
+export default EpisodeCarousel

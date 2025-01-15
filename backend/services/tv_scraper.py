@@ -1,4 +1,5 @@
 import time
+import json
 import pyppeteer
 import asyncio
 import threading
@@ -10,8 +11,76 @@ class TvScraper:
     
     def __init__(self):
         self.semaphore = asyncio.Semaphore(4)
+        
+        
+    async def get_homepage(self):
+        start_time = time.time()
+        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
+        page = await driver.newPage()
+        
+        await page.goto(f'{self.ROOT_URL}/explore/popular?mediaType=tv&language=en')
+        await asyncio.sleep(2)
+        # Check the current URL
+        while True:
+            if page.url != f'{self.ROOT_URL}/explore/popular?mediaType=tv&language=en':
+                await page.goto(f'{self.ROOT_URL}/explore/popular?mediaType=tv&language=en')
+            else:
+                break
+            
+        try:
+            
+            # Wait for the page to load
+            await page.waitForSelector(".infinite-scroll-component .movieCard")
+            time.sleep(3)
+            
+            SCROLL_PAUSE_TIME = 0.5
+            
+            # Get scroll height
+            last_height = await page.evaluate("document.body.scrollHeight")
+            response = []
+            counter = 0
+            while True:
+                # Wait to load page
+                time.sleep(SCROLL_PAUSE_TIME)
+                
+                # Now the data needs to be scraped
+                soup = BeautifulSoup(await page.content(), "html.parser")
+                search_results = soup.find("div", class_="infinite-scroll-component")
+                
+                media_results = search_results.find_all("a", class_="movieCard")
+                for media in media_results:
+                    poster_card = media.find("div", class_="posterBlock")
+                    if("lazy-load-image-loaded" in poster_card.find("span")['class']):
+                        ## The media has a poster and is loaded
+                        poster_img = self.__get_poster_info(poster_card)
+                        title,date,media_type = self.__get_text_info(media.find("div", class_="textBlock"))
+                        response.append({
+                                'title': title,
+                                'date': date,
+                                'poster_img': poster_img if "http" in poster_img else self.ROOT_URL + poster_img,
+                                'media_type': media_type,
+                                'link': media['href']
+                            })
+                            
+                    else:
+                        ## The media has no poster and is not loaded, when the window is scrolled down then the media would be loaded by JS
+                        pass
+                # Scroll down to bottom
+                await page.evaluate("window.scrollTo(0, document.body.scrollHeight);")
+                # Calculate new scroll height and compare with last scroll height
+                new_height = await page.evaluate("document.body.scrollHeight")
+                if new_height == last_height or counter == 5:
+                    break
+                last_height = new_height
+                counter += 1
+        except TimeoutError:
+            print("Timeout")
+        finally:
+            await driver.close()
+            
+        print(f"Time taken: {time.time() - start_time}")
+        return [json.loads(media) for media in set(json.dumps(item) for item in response)]
     
-
     async def search_show(self, show_name):
         """
         Search for a show on the website
@@ -32,7 +101,7 @@ class TvScraper:
         page = await driver.newPage()
         
         await page.goto(f"{self.ROOT_URL}/search/{show_name}")
-        
+        time.sleep(2)
         try:
             
             # Wait for the filter buttons
@@ -115,7 +184,7 @@ class TvScraper:
             await driver.close()
             
         print(f"Time taken: {time.time() - start_time}")
-        return response
+        return [json.loads(media) for media in set(json.dumps(item) for item in response)]
     
     def __get_poster_info(self, poster_card):
         """
@@ -540,8 +609,8 @@ if __name__ == "__main__":
     # print(scraper.change_server('/tv/59427',1,1,"VidSrc RIP"))
     
     async def main():
-        shows = await scraper.search_show("avengers")
-        print(shows)
+        # shows = await scraper.search_show("avengers")
+        # print(shows)
         # info = await scraper.get_show_info("/tv/60735")
         # print(info)
         # episodes = await scraper.get_show_season_info("/tv/60735",2)
@@ -550,5 +619,7 @@ if __name__ == "__main__":
         # print(episode)
         # server = await scraper.change_server('tv/19885',2,1,"VidSrc RIP")
         # print(server)
+        homepage = await scraper.get_homepage()
+        print(homepage)
 
     asyncio.get_event_loop().run_until_complete(main())

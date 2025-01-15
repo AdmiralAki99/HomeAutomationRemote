@@ -9,6 +9,7 @@ import MediaScreen from './screens/MediaScreen'
 import MovieInfoScreen from './screens/MovieInfoScreen'
 import MediaPlayerScreen from './screens/MediaPlayerScreen'
 import ShowInfoScreen from './screens/ShowInfoScreen'
+import AnimeInfoScreen from './screens/AnimeInfoScreen'
 
 export type RootStackParamList = {
   Home: undefined
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   MediaPlayerScreen: undefined
   MovieInfo: undefined
   ShowInfo: undefined
+  AnimeInfo: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -38,6 +40,7 @@ function App(): JSX.Element {
           <Stack.Screen name="MovieInfo" component={MovieInfoScreen} />
           <Stack.Screen name="MediaPlayerScreen" component={MediaPlayerScreen} />
           <Stack.Screen name="ShowInfo" component={ShowInfoScreen} />
+          <Stack.Screen name="AnimeInfo" component={AnimeInfoScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

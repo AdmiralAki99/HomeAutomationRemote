@@ -8,15 +8,15 @@ import Navbar from '../components/Navbar'
 import SearchResult from '../components/SearchResult'
 import GalleryGrid from '../components/GalleryGrid'
 
-type ShowScreenProps = {
+type AnimeScreenProps = {
   navigation: any
 }
 
-class ShowScreen extends Component<ShowScreenProps> {
+class AnimeScreen extends Component<AnimeScreenProps> {
   state = {
     searchPopupClicked: false,
     searchResults: [],
-    homepage: []
+    trending: [],
   }
   constructor(props) {
     super(props)
@@ -29,9 +29,9 @@ class ShowScreen extends Component<ShowScreenProps> {
   }
 
   async handleHomePage() {
-    await serverAPI.get('/tv/get/homepage').then((response) => {
+    await serverAPI.get('/animes/get/homepage').then((response) => {
       this.setState({
-        homepage: response.data
+        trending: response.data.trending
       })
     })
   }
@@ -42,7 +42,7 @@ class ShowScreen extends Component<ShowScreenProps> {
     }
 
     if (event.key === 'Enter') {
-      const response = await serverAPI.get(`/tv/search/?query=${event.target.value}`, { headers })
+      const response = await serverAPI.get(`/animes/search/?link=${event.target.value}`, { headers })
       this.setState({ searchResults: response.data })
     }
   }
@@ -81,12 +81,12 @@ class ShowScreen extends Component<ShowScreenProps> {
             <SearchResult
               key={index}
               header={result.title}
-              subtitle={[result.date]}
-              thumbnail={result.poster_img}
+              subtitle={[result.type]}
+              thumbnail={result.img}
               url={result.link}
               navigation={this.props.navigation}
               description=""
-              route="ShowInfo"
+              route="AnimeInfo"
             />
           ))}
         </div>
@@ -122,8 +122,8 @@ class ShowScreen extends Component<ShowScreenProps> {
           <div className="grid grid-cols-2 gap-4 max-w-full bg-home w-screen absolute z-0">
             <div className=" bg-home w-screen absolute z-0 overflow-hidden">
               <GalleryGrid
-                images={this.state.homepage.map((result: any) => result.poster_img)}
-                links={this.state.homepage.map((result: any) => result.link)}
+                images={this.state.trending.map((result: any) => result.img)}
+                links={this.state.trending.map((result: any) => result.link)}
               />
             </div>
           </div>
@@ -133,4 +133,4 @@ class ShowScreen extends Component<ShowScreenProps> {
   }
 }
 
-export default ShowScreen
+export default AnimeScreen

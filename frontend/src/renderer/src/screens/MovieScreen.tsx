@@ -6,6 +6,7 @@ import { ChevronLeft, Search } from 'react-bootstrap-icons'
 
 import Navbar from '../components/Navbar'
 import SearchResult from '../components/SearchResult'
+import GalleryGrid from '../components/GalleryGrid'
 
 type MovieScreenProps = {
   navigation: any
@@ -14,11 +15,25 @@ type MovieScreenProps = {
 class MovieScreen extends Component<MovieScreenProps> {
   state = {
     searchPopupClicked: false,
-    searchResults: []
+    searchResults: [],
+    homepage: []
   }
   constructor(props) {
     super(props)
     this.handleSearch = this.handleSearch.bind(this)
+    this.handleHomePage = this.handleHomePage.bind(this)
+  }
+
+  componentDidMount(): void {
+    this.handleHomePage()
+  }
+
+  async handleHomePage() {
+    await serverAPI.get('/movies/get/homepage').then((response) => {
+      this.setState({
+        homepage: response.data
+      })
+    })
   }
 
   async handleSearch(event) {
@@ -27,8 +42,10 @@ class MovieScreen extends Component<MovieScreenProps> {
     }
 
     if (event.key === 'Enter') {
-        const response = await serverAPI.get(`/movies/search/?query=${event.target.value}`, {headers})
-        this.setState({ searchResults: response.data })
+      const response = await serverAPI.get(`/movies/search/?query=${event.target.value}`, {
+        headers
+      })
+      this.setState({ searchResults: response.data })
     }
   }
 
@@ -82,7 +99,7 @@ class MovieScreen extends Component<MovieScreenProps> {
   render() {
     return (
       <View>
-        <div className="h-screen bg-home">
+        <div className="h-screen bg-home no-scrollbar">
           {this.state.searchPopupClicked ? this.renderSearchBar() : null}
           <Navbar
             leftItems={[
@@ -104,7 +121,9 @@ class MovieScreen extends Component<MovieScreenProps> {
               </button>
             ]}
           />
-          <div className="grid grid-cols-2 gap-4 max-w-full bg-home w-screen absolute z-0"></div>
+          <div className=" bg-home w-screen absolute z-0 overflow-hidden">
+            <GalleryGrid images={this.state.homepage.map((result:any) => result.poster_img)} links={this.state.homepage.map((result:any) => result.link)} />
+          </div>
         </div>
       </View>
     )
