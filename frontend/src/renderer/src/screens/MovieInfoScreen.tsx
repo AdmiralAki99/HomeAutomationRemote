@@ -61,6 +61,10 @@ class MovieInfoScreen extends Component<MovieInfoScreenProps> {
       })
   }
 
+  carouselOnClick(link: string,image: string) {
+    this.props.navigation.push('MovieInfoScreen', { url: link, img: image })
+  }
+
   pushPlayerScreen(){
     this.props.navigation.push('MediaPlayerScreen', {url: `/movies/get/link?query=${this.state.link}`})
   }
@@ -139,6 +143,9 @@ class MovieInfoScreen extends Component<MovieInfoScreenProps> {
                   subtitles={this.state.recommendations.map(
                     (item: any) => item.media_type + ' ' + item.date
                   )}
+                  links={this.state.recommendations.map((item: any) => item.link)}
+                  route={'MovieInfo'}
+                  navigation={this.props.navigation}
                 />
               </div>
             </div>

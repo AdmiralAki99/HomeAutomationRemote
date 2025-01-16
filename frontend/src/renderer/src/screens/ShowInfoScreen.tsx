@@ -162,6 +162,9 @@ class ShowInfoScreen extends Component<ShowInfoScreenProps> {
                   subtitles={this.state.recommendations.map(
                     (item: any) => item.media_type + ' ' + item.date
                   )}
+                  links={this.state.recommendations.map((item: any) => item.link)}
+                  route={'ShowInfo'}
+                  navigation={this.props.navigation}
                 />
               </div>
             </div>

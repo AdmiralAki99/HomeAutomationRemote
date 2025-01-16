@@ -1,17 +1,24 @@
 import { Component } from 'react'
 
+import ProgressBar from './ProgressBar'
+
 type ReaderProps = {
   pages: any[]
 }
 
 class Reader extends Component<ReaderProps> {
   state = {
-    currentPage: 0
+    currentPage: 0,
+    progress: 0
   }
 
   constructor(props) {
     super(props)
     console.log(this.props.pages)
+  }
+
+  updateProgressBar() {
+    this.setState({ progress: this.state.currentPage * 100 / this.props.pages.length })
   }
 
   componentDidUpdate(
@@ -21,7 +28,6 @@ class Reader extends Component<ReaderProps> {
   ): void {
     console.log('Reader Updated')
     console.log(this.state.currentPage)
-    // console.log(this.props.pages)
   }
 
   renderPageNavigationButtons() {
@@ -30,22 +36,19 @@ class Reader extends Component<ReaderProps> {
         <button
           className="w-full h-full"
           onClick={() => {
-            if(this.state.currentPage > 0){
+            if (this.state.currentPage > 0) {
               this.setState({ currentPage: this.state.currentPage - 1 })
             }
           }}
-        >
-        </button>
+        ></button>
         <button
           className="h-full w-full"
           onClick={() => {
-            if(this.state.currentPage < this.props.pages.length - 1){
+            if (this.state.currentPage < this.props.pages.length - 1) {
               this.setState({ currentPage: this.state.currentPage + 1 })
             }
-            
           }}
-        >
-        </button>
+        ></button>
       </div>
     )
   }
@@ -55,7 +58,7 @@ class Reader extends Component<ReaderProps> {
       <div className="bg-home h-full no-scrollbar items-center justify-center">
         {this.renderPageNavigationButtons()}
         <img src={this.props.pages[this.state.currentPage]} className="h-full max-h-full" />
-        {/* <div className="h-full">Progress Slider</div> */}
+        <ProgressBar currentPage={this.state.currentPage} length={this.props.pages.length} />
       </div>
     )
   }

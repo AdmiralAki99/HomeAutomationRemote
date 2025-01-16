@@ -79,7 +79,7 @@ class ComicBookScraper:
         img = img.find("img")["src"]
         title = series_name.find("a",class_="title")
         title = title.text.strip()
-        url = f'{self.ROOT_URL}/Comic/{title}'
+        url = series_name.find("a",class_="title")["href"]
         
         genres = series_name.find_all("p")[0]
         genre_list = []
@@ -92,7 +92,7 @@ class ComicBookScraper:
         
         return{
             "title": title,
-            "url": url,
+            "url": "/"+url,
             "img": self.ROOT_URL+img,
             "genres": genre_list,
             latest: latest

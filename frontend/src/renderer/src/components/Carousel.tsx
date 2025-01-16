@@ -5,6 +5,9 @@ type CarouselProps = {
   images: string[]
   titles: string[]
   subtitles: string[]
+  links: string[]
+  route: any
+  navigation: any
 }
 
 type CarouselState = {
@@ -67,7 +70,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
           ref={this.reference}
         >
           {this.props.images.map((image, index) => (
-            <div key={index} className="carousel-item flex-shrink-0 w-1/4 max-w-xs">
+            <div key={index} className="carousel-item flex-shrink-0 w-1/4 max-w-xs" onClick={()=>{this.props.navigation.push(this.props.route, {url: this.props.links[index], img: image})}}>
               <img
                 src={image}
                 alt={this.props.titles[index]}

@@ -148,6 +148,9 @@ class ComicsScreen extends Component<ComicsScreenProps> {
                 images={this.state.newComics.map((item: any) => item.img)}
                 titles={this.state.newComics.map((item: any) => item.title)}
                 subtitles={this.state.newComics.map((item: any) => item.genres.join(', '))}
+                route={'ComicInfo'}
+                navigation={this.props.navigation}
+                links={this.state.newComics.map((item: any) => item.url)}
               />
             </div>
             <div className="bg-noir w-full rounded-2xl pl-2">
@@ -156,6 +159,9 @@ class ComicsScreen extends Component<ComicsScreenProps> {
                 images={this.state.topToday.map((item: any) => item.img)}
                 titles={this.state.topToday.map((item: any) => item.title)}
                 subtitles={this.state.topToday.map((item: any) => item.genres.join(', '))}
+                route={'ComicInfo'}
+                navigation={this.props.navigation}
+                links={this.state.topToday.map((item: any) => item.url)}
               />
             </div>
             <div className="bg-noir w-full rounded-2xl pl-2">
@@ -164,6 +170,9 @@ class ComicsScreen extends Component<ComicsScreenProps> {
                 images={this.state.topThisWeek.map((item: any) => item.img)}
                 titles={this.state.topThisWeek.map((item: any) => item.title)}
                 subtitles={this.state.topThisWeek.map((item: any) => item.genres.join(', '))}
+                route={'ComicInfo'}
+                navigation={this.props.navigation}
+                links={this.state.topThisWeek.map((item: any) => item.url)}
               />
             </div>
           </div>
