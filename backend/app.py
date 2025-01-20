@@ -2,7 +2,7 @@ import os
 import signal
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import comics, movies, shows, animes
+from routers import comics, movies, shows, animes, mangas
 import uvicorn
 
 # Create an instance of FastAPI
@@ -13,6 +13,7 @@ app.include_router(comics.router,prefix="/comics",tags=["comics"])
 app.include_router(movies.router,prefix="/movies",tags=["movies"])
 app.include_router(shows.router,prefix="/tv",tags=["tv"])
 app.include_router(animes.router,prefix="/animes",tags=["animes"])
+app.include_router(mangas.router,prefix="/mangas",tags=["mangas"])
 
 app.add_middleware(
     CORSMiddleware,

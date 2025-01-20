@@ -107,14 +107,17 @@ class AnimeScraper:
     
     async def get_anime_info(self,anime_link):
         start_time = time.time()
-        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
+        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True,args=[ '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'])
         page = await driver.newPage()
-        
+
         await page.goto(f'{self.ROOT_URL}{anime_link}')
-        
+        await asyncio.sleep(2)
         try:
-            # Wait for the page to load
-            await page.waitForSelector(".episode-item")
+            if not await page.querySelector(".episode-list .episode-item"):
+                await page.reload()
+            # Wait for the page to load if it is not loaded then make a request again
+            time.sleep(1.5)
+            await page.waitForSelector(".episode-list .episode-item")
             time.sleep(1.5)
             
             soup = BeautifulSoup(await page.content(),"html.parser")
