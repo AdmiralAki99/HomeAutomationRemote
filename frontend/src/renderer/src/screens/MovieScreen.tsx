@@ -122,7 +122,7 @@ class MovieScreen extends Component<MovieScreenProps> {
             ]}
           />
           <div className=" bg-home w-screen absolute z-0 overflow-hidden">
-            <GalleryGrid images={this.state.homepage.map((result:any) => result.poster_img)} links={this.state.homepage.map((result:any) => result.link)} />
+            <GalleryGrid images={this.state.homepage.map((result:any) => result.poster_img)} links={this.state.homepage.map((result:any) => result.link)} navigation={this.props.navigation} route={"MovieInfo"}/>
           </div>
         </div>
       </View>

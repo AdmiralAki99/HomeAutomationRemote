@@ -1,17 +1,18 @@
 import { Component, createRef, RefObject } from 'react';
 import { ChevronUp, ChevronDown } from 'react-bootstrap-icons';
 
-type GalleryGridProps = {
-  images: string[];
+type IssueCarouselProps = {
+  titles: string[];
   links: string[];
   navigation: any;
   route: any;
+  onIssueClick: any;
 };
 
-class GalleryGrid extends Component<GalleryGridProps> {
+class IssueCarousel extends Component<IssueCarouselProps> {
   reference: RefObject<HTMLDivElement> = createRef();
 
-  constructor(props: GalleryGridProps) {
+  constructor(props: IssueCarouselProps) {
     super(props);
     this.scrollUp = this.scrollUp.bind(this);
     this.scrollDown = this.scrollDown.bind(this);
@@ -49,16 +50,12 @@ class GalleryGrid extends Component<GalleryGridProps> {
 
         {/* Scrollable grid container */}
         <div
-          className="grid grid-cols-4 gap-4 p-4 overflow-y-scroll h-[95vh] no-scrollbar scroll-smooth"
+          className="grid grid-cols-1 gap-4 p-4 pl-16 overflow-y-scroll h-[95vh] no-scrollbar scroll-smooth"
           ref={this.reference}
         >
-          {this.props.images.map((result, index) => (
-            <div key={index} className="grid-item bg-white p-4 rounded-lg shadow-md" onClick={()=>{this.props.navigation.push(this.props.route, {url: this.props.links[index], img: result})}}>
-              <img
-                src={result}
-                alt={`Image ${index + 1}`}
-                className="w-full h-48 object-cover rounded-lg mb-2"
-              />
+          {this.props.titles.map((result, index) => (
+            <div key={index} className="grid-item text-sm font-semibold bg-white p-4 rounded-lg shadow-md" onClick={()=>{this.props.onIssueClick(this.props.links[index])}}>
+              Chapter {result}
             </div>
           ))}
         </div>
@@ -66,7 +63,7 @@ class GalleryGrid extends Component<GalleryGridProps> {
         {/* Down arrow button */}
         <button
           onClick={this.scrollDown}
-          className="absolute bottom-20 left-7 transform -translate-x-1/2 bg-gray-700 text-white p-2 rounded-full z-10"
+          className="absolute bottom-[35%] left-7 transform -translate-x-1/2 bg-gray-700 text-white p-2 rounded-full z-10"
           aria-label="Scroll Down"
         >
           <ChevronDown size={24} />
@@ -76,4 +73,4 @@ class GalleryGrid extends Component<GalleryGridProps> {
   }
 }
 
-export default GalleryGrid;
+export default IssueCarousel;

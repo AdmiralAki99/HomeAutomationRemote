@@ -17,6 +17,7 @@ class MediaPlayerScreen extends Component<MediaPlayerScreenProps> {
   state = {
     source: '',
     isFullScreen: false,
+    sourceFetched: false,
     servers: []
   }
 
@@ -26,7 +27,11 @@ class MediaPlayerScreen extends Component<MediaPlayerScreenProps> {
   }
 
   componentDidMount(): void {
-    this.getMovieSource()
+    if(this.state.source === ''){
+      console.log("Fetching source")
+      console.dir(this.state)
+      this.getMovieSource()
+    }
   }
 
   handleFullScreen() {

@@ -1,6 +1,7 @@
 import { Component } from 'react'
 
 import ComicsScreen from './ComicsScreen'
+import MangaScreen from './MangaScreen'
 
 import { LightbulbFill, BookFill } from 'react-bootstrap-icons'
 
@@ -26,10 +27,20 @@ class ReaderScreen extends Component<ReaderScreenProps> {
     )
   }
 
+  renderMangaScreen() {
+    return (
+      <div>
+        <MangaScreen navigation={this.props.navigation} />
+      </div>
+    )
+  }
+
   render() {
     return (
       <div>
-        {this.state.currentScreen === 'Comics' ? this.renderComicsScreen() : null}
+        {this.state.currentScreen === 'Comics'
+          ? this.renderComicsScreen()
+          : this.renderMangaScreen()}
         <div className="fixed w-full h-16 max-w-lg -translate-x-1/2 bg-noir border border-black rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
           <div className="grid h-full max-w-lg grid-cols-2 mx-auto">
             <button onClick={() => this.setState({ currentScreen: 'Comics' })}>

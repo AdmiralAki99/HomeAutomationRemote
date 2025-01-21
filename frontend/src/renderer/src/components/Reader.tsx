@@ -4,6 +4,7 @@ import ProgressBar from './ProgressBar'
 
 type ReaderProps = {
   pages: any[]
+  decoded?: boolean
 }
 
 class Reader extends Component<ReaderProps> {
@@ -18,7 +19,7 @@ class Reader extends Component<ReaderProps> {
   }
 
   updateProgressBar() {
-    this.setState({ progress: this.state.currentPage * 100 / this.props.pages.length })
+    this.setState({ progress: (this.state.currentPage * 100) / this.props.pages.length })
   }
 
   componentDidUpdate(
@@ -57,7 +58,17 @@ class Reader extends Component<ReaderProps> {
     return (
       <div className="bg-home h-full no-scrollbar items-center justify-center">
         {this.renderPageNavigationButtons()}
-        <img src={this.props.pages[this.state.currentPage]} className="h-full max-h-full" />
+        {this.props.decoded ? (
+          this.props.decoded == true ? (
+            <img
+              src={`data:image/jpg;base64,${this.props.pages[this.state.currentPage]}`}
+              className="h-full max-h-full"
+            />
+          ) : null
+        ) : (
+          <img src={this.props.pages[this.state.currentPage]} className="h-full max-h-full" />
+        )}
+
         <ProgressBar currentPage={this.state.currentPage} length={this.props.pages.length} />
       </div>
     )

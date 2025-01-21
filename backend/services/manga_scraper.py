@@ -5,6 +5,7 @@ import os
 import threading
 import base64
 import dotenv
+import asyncio
 
 class MangaScraper:
     
@@ -157,6 +158,7 @@ class MangaScraper:
         params = {
             "contentRating[]": ["safe"],
             "order[chapter]":"desc",
+            "translatedLanguage[]":["en"],
         }
         
         response = requests.get(url,params=params,headers=self.__get_headers())
@@ -199,33 +201,52 @@ class MangaScraper:
             else:
                 images = response.json()['chapter']['data']
                 
-            pages = []
+            pages = {}
             threads = []
-            for image in images:
-                thread = threading.Thread(target=self.__parse_chapter_pages,args=(hash_id,image,pages))
+            for index,image in enumerate(images):
+                thread = threading.Thread(target=self.__parse_chapter_pages,args=(hash_id,image,index,pages))
                 threads.append(thread)
                 thread.start()
                 
             for t in threads:
                 t.join()
-                
+               
+            pages = [pages[i] for i in sorted(pages)]
+            
             print(f"Time taken: {time.time()-start_time}")
             return pages
         
         return None
     
-    def __parse_chapter_pages(self,hash_id,page_link,pages: list):
+    def __parse_chapter_pages(self,hash_id,page_link,page_index,pages: dict):
         # Parse the chapter pages
         url = f'{self.__IMAGE_URL}/{hash_id}/{page_link}'
         
         response = requests.get(url,headers=self.__get_headers())
         
         if response.status_code == 200:
-            pages.append(base64.b64encode(response.content).decode('utf-8'))
+            pages[page_index] = base64.b64encode(response.content).decode('utf-8')
         
         return None
-            
-            
+    
+    async def get_home_page(self,num=3):
+        # Accoring to the API sturcture after testing, creating three open get requests will create the home page
+        # This is to get the home page
+        threads = []
+        manga_list = []
+        manga_list = await asyncio.gather(*[self.__get_random_list() for _ in range(num)])
+        
+        # return manga_list
+        return {
+            'top':manga_list[0],
+            'middle':manga_list[1],
+            'bottom':manga_list[2]
+        }
+        
+    async def __get_random_list(self):
+        # Fetch the request
+        return await self.search_manga('')
+
         
     
 if __name__ == '__main__':

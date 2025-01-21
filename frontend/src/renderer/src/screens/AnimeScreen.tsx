@@ -124,6 +124,8 @@ class AnimeScreen extends Component<AnimeScreenProps> {
               <GalleryGrid
                 images={this.state.trending.map((result: any) => result.img)}
                 links={this.state.trending.map((result: any) => result.link)}
+                navigation={this.props.navigation}
+                route={'AnimeInfo'}
               />
             </div>
           </div>

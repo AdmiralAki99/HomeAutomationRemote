@@ -3,7 +3,7 @@ import React from 'react'
 type SearchResultProps = {
   key: number
   header: string
-  subtitle: [any]
+  subtitle: Array<any>
   thumbnail: string
   url: string
   navigation: any
@@ -19,8 +19,8 @@ class SearchResult extends React.Component<SearchResultProps> {
   render() {
     return (
       <a
-        onClick={() => {
-          this.props.navigation.push(this.props.route, {
+        onClick={async () => {
+          await this.props.navigation.push(this.props.route, {
             url: this.props.url,
             img: this.props.thumbnail
           })

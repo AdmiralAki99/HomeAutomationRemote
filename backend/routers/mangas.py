@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from services.manga_scraper import MangaScraper
 import time
@@ -29,6 +29,14 @@ async def search_chapter(manga_id: str):
 async def search_chapter_pages(chapter_id: str):
     try:
         return await scraper.get_chapter_pages(chapter_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    
+@router.get("/get/homepage")
+async def get_homepage():
+    try:
+        return await scraper.get_home_page()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     

@@ -124,6 +124,8 @@ class ShowScreen extends Component<ShowScreenProps> {
               <GalleryGrid
                 images={this.state.homepage.map((result: any) => result.poster_img)}
                 links={this.state.homepage.map((result: any) => result.link)}
+                navigation={this.props.navigation}
+                route={'ShowInfo'}
               />
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { Component, createRef, RefObject } from 'react'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
 
-type CarouselProps = {
+type MangaCarouselProps = {
   images: string[]
   titles: string[]
   subtitles: string[]
@@ -9,16 +9,21 @@ type CarouselProps = {
   route: any
   navigation: any
   decode?: boolean
+  description: string[]
+  tags: any[]
+  status: any[]
+  id: any[]
+  authors: any[]
 }
 
-type CarouselState = {
+type MangaCarouselState = {
   currentImage: number
 }
 
-class Carousel extends Component<CarouselProps, CarouselState> {
+class MangaCarousel extends Component<MangaCarouselProps, MangaCarouselState> {
   reference: RefObject<HTMLDivElement> = createRef()
 
-  constructor(props: CarouselProps) {
+  constructor(props: MangaCarouselProps) {
     super(props)
     this.state = {
       currentImage: 0
@@ -76,8 +81,15 @@ class Carousel extends Component<CarouselProps, CarouselState> {
               className="carousel-item flex-shrink-0 w-1/4 max-w-xs"
               onClick={() => {
                 this.props.navigation.push(this.props.route, {
-                  url: this.props.links[index],
-                  img: image
+                  url: "",
+                  img: image,
+                  description: this.props.description[index],
+                  status: this.props.status[index],
+                  year: this.props.subtitles[index],
+                  title: this.props.titles[index],
+                  tags: this.props.tags[index],
+                  author: this.props.authors[index],
+                  id: this.props.id[index]
                 })
               }}
             >
@@ -122,4 +134,4 @@ class Carousel extends Component<CarouselProps, CarouselState> {
   }
 }
 
-export default Carousel
+export default MangaCarousel
