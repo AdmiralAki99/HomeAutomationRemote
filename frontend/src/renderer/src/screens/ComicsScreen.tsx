@@ -8,6 +8,7 @@ import '../styles/ComicScreen.css'
 import Navbar from '../components/Navbar'
 import ComicSearchResult from '../components/ComicSearchResult'
 import Carousel from '../components/Carousel'
+import FloatingKeyboard from '../components/FloatingKeyboard'
 
 type ComicsScreenProps = {
   navigation: any
@@ -15,6 +16,7 @@ type ComicsScreenProps = {
 
 class ComicsScreen extends Component<ComicsScreenProps> {
   state = {
+    searchQuery: '',
     searchPopupClicked: false,
     searchResults: [],
     newComics: [],
@@ -33,7 +35,8 @@ class ComicsScreen extends Component<ComicsScreenProps> {
       topToday: [],
       topThisWeek: [],
       topThisMonth: [],
-      popular: []
+      popular: [],
+      searchQuery: ''
     }
 
     this.handleSearch = this.handleSearch.bind(this)
@@ -43,18 +46,16 @@ class ComicsScreen extends Component<ComicsScreenProps> {
     this.handleHomePage()
   }
 
-  async handleSearch(event) {
+  async handleSearch(query: string) {
     const headers = {
       'Content-Type': 'application/json'
     }
 
-    if (event.key === 'Enter') {
-      const response = await serverAPI.get(`/comics/search?query=${event.target.value}}`, {
+    await serverAPI
+      .get(`/comics/search?query=${query}}`, {
         headers
       })
-      console.log()
-      this.setState({ searchResults: response.data })
-    }
+      .then((response) => this.setState({ searchResults: response.data }))
   }
 
   async handleHomePage() {
@@ -69,15 +70,43 @@ class ComicsScreen extends Component<ComicsScreenProps> {
     })
   }
 
+  onKeyPress(button) {
+    if (button === '{enter}') {
+      // this.handleSearch()
+    }
+  }
+
+  renderKeyboard() {
+    return (
+      <div>
+        <FloatingKeyboard
+          query={this.state.searchQuery}
+          onSubmit={() => {
+            this.handleSearch(this.state.searchQuery)
+          }}
+          onKeyPress={(button: string) => {
+            if (button === '{backspace}') {
+              this.setState({ searchQuery: this.state.searchQuery.slice(0, -1) })
+            } else if (button === '{space}') {
+              this.setState({ searchQuery: this.state.searchQuery + ' ' })
+            } else {
+              this.setState({ searchQuery: this.state.searchQuery + button })
+            }
+          }}
+        />
+      </div>
+    )
+  }
+
   renderSearchBar() {
     return (
       <div>
         <div className="fixed z-10 top-20 -right-14 w-full rounded-full">
           <input
             type="text"
+            value={this.state.searchQuery}
             placeholder="Search..."
             className="h-12 w-[80%] rounded-3xl pl-3 text-lg"
-            onKeyDown={this.handleSearch}
           />
         </div>
         <div className="fixed z-10 top-20 right-2 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
@@ -112,6 +141,7 @@ class ComicsScreen extends Component<ComicsScreenProps> {
             />
           ))}
         </div>
+        {this.renderKeyboard()}
       </div>
     )
   }

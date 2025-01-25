@@ -74,7 +74,7 @@ class MovieScraper:
     
     async def search_media(self, movie_name):
         start_time = time.time()
-        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=False)
+        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
         page = await driver.newPage()
         
         await page.goto(f"{self.ROOT_URL}/search/{movie_name}")
@@ -331,7 +331,7 @@ class MovieScraper:
     
     async def change_server(self,movie_link,server_name):
         start_time = time.time()
-        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=False)
+        driver = await pyppeteer.launch(executablePath=r"C:\Program Files\Google\Chrome\Application\chrome.exe", headless=True)
         page = await driver.newPage()
         
         await page.goto(f"{self.ROOT_URL}/watch{movie_link}")

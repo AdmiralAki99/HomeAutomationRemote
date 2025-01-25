@@ -18,15 +18,18 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(function({ addUtilities }) {
+    plugin(function ({ addUtilities }) {
       addUtilities({
-        '.no-scrollbar::-webkit-scrollbar' : {
+        '.no-scrollbar::-webkit-scrollbar': {
           display: 'none'
         },
-        '.no-scrollbar' : {
+        '.no-scrollbar': {
           'overflow-y': 'auto',
           '-ms-overflow-style': 'none', /* IE and Edge */
           'scrollbar-width': 'none'  /* Firefox */
+        },
+        '.no-transform': {
+          transform: 'none !important'
         }
       })
     })

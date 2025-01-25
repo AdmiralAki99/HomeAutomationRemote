@@ -5,7 +5,7 @@ import { RootStackParamList } from '../App'
 import '../styles/HomeScreen.css'
 
 /* Icons for the cards*/
-import { BusFrontFill, BookHalf, Calendar, Film, Pc, House } from 'react-bootstrap-icons'
+import { BusFrontFill, BookHalf, Calendar, Film, Pc, House, Dpad } from 'react-bootstrap-icons'
 
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>
 
@@ -42,27 +42,34 @@ function HomeScreen({ route, navigation }: HomeScreenProps) {
               subtitle="Subtitle"
               icon={<Film color="white" />}
             />
-            <Card
+            {/* <Card
               title="Calendar"
               navigation={navigation}
               route="Calendar"
               subtitle="Subtitle"
               icon={<Calendar color="white" />}
-            />
+            /> */}
             <Card
+              title="Remote"
+              navigation={navigation}
+              route="Remote"
+              subtitle="Subtitle"
+              icon={<Dpad color="white" />}
+            />
+            {/* <Card
               title="PC"
               navigation={navigation}
               route="PC"
               subtitle="Subtitle"
               icon={<Pc color="white" />}
-            />
-            <Card
+            /> */}
+            {/* <Card
               title="MBTA"
               navigation={navigation}
               route="MBTA"
               subtitle="Subtitle"
               icon={<BusFrontFill color="white" />}
-            />
+            /> */}
           </div>
         </div>
       </div>

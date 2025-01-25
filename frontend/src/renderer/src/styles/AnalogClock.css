@@ -24,18 +24,19 @@
     left: 5%;
     width: 45%;
     height: 3px;
+    background: #e0e1dd;
 }
 
 .hour-hand{
     left: 10%;
     width: 40%;
     height: 5px;
+    background: #e0e1dd;
 }
 
-span{
+.hand{
     position: absolute;
     top: 50%;
-    background: #e0e1dd;
     transform: rotate(90deg);
     transform-origin: 100%;
     transition: all 0.2s;

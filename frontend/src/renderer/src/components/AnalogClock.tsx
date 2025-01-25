@@ -60,9 +60,9 @@ class AnalogClock extends React.Component {
             <div className="">
                 <div className="clock bg-home">
                     <div className="clock-face">
-                        <span className={"hour-hand"}  style={{transform: `rotate(${this.state.hoursAngle}deg)`}}></span>
-                        <span className="minute-hand" style={{transform: `rotate(${this.state.minutesAngle}deg)`}}></span>
-                        <span className="second-hand" style={{transform: `rotate(${this.state.secondsAngle}deg)`}}></span>
+                        <span className="hand hour-hand"  style={{transform: `rotate(${this.state.hoursAngle}deg)`}}></span>
+                        <span className="hand minute-hand" style={{transform: `rotate(${this.state.minutesAngle}deg)`}}></span>
+                        <span className="hand second-hand" style={{transform: `rotate(${this.state.secondsAngle}deg)`}}></span>
                     </div>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import { ChevronLeft, Search } from 'react-bootstrap-icons'
 import Navbar from '../components/Navbar'
 import SearchResult from '../components/SearchResult'
 import GalleryGrid from '../components/GalleryGrid'
+import FloatingKeyboard from '../components/FloatingKeyboard'
 
 type ShowScreenProps = {
   navigation: any
@@ -16,7 +17,8 @@ class ShowScreen extends Component<ShowScreenProps> {
   state = {
     searchPopupClicked: false,
     searchResults: [],
-    homepage: []
+    homepage: [],
+    searchQuery: ''
   }
   constructor(props) {
     super(props)
@@ -36,15 +38,35 @@ class ShowScreen extends Component<ShowScreenProps> {
     })
   }
 
-  async handleSearch(event) {
+  async handleSearch(query: string) {
     const headers = {
       'Content-Type': 'application/json'
     }
 
-    if (event.key === 'Enter') {
-      const response = await serverAPI.get(`/tv/search/?query=${event.target.value}`, { headers })
-      this.setState({ searchResults: response.data })
-    }
+    await serverAPI.get(`/tv/search/?query=${query}`, { headers }).then((response) =>this.setState({ searchResults: response.data }))
+    
+  }
+
+  renderKeyboard() {
+    return (
+      <div>
+        <FloatingKeyboard
+          query={this.state.searchQuery}
+          onSubmit={() => {
+            this.handleSearch(this.state.searchQuery)
+          }}
+          onKeyPress={(button: string) => {
+            if (button === '{backspace}') {
+              this.setState({ searchQuery: this.state.searchQuery.slice(0, -1) })
+            } else if (button === '{space}') {
+              this.setState({ searchQuery: this.state.searchQuery + ' ' })
+            } else {
+              this.setState({ searchQuery: this.state.searchQuery + button })
+            }
+          }}
+        />
+      </div>
+    )
   }
 
   renderSearchBar() {
@@ -55,7 +77,7 @@ class ShowScreen extends Component<ShowScreenProps> {
             type="text"
             placeholder="Search..."
             className="h-12 w-[80%] rounded-3xl pl-3 text-lg"
-            onKeyDown={this.handleSearch}
+            value={this.state.searchQuery}
           />
         </div>
         <div className="fixed z-10 top-20 right-2 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
@@ -90,6 +112,7 @@ class ShowScreen extends Component<ShowScreenProps> {
             />
           ))}
         </div>
+        {this.renderKeyboard()}
       </div>
     )
   }

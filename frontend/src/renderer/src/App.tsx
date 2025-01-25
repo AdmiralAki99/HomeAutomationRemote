@@ -12,6 +12,7 @@ import ShowInfoScreen from './screens/ShowInfoScreen'
 import AnimeInfoScreen from './screens/AnimeInfoScreen'
 import MangaInfoScreen from './screens/MangaInfoScreen'
 import MangaReaderScreen from './screens/MangaReaderScreen'
+import RemoteScreen from './screens/RemoteScreen'
 
 export type RootStackParamList = {
   Home: undefined
@@ -26,6 +27,7 @@ export type RootStackParamList = {
   ShowInfo: undefined
   AnimeInfo: undefined
   MangaInfo: undefined
+  Remote: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -47,6 +49,7 @@ function App(): JSX.Element {
           <Stack.Screen name="AnimeInfo" component={AnimeInfoScreen} />
           <Stack.Screen name="MangaInfo" component={MangaInfoScreen} />
           <Stack.Screen name="MangaReader" component={MangaReaderScreen} />
+          <Stack.Screen name="Remote" component={RemoteScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

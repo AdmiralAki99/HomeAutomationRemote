@@ -2,7 +2,7 @@
   -webkit-appearance: none;
   width: 700px; /* Make the slider take full width */
   height: 70px; /* Adjust height for desired thickness */
-  background: linear-gradient(to right, #4CAF50 0%, #4CAF50 10%, #d3d3d3 10%);
+  background: #DA3B5E;
   outline: none;
   border-radius: 15px;
   transform: rotate(-90deg);
@@ -13,7 +13,8 @@
   appearance: none;
   width: 10px;
   height: 50px;
-  background: #4caf50;
+  background: #ffffff;
+  opacity: 1.0;
   cursor: pointer;
   border-radius: 10%;
 }

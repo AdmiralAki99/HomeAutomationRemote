@@ -7,6 +7,7 @@ import { ChevronLeft, Search } from 'react-bootstrap-icons'
 import Navbar from '../components/Navbar'
 import MangaSearchResult from '../components/MangaSearchResult'
 import MangaCarousel from '../components/MangaCarousel'
+import FloatingKeyboard from '../components/FloatingKeyboard'
 
 type MangaScreenProps = {
   navigation: any
@@ -18,7 +19,8 @@ class MangaScreen extends Component<MangaScreenProps> {
     searchResults: [],
     topList: [],
     middleList: [],
-    bottomList: []  
+    bottomList: [],
+    searchQuery: ''  
   }
 
   constructor(props: MangaScreenProps) {
@@ -28,7 +30,8 @@ class MangaScreen extends Component<MangaScreenProps> {
       searchResults: [],
       topList: [],
       middleList: [],
-      bottomList: []
+      bottomList: [],
+      searchQuery: ''
     }
 
     this.handleSearch = this.handleSearch.bind(this)
@@ -49,18 +52,36 @@ class MangaScreen extends Component<MangaScreenProps> {
     })
   }
 
-  async handleSearch(event) {
+  async handleSearch(query: string) {
     const headers = {
       'Content-Type': 'application/json'
     }
 
-    if (event.key === 'Enter') {
-      const response = await serverAPI.get(`/mangas/search?query=${event.target.value}}`, {
-        headers
-      })
-      console.log(response.data)
-      this.setState({ searchResults: response.data })
-    }
+    await serverAPI.get(`/mangas/search?query=${query}}`, {
+      headers
+    }).then((response) => this.setState({ searchResults: response.data }))
+  }
+
+  renderKeyboard() {
+    return (
+      <div>
+        <FloatingKeyboard
+          query={this.state.searchQuery}
+          onSubmit={() => {
+            this.handleSearch(this.state.searchQuery)
+          }}
+          onKeyPress={(button: string) => {
+            if (button === '{backspace}') {
+              this.setState({ searchQuery: this.state.searchQuery.slice(0, -1) })
+            } else if (button === '{space}') {
+              this.setState({ searchQuery: this.state.searchQuery + ' ' })
+            } else {
+              this.setState({ searchQuery: this.state.searchQuery + button })
+            }
+          }}
+        />
+      </div>
+    )
   }
 
   renderSearchBar() {
@@ -71,7 +92,7 @@ class MangaScreen extends Component<MangaScreenProps> {
             type="text"
             placeholder="Search..."
             className="h-12 w-[80%] rounded-3xl pl-3 text-lg"
-            onKeyDown={this.handleSearch}
+            value={this.state.searchQuery}
           />
         </div>
         <div className="fixed z-10 top-20 right-2 w-12 h-12 bg-primary rounded-full flex items-center justify-center">
@@ -113,6 +134,7 @@ class MangaScreen extends Component<MangaScreenProps> {
             />
           ))}
         </div>
+        {this.renderKeyboard()}
       </div>
     )
   }
